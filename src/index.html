@@ -1,0 +1,1577 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Document</title>
+    <link href="./output.css" rel="stylesheet" />
+    <link
+      rel="stylesheet"
+      href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css"
+    />
+  </head>
+  <body>
+    <!-- <header
+      class="fixed top-0 z-50 w-full shadow-sm border-b"
+      style="
+        background-color: var(--color-surface);
+        border-color: var(--color-border);
+      "
+    >
+      <div class="flex items-center justify-between px-4 h-14">
+        <h1
+          class="text-xl font-black tracking-tighter"
+          style="color: var(--color-primary)"
+        >
+          chtech
+        </h1>
+
+        <div class="flex items-center gap-4">
+          <button style="color: var(--color-text-main)">
+            <i class="fas fa-search text-lg"></i>
+          </button>
+
+          <div class="relative">
+            <i
+              class="fas fa-shopping-cart text-lg"
+              style="color: var(--color-text-main)"
+            ></i>
+            <span
+              class="absolute -top-1.5 -right-1.5 flex items-center justify-center rounded-full text-[9px] font-bold"
+              style="
+                background-color: var(--color-accent);
+                color: var(--color-pure);
+                width: 16px;
+                height: 16px;
+                border: 2px solid var(--color-surface);
+              "
+            >
+              2
+            </span>
+          </div>
+
+          <button
+            class="w-8 h-8 rounded-full flex items-center justify-center shadow-md"
+            style="
+              background-color: var(--color-primary);
+              color: var(--color-pure);
+            "
+          >
+            <i class="fas fa-plus text-sm"></i>
+          </button>
+
+          <div
+            class="p-0.5 rounded-full border-2"
+            style="border-color: var(--color-primary)"
+          >
+            <img
+              src="https://ui-avatars.com/api/?name=CH&background=6366f1&color=fff"
+              class="w-7 h-7 rounded-full"
+            />
+          </div>
+        </div>
+      </div>
+
+      <div
+        class="flex justify-center border-t h-12"
+        style="border-color: var(--color-border)"
+      >
+        <nav class="flex h-full w-full max-w-2xl">
+          <a
+            href="#"
+            class="group relative flex-1 flex items-center justify-center border-b-4"
+            style="
+              border-color: var(--color-primary);
+              color: var(--color-primary);
+            "
+          >
+            <i class="fas fa-home text-xl"></i>
+            <span class="tooltip-text">Accueil</span>
+          </a>
+
+          <a
+            href="blogs.html"
+            class="group relative flex-1 flex items-center justify-center hover:bg-black/5 dark:hover:bg-white/5"
+            style="color: var(--color-text-sub)"
+          >
+            <i class="fas fa-newspaper text-xl"></i>
+            <span class="tooltip-text">Blogs</span>
+          </a>
+
+          <a
+            href="#"
+            class="group relative flex-1 flex items-center justify-center hover:bg-black/5 dark:hover:bg-white/5"
+            style="color: var(--color-text-sub)"
+          >
+            <div class="relative">
+              <i class="fas fa-bell text-xl"></i>
+              <span class="nav-badge"></span>
+            </div>
+            <span class="tooltip-text">Notifications</span>
+          </a>
+
+          <a
+            href="#"
+            class="group relative flex-1 flex items-center justify-center hover:bg-black/5 dark:hover:bg-white/5"
+            style="color: var(--color-text-sub)"
+          >
+            <div class="relative">
+              <i class="fas fa-comments text-xl"></i>
+              <span class="nav-badge"></span>
+            </div>
+            <span class="tooltip-text">Messages</span>
+          </a>
+
+          <a
+            href="#"
+            class="group relative flex-1 flex items-center justify-center hover:bg-black/5 dark:hover:bg-white/5"
+            style="color: var(--color-text-sub)"
+          >
+            <i class="fas fa-chart-line text-xl"></i>
+            <span class="tooltip-text">Tableau de bord</span>
+          </a>
+        </nav>
+      </div>
+    </header> -->
+
+    <header
+      class="fixed top-0 z-50 w-full shadow-sm border-b"
+      style="
+        background-color: var(--color-surface);
+        border-color: var(--color-border);
+      "
+    >
+      <div class="flex items-center justify-between px-4 h-14 gap-4">
+        <h1
+          class="text-xl font-black tracking-tighter flex-shrink-0"
+          style="color: var(--color-primary)"
+        >
+          chtech
+        </h1>
+
+        <div class="hidden md:flex flex-1 max-w-xl relative group">
+          <i
+            class="fas fa-search absolute left-3 top-1/2 -translate-y-1/2 text-xs transition-colors group-focus-within:text-primary"
+            style="color: var(--color-text-sub)"
+          ></i>
+
+          <input
+            type="text"
+            placeholder="Rechercher..."
+            class="w-full pl-10 pr-4 py-2 rounded-full text-sm border-none outline-none focus:ring-2 focus:ring-[var(--color-primary)] transition-all"
+            style="
+              background-color: var(--color-bg);
+              color: var(--color-text-main);
+            "
+          />
+        </div>
+
+        <div class="flex items-center gap-3 md:gap-4">
+          <button class="md:hidden" style="color: var(--color-text-main)">
+            <i class="fas fa-search text-lg"></i>
+          </button>
+
+          <div class="relative cursor-pointer">
+            <i
+              class="fas fa-shopping-cart text-lg"
+              style="color: var(--color-text-main)"
+            ></i>
+            <span
+              class="absolute -top-1.5 -right-1.5 flex items-center justify-center rounded-full text-[9px] font-bold"
+              style="
+                background-color: var(--color-accent);
+                color: var(--color-pure);
+                width: 16px;
+                height: 16px;
+                border: 2px solid var(--color-surface);
+              "
+            >
+              2
+            </span>
+          </div>
+
+          <button
+            class="w-8 h-8 rounded-full flex items-center justify-center shadow-md transition-transform active:scale-90"
+            style="
+              background-color: var(--color-primary);
+              color: var(--color-pure);
+            "
+          >
+            <i class="fas fa-plus text-sm"></i>
+          </button>
+
+          <div
+            class="p-0.5 rounded-full border-2"
+            style="border-color: var(--color-primary)"
+          >
+            <img
+              src="https://ui-avatars.com/api/?name=CH&background=6366f1&color=fff"
+              class="w-7 h-7 rounded-full"
+            />
+          </div>
+        </div>
+      </div>
+
+      <div
+        class="flex justify-center border-t h-12"
+        style="border-color: var(--color-border)"
+      >
+        <nav class="flex h-full w-full max-w-2xl">
+          <a
+            href="#"
+            class="group relative flex-1 flex items-center justify-center border-b-4"
+            style="
+              border-color: var(--color-primary);
+              color: var(--color-primary);
+            "
+          >
+            <i class="fas fa-home text-xl"></i>
+          </a>
+
+          <a
+            href="blogs.html"
+            class="group relative flex-1 flex items-center justify-center hover:bg-black/5 dark:hover:bg-white/5"
+            style="color: var(--color-text-sub)"
+          >
+            <i class="fas fa-newspaper text-xl"></i>
+          </a>
+
+          <a
+            href="#"
+            class="group relative flex-1 flex items-center justify-center hover:bg-black/5 dark:hover:bg-white/5"
+            style="color: var(--color-text-sub)"
+          >
+            <div class="relative">
+              <i class="fas fa-bell text-xl"></i>
+              <span
+                class="absolute top-0 right-0 w-2 h-2 rounded-full bg-rose-500 border border-white"
+              ></span>
+            </div>
+          </a>
+
+          <a
+            href="#"
+            class="group relative flex-1 flex items-center justify-center hover:bg-black/5 dark:hover:bg-white/5"
+            style="color: var(--color-text-sub)"
+          >
+            <i class="fas fa-comments text-xl"></i>
+          </a>
+
+          <a
+            href="#"
+            class="group relative flex-1 flex items-center justify-center hover:bg-black/5 dark:hover:bg-white/5"
+            style="color: var(--color-text-sub)"
+          >
+            <i class="fas fa-chart-line text-xl"></i>
+          </a>
+        </nav>
+      </div>
+    </header>
+
+    <div class="h-28"></div>
+
+    <section>
+      <div
+        class="w-full overflow-hidden border-b"
+        style="
+          background-color: var(--color-bg);
+          border-color: var(--color-border);
+        "
+      >
+        <div class="scroll-track">
+          <div class="category-card active">
+            <i class="fas fa-microchip text-xl"></i>
+            <span class="text-[10px] font-bold uppercase tracking-tighter"
+              >Processeurs</span
+            >
+          </div>
+          <div class="category-card">
+            <i class="fas fa-laptop text-xl"></i>
+            <span class="text-[10px] font-bold uppercase tracking-tighter"
+              >Laptops</span
+            >
+          </div>
+          <div class="category-card">
+            <i class="fas fa-microchip text-xl"></i>
+            <span class="text-[10px] font-bold uppercase tracking-tighter"
+              >Processeurs</span
+            >
+          </div>
+          <div class="category-card">
+            <i class="fas fa-laptop text-xl"></i>
+            <span class="text-[10px] font-bold uppercase tracking-tighter"
+              >Laptops</span
+            >
+          </div>
+          <div class="category-card active">
+            <i class="fas fa-microchip text-xl"></i>
+            <span class="text-[10px] font-bold uppercase tracking-tighter"
+              >Processeurs</span
+            >
+          </div>
+          <div class="category-card">
+            <i class="fas fa-laptop text-xl"></i>
+            <span class="text-[10px] font-bold uppercase tracking-tighter"
+              >Laptops</span
+            >
+          </div>
+          <div class="category-card">
+            <i class="fas fa-microchip text-xl"></i>
+            <span class="text-[10px] font-bold uppercase tracking-tighter"
+              >Processeurs</span
+            >
+          </div>
+          <div class="category-card">
+            <i class="fas fa-laptop text-xl"></i>
+            <span class="text-[10px] font-bold uppercase tracking-tighter"
+              >Laptops</span
+            >
+          </div>
+          <div class="category-card active">
+            <i class="fas fa-microchip text-xl"></i>
+            <span class="text-[10px] font-bold uppercase tracking-tighter"
+              >Processeurs</span
+            >
+          </div>
+          <div class="category-card">
+            <i class="fas fa-laptop text-xl"></i>
+            <span class="text-[10px] font-bold uppercase tracking-tighter"
+              >Laptops</span
+            >
+          </div>
+          <div class="category-card">
+            <i class="fas fa-microchip text-xl"></i>
+            <span class="text-[10px] font-bold uppercase tracking-tighter"
+              >Processeurs</span
+            >
+          </div>
+          <div class="category-card">
+            <i class="fas fa-laptop text-xl"></i>
+            <span class="text-[10px] font-bold uppercase tracking-tighter"
+              >Laptops</span
+            >
+          </div>
+          <div class="category-card active">
+            <i class="fas fa-microchip text-xl"></i>
+            <span class="text-[10px] font-bold uppercase tracking-tighter"
+              >Processeurs</span
+            >
+          </div>
+          <div class="category-card">
+            <i class="fas fa-laptop text-xl"></i>
+            <span class="text-[10px] font-bold uppercase tracking-tighter"
+              >Laptops</span
+            >
+          </div>
+          <div class="category-card">
+            <i class="fas fa-microchip text-xl"></i>
+            <span class="text-[10px] font-bold uppercase tracking-tighter"
+              >Processeurs</span
+            >
+          </div>
+          <div class="category-card">
+            <i class="fas fa-laptop text-xl"></i>
+            <span class="text-[10px] font-bold uppercase tracking-tighter"
+              >Laptops</span
+            >
+          </div>
+          <div class="category-card active">
+            <i class="fas fa-microchip text-xl"></i>
+            <span class="text-[10px] font-bold uppercase tracking-tighter"
+              >Processeurs</span
+            >
+          </div>
+          <div class="category-card">
+            <i class="fas fa-laptop text-xl"></i>
+            <span class="text-[10px] font-bold uppercase tracking-tighter"
+              >Laptops</span
+            >
+          </div>
+          <div class="category-card">
+            <i class="fas fa-microchip text-xl"></i>
+            <span class="text-[10px] font-bold uppercase tracking-tighter"
+              >Processeurs</span
+            >
+          </div>
+          <div class="category-card">
+            <i class="fas fa-laptop text-xl"></i>
+            <span class="text-[10px] font-bold uppercase tracking-tighter"
+              >Laptops</span
+            >
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section class="mx-auto max-w-7xl px-4 mb-4 mt-4">
+      <div
+        class="flex flex-col md:flex-row items-center justify-between p-4 rounded-2xl shadow-lg border"
+        style="
+          background-color: var(--color-accent);
+          border-color: var(--color-border);
+        "
+      >
+        <div class="flex items-center gap-4">
+          <h2
+            class="text-lg md:text-xl font-black text-[var(--color-pure)] uppercase tracking-tighter"
+          >
+            Spéciale Promo !! | Stock Limité
+          </h2>
+          <button
+            class="hidden md:block px-4 py-1.5 rounded-lg text-[10px] font-bold bg-white/20 text-white border border-white/30 hover:bg-white/30 transition"
+          >
+            VOIR PLUS...
+          </button>
+        </div>
+
+        <div class="flex items-center gap-3 mt-4 md:mt-0">
+          <span class="text-xs font-bold text-white/90 uppercase"
+            >Fin dans :</span
+          >
+          <div class="flex items-center gap-2">
+            <div
+              class="flex items-center gap-1 bg-white px-3 py-2 rounded-xl shadow-inner"
+            >
+              <span
+                class="text-sm font-black"
+                style="color: var(--color-accent)"
+                >14j</span
+              >
+              <span class="opacity-30">:</span>
+              <span
+                class="text-sm font-black"
+                style="color: var(--color-accent)"
+                >12h</span
+              >
+              <span class="opacity-30">:</span>
+              <span
+                class="text-sm font-black"
+                style="color: var(--color-accent)"
+                >35m</span
+              >
+              <span class="opacity-30">:</span>
+              <span
+                class="text-sm font-black"
+                style="color: var(--color-accent)"
+                >23s</span
+              >
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <div class="product-grid px-4 py-8 pt-2 max-w-7xl mx-auto">
+      <article
+        class="product-card group relative flex flex-col h-full shadow-sm"
+      >
+        <div
+          class="aspect-square w-full overflow-hidden relative bg-white border-b"
+          style="border-color: var(--color-border)"
+        >
+          <img src="assets/image.png" class="w-full h-full object-cover" />
+
+          <div
+            class="absolute top-2 left-2 view-badge"
+            style="
+              background-color: rgba(255, 255, 255, 0.9);
+              backdrop-filter: blur(4px);
+            "
+          >
+            <i class="fas fa-eye" style="color: var(--color-primary)"></i>
+            <span>1,425</span>
+          </div>
+
+          <button
+            class="absolute top-2 right-2 w-7 h-7 rounded-full bg-white/90 flex items-center justify-center shadow-sm"
+          >
+            <i
+              class="fas fa-heart text-xs"
+              style="color: var(--color-text-sub)"
+            ></i>
+          </button>
+        </div>
+
+        <div class="p-3 flex flex-col flex-grow">
+          <span
+            class="text-[9px] font-black uppercase tracking-widest mb-1"
+            style="color: var(--color-primary)"
+            >Accessoires</span
+          >
+
+          <h3
+            class="text-xs font-bold line-clamp-2 mb-2"
+            style="color: var(--color-text-main)"
+          >
+            Montre Minimaliste Edition Limitée
+          </h3>
+
+          <div class="flex items-center gap-1 mb-3">
+            <div class="flex text-[8px]" style="color: var(--color-rating)">
+              <i class="fas fa-star"></i><i class="fas fa-star"></i
+              ><i class="fas fa-star"></i><i class="fas fa-star"></i
+              ><i class="fas fa-star"></i>
+            </div>
+          </div>
+
+          <div class="mt-auto flex items-center justify-between">
+            <span
+              class="text-sm font-black"
+              style="color: var(--color-text-main)"
+              >89,00€</span
+            >
+
+            <button
+              class="btn-details flex items-center gap-1 p-1.5 rounded transition hover:bg-black/5 dark:hover:bg-white/5"
+            >
+              <span class="hidden sm:inline">VOIR</span>
+              <!-- <i class="fas fa-plus-circle sm:hidden text-lg"></i> -->
+              <i class="fas fa-arrow-right hidden sm:inline text-[10px]"></i>
+            </button>
+          </div>
+        </div>
+      </article>
+      <article
+        class="product-card group relative flex flex-col h-full shadow-sm"
+      >
+        <div
+          class="aspect-square w-full overflow-hidden relative bg-white border-b"
+          style="border-color: var(--color-border)"
+        >
+          <img src="assets/img2.jpeg" class="w-full h-full object-cover" />
+
+          <div
+            class="absolute top-2 left-2 view-badge"
+            style="
+              background-color: rgba(255, 255, 255, 0.9);
+              backdrop-filter: blur(4px);
+            "
+          >
+            <i class="fas fa-eye" style="color: var(--color-primary)"></i>
+            <span>1,425</span>
+          </div>
+
+          <button
+            class="absolute top-2 right-2 w-7 h-7 rounded-full bg-white/90 flex items-center justify-center shadow-sm"
+          >
+            <i
+              class="fas fa-heart text-xs"
+              style="color: var(--color-text-sub)"
+            ></i>
+          </button>
+        </div>
+
+        <div class="p-3 flex flex-col flex-grow">
+          <span
+            class="text-[9px] font-black uppercase tracking-widest mb-1"
+            style="color: var(--color-primary)"
+            >Accessoires</span
+          >
+
+          <h3
+            class="text-xs font-bold line-clamp-2 mb-2"
+            style="color: var(--color-text-main)"
+          >
+            Montre Minimaliste Edition Limitée
+          </h3>
+
+          <div class="flex items-center gap-1 mb-3">
+            <div class="flex text-[8px]" style="color: var(--color-rating)">
+              <i class="fas fa-star"></i><i class="fas fa-star"></i
+              ><i class="fas fa-star"></i><i class="fas fa-star"></i
+              ><i class="fas fa-star"></i>
+            </div>
+          </div>
+
+          <div class="mt-auto flex items-center justify-between">
+            <span
+              class="text-sm font-black"
+              style="color: var(--color-text-main)"
+              >89,00€</span
+            >
+
+            <button
+              class="btn-details flex items-center gap-1 p-1.5 rounded transition hover:bg-black/5 dark:hover:bg-white/5"
+            >
+              <span class="hidden sm:inline">VOIR</span>
+              <!-- <i class="fas fa-plus-circle sm:hidden text-lg"></i> -->
+              <i class="fas fa-arrow-right hidden sm:inline text-[10px]"></i>
+            </button>
+          </div>
+        </div>
+      </article>
+      <article
+        class="product-card group relative flex flex-col h-full shadow-sm"
+      >
+        <div
+          class="aspect-square w-full overflow-hidden relative bg-white border-b"
+          style="border-color: var(--color-border)"
+        >
+          <img src="assets/img3.jpeg" class="w-full h-full object-cover" />
+
+          <div
+            class="absolute top-2 left-2 view-badge"
+            style="
+              background-color: rgba(255, 255, 255, 0.9);
+              backdrop-filter: blur(4px);
+            "
+          >
+            <i class="fas fa-eye" style="color: var(--color-primary)"></i>
+            <span>1,425</span>
+          </div>
+
+          <button
+            class="absolute top-2 right-2 w-7 h-7 rounded-full bg-white/90 flex items-center justify-center shadow-sm"
+          >
+            <i
+              class="fas fa-heart text-xs"
+              style="color: var(--color-text-sub)"
+            ></i>
+          </button>
+        </div>
+
+        <div class="p-3 flex flex-col flex-grow">
+          <span
+            class="text-[9px] font-black uppercase tracking-widest mb-1"
+            style="color: var(--color-primary)"
+            >Accessoires</span
+          >
+
+          <h3
+            class="text-xs font-bold line-clamp-2 mb-2"
+            style="color: var(--color-text-main)"
+          >
+            Montre Minimaliste Edition Limitée
+          </h3>
+
+          <div class="flex items-center gap-1 mb-3">
+            <div class="flex text-[8px]" style="color: var(--color-rating)">
+              <i class="fas fa-star"></i><i class="fas fa-star"></i
+              ><i class="fas fa-star"></i><i class="fas fa-star"></i
+              ><i class="fas fa-star"></i>
+            </div>
+          </div>
+
+          <div class="mt-auto flex items-center justify-between">
+            <span
+              class="text-sm font-black"
+              style="color: var(--color-text-main)"
+              >89,00€</span
+            >
+
+            <button
+              class="btn-details flex items-center gap-1 p-1.5 rounded transition hover:bg-black/5 dark:hover:bg-white/5"
+            >
+              <span class="hidden sm:inline">VOIR</span>
+              <!-- <i class="fas fa-plus-circle sm:hidden text-lg"></i> -->
+              <i class="fas fa-arrow-right hidden sm:inline text-[10px]"></i>
+            </button>
+          </div>
+        </div>
+      </article>
+      <article
+        class="product-card group relative flex flex-col h-full shadow-sm"
+      >
+        <div
+          class="aspect-square w-full overflow-hidden relative border-b"
+          style="
+            border-color: var(--color-border);
+            background: var(--color-pure);
+          "
+        >
+          <img src="assets/img4.jpeg" class="w-full h-full object-cover" />
+
+          <div
+            class="absolute top-2 left-2 view-badge"
+            style="
+              background-color: rgba(255, 255, 255, 0.9);
+              backdrop-filter: blur(4px);
+            "
+          >
+            <i class="fas fa-eye" style="color: var(--color-primary)"></i>
+            <span>1,425</span>
+          </div>
+
+          <button
+            class="absolute top-2 right-2 w-7 h-7 rounded-full bg-white/90 flex items-center justify-center shadow-sm"
+          >
+            <i
+              class="fas fa-heart text-xs"
+              style="color: var(--color-text-sub)"
+            ></i>
+          </button>
+        </div>
+
+        <div class="p-3 flex flex-col flex-grow">
+          <span
+            class="text-[9px] font-black uppercase tracking-widest mb-1"
+            style="color: var(--color-primary)"
+            >Accessoires</span
+          >
+
+          <h3
+            class="text-xs font-bold line-clamp-2 mb-2"
+            style="color: var(--color-text-main)"
+          >
+            Montre Minimaliste Edition Limitée
+          </h3>
+
+          <div class="flex items-center gap-1 mb-3">
+            <div class="flex text-[8px]" style="color: var(--color-rating)">
+              <i class="fas fa-star"></i><i class="fas fa-star"></i
+              ><i class="fas fa-star"></i><i class="fas fa-star"></i
+              ><i class="fas fa-star"></i>
+            </div>
+          </div>
+
+          <div class="mt-auto flex items-center justify-between">
+            <span
+              class="text-sm font-black"
+              style="color: var(--color-text-main)"
+              >89,00€</span
+            >
+
+            <button
+              class="btn-details flex items-center gap-1 p-1.5 rounded transition hover:bg-black/5 dark:hover:bg-white/5"
+            >
+              <span class="hidden sm:inline">VOIR</span>
+              <!-- <i class="fas fa-plus-circle sm:hidden text-lg"></i> -->
+              <i class="fas fa-arrow-right hidden sm:inline text-[10px]"></i>
+            </button>
+          </div>
+        </div>
+      </article>
+
+      <article
+        class="product-card group relative flex flex-col h-full shadow-sm"
+      >
+        <div
+          class="aspect-square w-full overflow-hidden relative border-b"
+          style="
+            border-color: var(--color-border);
+            background: var(--color-pure);
+          "
+        >
+          <img src="assets/img5.jpeg" class="w-full h-full object-cover" />
+
+          <div
+            class="absolute top-2 left-2 view-badge"
+            style="
+              background-color: rgba(255, 255, 255, 0.9);
+              backdrop-filter: blur(4px);
+            "
+          >
+            <i class="fas fa-eye" style="color: var(--color-primary)"></i>
+            <span>1,425</span>
+          </div>
+
+          <button
+            class="absolute top-2 right-2 w-7 h-7 rounded-full bg-white/90 flex items-center justify-center shadow-sm"
+          >
+            <i
+              class="fas fa-heart text-xs"
+              style="color: var(--color-text-sub)"
+            ></i>
+          </button>
+        </div>
+
+        <div class="p-3 flex flex-col flex-grow">
+          <span
+            class="text-[9px] font-black uppercase tracking-widest mb-1"
+            style="color: var(--color-primary)"
+            >Accessoires</span
+          >
+
+          <h3
+            class="text-xs font-bold line-clamp-2 mb-2"
+            style="color: var(--color-text-main)"
+          >
+            Montre Minimaliste Edition Limitée
+          </h3>
+
+          <div class="flex items-center gap-1 mb-3">
+            <div class="flex text-[8px]" style="color: var(--color-rating)">
+              <i class="fas fa-star"></i><i class="fas fa-star"></i
+              ><i class="fas fa-star"></i><i class="fas fa-star"></i
+              ><i class="fas fa-star"></i>
+            </div>
+          </div>
+
+          <div class="mt-auto flex items-center justify-between">
+            <span
+              class="text-sm font-black"
+              style="color: var(--color-text-main)"
+              >89,00€</span
+            >
+
+            <button
+              class="btn-details flex items-center gap-1 p-1.5 rounded transition hover:bg-black/5 dark:hover:bg-white/5"
+            >
+              <span class="hidden sm:inline">VOIR</span>
+              <!-- <i class="fas fa-plus-circle sm:hidden text-lg"></i> -->
+              <i class="fas fa-arrow-right hidden sm:inline text-[10px]"></i>
+            </button>
+          </div>
+        </div>
+      </article>
+
+      <article
+        class="product-card group relative flex flex-col h-full shadow-sm"
+      >
+        <div
+          class="aspect-square w-full overflow-hidden relative border-b"
+          style="
+            border-color: var(--color-border);
+            background: var(--color-pure);
+          "
+        >
+          <img src="assets/img6.jpeg" class="w-full h-full object-cover" />
+
+          <div
+            class="absolute top-2 left-2 view-badge"
+            style="
+              background-color: rgba(255, 255, 255, 0.9);
+              backdrop-filter: blur(4px);
+            "
+          >
+            <i class="fas fa-eye" style="color: var(--color-primary)"></i>
+            <span>1,425</span>
+          </div>
+
+          <button
+            class="absolute top-2 right-2 w-7 h-7 rounded-full bg-white/90 flex items-center justify-center shadow-sm"
+          >
+            <i
+              class="fas fa-heart text-xs"
+              style="color: var(--color-text-sub)"
+            ></i>
+          </button>
+        </div>
+
+        <div class="p-3 flex flex-col flex-grow">
+          <span
+            class="text-[9px] font-black uppercase tracking-widest mb-1"
+            style="color: var(--color-primary)"
+            >Accessoires</span
+          >
+
+          <h3
+            class="text-xs font-bold line-clamp-2 mb-2"
+            style="color: var(--color-text-main)"
+          >
+            Montre Minimaliste Edition Limitée
+          </h3>
+
+          <div class="flex items-center gap-1 mb-3">
+            <div class="flex text-[8px]" style="color: var(--color-rating)">
+              <i class="fas fa-star"></i><i class="fas fa-star"></i
+              ><i class="fas fa-star"></i><i class="fas fa-star"></i
+              ><i class="fas fa-star"></i>
+            </div>
+          </div>
+
+          <div class="mt-auto flex items-center justify-between">
+            <span
+              class="text-sm font-black"
+              style="color: var(--color-text-main)"
+              >89,00€</span
+            >
+
+            <button
+              class="btn-details flex items-center gap-1 p-1.5 rounded transition hover:bg-black/5 dark:hover:bg-white/5"
+            >
+              <span class="hidden sm:inline">VOIR</span>
+              <!-- <i class="fas fa-plus-circle sm:hidden text-lg"></i> -->
+              <i class="fas fa-arrow-right hidden sm:inline text-[10px]"></i>
+            </button>
+          </div>
+        </div>
+      </article>
+      <article
+        class="product-card group relative flex flex-col h-full shadow-sm"
+      >
+        <div
+          class="aspect-square w-full overflow-hidden relative border-b"
+          style="
+            border-color: var(--color-border);
+            background: var(--color-pure);
+          "
+        >
+          <img src="assets/img7.jpeg" class="w-full h-full object-cover" />
+
+          <div
+            class="absolute top-2 left-2 view-badge"
+            style="
+              background-color: rgba(255, 255, 255, 0.9);
+              backdrop-filter: blur(4px);
+            "
+          >
+            <i class="fas fa-eye" style="color: var(--color-primary)"></i>
+            <span>1,425</span>
+          </div>
+
+          <button
+            class="absolute top-2 right-2 w-7 h-7 rounded-full bg-white/90 flex items-center justify-center shadow-sm"
+          >
+            <i
+              class="fas fa-heart text-xs"
+              style="color: var(--color-text-sub)"
+            ></i>
+          </button>
+        </div>
+
+        <div class="p-3 flex flex-col flex-grow">
+          <span
+            class="text-[9px] font-black uppercase tracking-widest mb-1"
+            style="color: var(--color-primary)"
+            >Accessoires</span
+          >
+
+          <h3
+            class="text-xs font-bold line-clamp-2 mb-2"
+            style="color: var(--color-text-main)"
+          >
+            Montre Minimaliste Edition Limitée
+          </h3>
+
+          <div class="flex items-center gap-1 mb-3">
+            <div class="flex text-[8px]" style="color: var(--color-rating)">
+              <i class="fas fa-star"></i><i class="fas fa-star"></i
+              ><i class="fas fa-star"></i><i class="fas fa-star"></i
+              ><i class="fas fa-star"></i>
+            </div>
+          </div>
+
+          <div class="mt-auto flex items-center justify-between">
+            <span
+              class="text-sm font-black"
+              style="color: var(--color-text-main)"
+              >89,00€</span
+            >
+
+            <button
+              class="btn-details flex items-center gap-1 p-1.5 rounded transition hover:bg-black/5 dark:hover:bg-white/5"
+            >
+              <span class="hidden sm:inline">VOIR</span>
+              <!-- <i class="fas fa-plus-circle sm:hidden text-lg"></i> -->
+              <i class="fas fa-arrow-right hidden sm:inline text-[10px]"></i>
+            </button>
+          </div>
+        </div>
+      </article>
+      <article
+        class="product-card group relative flex flex-col h-full shadow-sm"
+      >
+        <div
+          class="aspect-square w-full overflow-hidden relative bg-white border-b"
+          style="border-color: var(--color-border)"
+        >
+          <img src="assets/img6.jpeg" class="w-full h-full object-cover" />
+
+          <div
+            class="absolute top-2 left-2 view-badge"
+            style="
+              background-color: rgba(255, 255, 255, 0.9);
+              backdrop-filter: blur(4px);
+            "
+          >
+            <i class="fas fa-eye" style="color: var(--color-primary)"></i>
+            <span>1,425</span>
+          </div>
+
+          <button
+            class="absolute top-2 right-2 w-7 h-7 rounded-full bg-white/90 flex items-center justify-center shadow-sm"
+          >
+            <i
+              class="fas fa-heart text-xs"
+              style="color: var(--color-text-sub)"
+            ></i>
+          </button>
+        </div>
+
+        <div class="p-3 flex flex-col flex-grow">
+          <span
+            class="text-[9px] font-black uppercase tracking-widest mb-1"
+            style="color: var(--color-primary)"
+            >Accessoires</span
+          >
+
+          <h3
+            class="text-xs font-bold line-clamp-2 mb-2"
+            style="color: var(--color-text-main)"
+          >
+            Montre Minimaliste Edition Limitée
+          </h3>
+
+          <div class="flex items-center gap-1 mb-3">
+            <div class="flex text-[8px]" style="color: var(--color-rating)">
+              <i class="fas fa-star"></i><i class="fas fa-star"></i
+              ><i class="fas fa-star"></i><i class="fas fa-star"></i
+              ><i class="fas fa-star"></i>
+            </div>
+          </div>
+
+          <div class="mt-auto flex items-center justify-between">
+            <span
+              class="text-sm font-black"
+              style="color: var(--color-text-main)"
+              >89,00€</span
+            >
+
+            <button
+              class="btn-details flex items-center gap-1 p-1.5 rounded transition hover:bg-black/5 dark:hover:bg-white/5"
+            >
+              <span class="hidden sm:inline">VOIR</span>
+              <!-- <i class="fas fa-plus-circle sm:hidden text-lg"></i> -->
+              <i class="fas fa-arrow-right hidden sm:inline text-[10px]"></i>
+            </button>
+          </div>
+        </div>
+      </article>
+      <article
+        class="product-card group relative flex flex-col h-full shadow-sm"
+      >
+        <div
+          class="aspect-square w-full overflow-hidden relative bg-white border-b"
+          style="border-color: var(--color-border)"
+        >
+          <img src="assets/img6.jpeg" class="w-full h-full object-cover" />
+
+          <div
+            class="absolute top-2 left-2 view-badge"
+            style="
+              background-color: rgba(255, 255, 255, 0.9);
+              backdrop-filter: blur(4px);
+            "
+          >
+            <i class="fas fa-eye" style="color: var(--color-primary)"></i>
+            <span>1,425</span>
+          </div>
+
+          <button
+            class="absolute top-2 right-2 w-7 h-7 rounded-full bg-white/90 flex items-center justify-center shadow-sm"
+          >
+            <i
+              class="fas fa-heart text-xs"
+              style="color: var(--color-text-sub)"
+            ></i>
+          </button>
+        </div>
+
+        <div class="p-3 flex flex-col flex-grow">
+          <span
+            class="text-[9px] font-black uppercase tracking-widest mb-1"
+            style="color: var(--color-primary)"
+            >Accessoires</span
+          >
+
+          <h3
+            class="text-xs font-bold line-clamp-2 mb-2"
+            style="color: var(--color-text-main)"
+          >
+            Montre Minimaliste Edition Limitée
+          </h3>
+
+          <div class="flex items-center gap-1 mb-3">
+            <div class="flex text-[8px]" style="color: var(--color-rating)">
+              <i class="fas fa-star"></i><i class="fas fa-star"></i
+              ><i class="fas fa-star"></i><i class="fas fa-star"></i
+              ><i class="fas fa-star"></i>
+            </div>
+          </div>
+
+          <div class="mt-auto flex items-center justify-between">
+            <span
+              class="text-sm font-black"
+              style="color: var(--color-text-main)"
+              >89,00€</span
+            >
+
+            <button
+              class="btn-details flex items-center gap-1 p-1.5 rounded transition hover:bg-black/5 dark:hover:bg-white/5"
+            >
+              <span class="hidden sm:inline">VOIR</span>
+              <!-- <i class="fas fa-plus-circle sm:hidden text-lg"></i> -->
+              <i class="fas fa-arrow-right hidden sm:inline text-[10px]"></i>
+            </button>
+          </div>
+        </div>
+      </article>
+    </div>
+
+    <section class="mx-auto max-w-7xl px-4 mb-8 mt-4">
+      <div
+        class="flex flex-col md:flex-row items-center justify-between p-4 rounded-2xl shadow-lg border"
+        style="
+          background-color: var(--color-accent);
+          border-color: var(--color-border);
+        "
+      >
+        <div class="flex items-center gap-4">
+          <h2
+            class="text-lg md:text-xl font-black text-white uppercase tracking-tighter"
+          >
+            Spéciale Promo !! | Stock Limité
+          </h2>
+          <button
+            class="hidden md:block px-4 py-1.5 rounded-lg text-[10px] font-bold bg-white/20 text-white border border-white/30 hover:bg-white/30 transition"
+          >
+            VOIR PLUS...
+          </button>
+        </div>
+
+        <div class="flex items-center gap-3 mt-4 md:mt-0">
+          <span class="text-xs font-bold text-white/90 uppercase"
+            >Fin dans :</span
+          >
+          <div class="flex items-center gap-2">
+            <div
+              class="flex items-center gap-1 bg-white px-3 py-2 rounded-xl shadow-inner"
+            >
+              <span
+                class="text-sm font-black"
+                style="color: var(--color-accent)"
+                >14j</span
+              >
+              <span class="opacity-30">:</span>
+              <span
+                class="text-sm font-black"
+                style="color: var(--color-accent)"
+                >12h</span
+              >
+              <span class="opacity-30">:</span>
+              <span
+                class="text-sm font-black"
+                style="color: var(--color-accent)"
+                >35m</span
+              >
+              <span class="opacity-30">:</span>
+              <span
+                class="text-sm font-black"
+                style="color: var(--color-accent)"
+                >23s</span
+              >
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <div class="product-grid px-4 py-8 max-w-7xl mx-auto">
+      <article
+        class="product-card group relative flex flex-col h-full shadow-sm"
+      >
+        <div
+          class="aspect-square w-full overflow-hidden relative bg-white border-b"
+          style="border-color: var(--color-border)"
+        >
+          <img src="assets/img5.jpeg" class="w-full h-full object-cover" />
+
+          <div
+            class="absolute top-2 left-2 view-badge"
+            style="
+              background-color: rgba(255, 255, 255, 0.9);
+              backdrop-filter: blur(4px);
+            "
+          >
+            <i class="fas fa-eye" style="color: var(--color-primary)"></i>
+            <span>1,425</span>
+          </div>
+
+          <button
+            class="absolute top-2 right-2 w-7 h-7 rounded-full bg-white/90 flex items-center justify-center shadow-sm"
+          >
+            <i
+              class="fas fa-heart text-xs"
+              style="color: var(--color-text-sub)"
+            ></i>
+          </button>
+        </div>
+
+        <div class="p-3 flex flex-col flex-grow">
+          <span
+            class="text-[9px] font-black uppercase tracking-widest mb-1"
+            style="color: var(--color-primary)"
+            >Accessoires</span
+          >
+
+          <h3
+            class="text-xs font-bold line-clamp-2 mb-2"
+            style="color: var(--color-text-main)"
+          >
+            Montre Minimaliste Edition Limitée
+          </h3>
+
+          <div class="flex items-center gap-1 mb-3">
+            <div class="flex text-[8px]" style="color: var(--color-rating)">
+              <i class="fas fa-star"></i><i class="fas fa-star"></i
+              ><i class="fas fa-star"></i><i class="fas fa-star"></i
+              ><i class="fas fa-star"></i>
+            </div>
+          </div>
+
+          <div class="mt-auto flex items-center justify-between">
+            <span
+              class="text-sm font-black"
+              style="color: var(--color-text-main)"
+              >89,00€</span
+            >
+
+            <button
+              class="btn-details flex items-center gap-1 p-1.5 rounded transition hover:bg-black/5 dark:hover:bg-white/5"
+            >
+              <span class="hidden sm:inline">VOIR</span>
+              <!-- <i class="fas fa-plus-circle sm:hidden text-lg"></i> -->
+              <i class="fas fa-arrow-right hidden sm:inline text-[10px]"></i>
+            </button>
+          </div>
+        </div>
+      </article>
+      <article
+        class="product-card group relative flex flex-col h-full shadow-sm"
+      >
+        <div
+          class="aspect-square w-full overflow-hidden relative bg-white border-b"
+          style="border-color: var(--color-border)"
+        >
+          <img src="assets/img6.jpeg" class="w-full h-full object-cover" />
+
+          <div
+            class="absolute top-2 left-2 view-badge"
+            style="
+              background-color: rgba(255, 255, 255, 0.9);
+              backdrop-filter: blur(4px);
+            "
+          >
+            <i class="fas fa-eye" style="color: var(--color-primary)"></i>
+            <span>1,425</span>
+          </div>
+
+          <button
+            class="absolute top-2 right-2 w-7 h-7 rounded-full bg-white/90 flex items-center justify-center shadow-sm"
+          >
+            <i
+              class="fas fa-heart text-xs"
+              style="color: var(--color-text-sub)"
+            ></i>
+          </button>
+        </div>
+
+        <div class="p-3 flex flex-col flex-grow">
+          <span
+            class="text-[9px] font-black uppercase tracking-widest mb-1"
+            style="color: var(--color-primary)"
+            >Accessoires</span
+          >
+
+          <h3
+            class="text-xs font-bold line-clamp-2 mb-2"
+            style="color: var(--color-text-main)"
+          >
+            Montre Minimaliste Edition Limitée
+          </h3>
+
+          <div class="flex items-center gap-1 mb-3">
+            <div class="flex text-[8px]" style="color: var(--color-rating)">
+              <i class="fas fa-star"></i><i class="fas fa-star"></i
+              ><i class="fas fa-star"></i><i class="fas fa-star"></i
+              ><i class="fas fa-star"></i>
+            </div>
+          </div>
+
+          <div class="mt-auto flex items-center justify-between">
+            <span
+              class="text-sm font-black"
+              style="color: var(--color-text-main)"
+              >89,00€</span
+            >
+
+            <button
+              class="btn-details flex items-center gap-1 p-1.5 rounded transition hover:bg-black/5 dark:hover:bg-white/5"
+            >
+              <span class="hidden sm:inline">VOIR</span>
+              <!-- <i class="fas fa-plus-circle sm:hidden text-lg"></i> -->
+              <i class="fas fa-arrow-right hidden sm:inline text-[10px]"></i>
+            </button>
+          </div>
+        </div>
+      </article>
+      <article
+        class="product-card group relative flex flex-col h-full shadow-sm"
+      >
+        <div
+          class="aspect-square w-full overflow-hidden relative bg-white border-b"
+          style="border-color: var(--color-border)"
+        >
+          <img src="assets/image.png" class="w-full h-full object-cover" />
+
+          <div
+            class="absolute top-2 left-2 view-badge"
+            style="
+              background-color: rgba(255, 255, 255, 0.9);
+              backdrop-filter: blur(4px);
+            "
+          >
+            <i class="fas fa-eye" style="color: var(--color-primary)"></i>
+            <span>1,425</span>
+          </div>
+
+          <button
+            class="absolute top-2 right-2 w-7 h-7 rounded-full bg-white/90 flex items-center justify-center shadow-sm"
+          >
+            <i
+              class="fas fa-heart text-xs"
+              style="color: var(--color-text-sub)"
+            ></i>
+          </button>
+        </div>
+
+        <div class="p-3 flex flex-col flex-grow">
+          <span
+            class="text-[9px] font-black uppercase tracking-widest mb-1"
+            style="color: var(--color-primary)"
+            >Accessoires</span
+          >
+
+          <h3
+            class="text-xs font-bold line-clamp-2 mb-2"
+            style="color: var(--color-text-main)"
+          >
+            Montre Minimaliste Edition Limitée
+          </h3>
+
+          <div class="flex items-center gap-1 mb-3">
+            <div class="flex text-[8px]" style="color: var(--color-rating)">
+              <i class="fas fa-star"></i><i class="fas fa-star"></i
+              ><i class="fas fa-star"></i><i class="fas fa-star"></i
+              ><i class="fas fa-star"></i>
+            </div>
+          </div>
+
+          <div class="mt-auto flex items-center justify-between">
+            <span
+              class="text-sm font-black"
+              style="color: var(--color-text-main)"
+              >89,00€</span
+            >
+
+            <button
+              class="btn-details flex items-center gap-1 p-1.5 rounded transition hover:bg-black/5 dark:hover:bg-white/5"
+            >
+              <span class="hidden sm:inline">VOIR</span>
+              <!-- <i class="fas fa-plus-circle sm:hidden text-lg"></i> -->
+              <i class="fas fa-arrow-right hidden sm:inline text-[10px]"></i>
+            </button>
+          </div>
+        </div>
+      </article>
+      <article
+        class="product-card group relative flex flex-col h-full shadow-sm"
+      >
+        <div
+          class="aspect-square w-full overflow-hidden relative bg-white border-b"
+          style="border-color: var(--color-border)"
+        >
+          <img src="assets/image.png" class="w-full h-full object-cover" />
+
+          <div
+            class="absolute top-2 left-2 view-badge"
+            style="
+              background-color: rgba(255, 255, 255, 0.9);
+              backdrop-filter: blur(4px);
+            "
+          >
+            <i class="fas fa-eye" style="color: var(--color-primary)"></i>
+            <span>1,425</span>
+          </div>
+
+          <button
+            class="absolute top-2 right-2 w-7 h-7 rounded-full bg-white/90 flex items-center justify-center shadow-sm"
+          >
+            <i
+              class="fas fa-heart text-xs"
+              style="color: var(--color-text-sub)"
+            ></i>
+          </button>
+        </div>
+
+        <div class="p-3 flex flex-col flex-grow">
+          <span
+            class="text-[9px] font-black uppercase tracking-widest mb-1"
+            style="color: var(--color-primary)"
+            >Accessoires</span
+          >
+
+          <h3
+            class="text-xs font-bold line-clamp-2 mb-2"
+            style="color: var(--color-text-main)"
+          >
+            Montre Minimaliste Edition Limitée
+          </h3>
+
+          <div class="flex items-center gap-1 mb-3">
+            <div class="flex text-[8px]" style="color: var(--color-rating)">
+              <i class="fas fa-star"></i><i class="fas fa-star"></i
+              ><i class="fas fa-star"></i><i class="fas fa-star"></i
+              ><i class="fas fa-star"></i>
+            </div>
+          </div>
+
+          <div class="mt-auto flex items-center justify-between">
+            <span
+              class="text-sm font-black"
+              style="color: var(--color-text-main)"
+              >89,00€</span
+            >
+
+            <button
+              class="btn-details flex items-center gap-1 p-1.5 rounded transition hover:bg-black/5 dark:hover:bg-white/5"
+            >
+              <span class="hidden sm:inline">VOIR</span>
+              <!-- <i class="fas fa-plus-circle sm:hidden text-lg"></i> -->
+              <i class="fas fa-arrow-right hidden sm:inline text-[10px]"></i>
+            </button>
+          </div>
+        </div>
+      </article>
+      <article
+        class="product-card group relative flex flex-col h-full shadow-sm"
+      >
+        <div
+          class="aspect-square w-full overflow-hidden relative bg-white border-b"
+          style="border-color: var(--color-border)"
+        >
+          <img src="assets/image.png" class="w-full h-full object-cover" />
+
+          <div
+            class="absolute top-2 left-2 view-badge"
+            style="
+              background-color: rgba(255, 255, 255, 0.9);
+              backdrop-filter: blur(4px);
+            "
+          >
+            <i class="fas fa-eye" style="color: var(--color-primary)"></i>
+            <span>1,425</span>
+          </div>
+
+          <button
+            class="absolute top-2 right-2 w-7 h-7 rounded-full bg-white/90 flex items-center justify-center shadow-sm"
+          >
+            <i
+              class="fas fa-heart text-xs"
+              style="color: var(--color-text-sub)"
+            ></i>
+          </button>
+        </div>
+
+        <div class="p-3 flex flex-col flex-grow">
+          <span
+            class="text-[9px] font-black uppercase tracking-widest mb-1"
+            style="color: var(--color-primary)"
+            >Accessoires</span
+          >
+
+          <h3
+            class="text-xs font-bold line-clamp-2 mb-2"
+            style="color: var(--color-text-main)"
+          >
+            Montre Minimaliste Edition Limitée
+          </h3>
+
+          <div class="flex items-center gap-1 mb-3">
+            <div class="flex text-[8px]" style="color: var(--color-rating)">
+              <i class="fas fa-star"></i><i class="fas fa-star"></i
+              ><i class="fas fa-star"></i><i class="fas fa-star"></i
+              ><i class="fas fa-star"></i>
+            </div>
+          </div>
+
+          <div class="mt-auto flex items-center justify-between">
+            <span
+              class="text-sm font-black"
+              style="color: var(--color-text-main)"
+              >89,00€</span
+            >
+
+            <button
+              class="btn-details flex items-center gap-1 p-1.5 rounded transition hover:bg-black/5 dark:hover:bg-white/5"
+            >
+              <span class="hidden sm:inline">VOIR</span>
+              <!-- <i class="fas fa-plus-circle sm:hidden text-lg"></i> -->
+              <i class="fas fa-arrow-right hidden sm:inline text-[10px]"></i>
+            </button>
+          </div>
+        </div>
+      </article>
+      <article
+        class="product-card group relative flex flex-col h-full shadow-sm"
+      >
+        <div
+          class="aspect-square w-full overflow-hidden relative bg-white border-b"
+          style="border-color: var(--color-border)"
+        >
+          <img src="assets/image.png" class="w-full h-full object-cover" />
+
+          <div
+            class="absolute top-2 left-2 view-badge"
+            style="
+              background-color: rgba(255, 255, 255, 0.9);
+              backdrop-filter: blur(4px);
+            "
+          >
+            <i class="fas fa-eye" style="color: var(--color-primary)"></i>
+            <span>1,425</span>
+          </div>
+
+          <button
+            class="absolute top-2 right-2 w-7 h-7 rounded-full bg-white/90 flex items-center justify-center shadow-sm"
+          >
+            <i
+              class="fas fa-heart text-xs"
+              style="color: var(--color-text-sub)"
+            ></i>
+          </button>
+        </div>
+
+        <div class="p-3 flex flex-col flex-grow">
+          <span
+            class="text-[9px] font-black uppercase tracking-widest mb-1"
+            style="color: var(--color-primary)"
+            >Accessoires</span
+          >
+
+          <h3
+            class="text-xs font-bold line-clamp-2 mb-2"
+            style="color: var(--color-text-main)"
+          >
+            Montre Minimaliste Edition Limitée
+          </h3>
+
+          <div class="flex items-center gap-1 mb-3">
+            <div class="flex text-[8px]" style="color: var(--color-rating)">
+              <i class="fas fa-star"></i><i class="fas fa-star"></i
+              ><i class="fas fa-star"></i><i class="fas fa-star"></i
+              ><i class="fas fa-star"></i>
+            </div>
+          </div>
+
+          <div class="mt-auto flex items-center justify-between">
+            <span
+              class="text-sm font-black"
+              style="color: var(--color-text-main)"
+              >89,00€</span
+            >
+
+            <button
+              class="btn-details flex items-center gap-1 p-1.5 rounded transition hover:bg-black/5 dark:hover:bg-white/5"
+            >
+              <span class="hidden sm:inline">VOIR</span>
+              <!-- <i class="fas fa-plus-circle sm:hidden text-lg"></i> -->
+              <i class="fas fa-arrow-right hidden sm:inline text-[10px]"></i>
+            </button>
+          </div>
+        </div>
+      </article>
+    </div>
+  </body>
+</html>

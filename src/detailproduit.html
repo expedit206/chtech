@@ -1,0 +1,444 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Document</title>
+    <link href="./output.css" rel="stylesheet" />
+    <link
+      rel="stylesheet"
+      href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css"
+    />
+  </head>
+  <body>
+    <header
+      class="fixed top-0 z-50 w-full shadow-sm border-b"
+      style="
+        background-color: var(--color-surface);
+        border-color: var(--color-border);
+      "
+    >
+      <div class="flex items-center justify-between px-4 h-14 gap-4">
+        <h1
+          class="text-xl font-black tracking-tighter flex-shrink-0"
+          style="color: var(--color-primary)"
+        >
+          chtech
+        </h1>
+
+        <div class="hidden md:flex flex-1 max-w-xl relative group">
+          <i
+            class="fas fa-search absolute left-3 top-1/2 -translate-y-1/2 text-xs transition-colors group-focus-within:text-primary"
+            style="color: var(--color-text-sub)"
+          ></i>
+
+          <input
+            type="text"
+            placeholder="Rechercher..."
+            class="w-full pl-10 pr-4 py-2 rounded-full text-sm border-none outline-none focus:ring-2 focus:ring-[var(--color-primary)] transition-all"
+            style="
+              background-color: var(--color-bg);
+              color: var(--color-text-main);
+            "
+          />
+        </div>
+
+        <div class="flex items-center gap-3 md:gap-4">
+          <button class="md:hidden" style="color: var(--color-text-main)">
+            <i class="fas fa-search text-lg"></i>
+          </button>
+
+          <div class="relative cursor-pointer">
+            <i
+              class="fas fa-shopping-cart text-lg"
+              style="color: var(--color-text-main)"
+            ></i>
+            <span
+              class="absolute -top-1.5 -right-1.5 flex items-center justify-center rounded-full text-[9px] font-bold"
+              style="
+                background-color: var(--color-accent);
+                color: var(--color-pure);
+                width: 16px;
+                height: 16px;
+                border: 2px solid var(--color-surface);
+              "
+            >
+              2
+            </span>
+          </div>
+
+          <button
+            class="w-8 h-8 rounded-full flex items-center justify-center shadow-md transition-transform active:scale-90"
+            style="
+              background-color: var(--color-primary);
+              color: var(--color-pure);
+            "
+          >
+            <i class="fas fa-plus text-sm"></i>
+          </button>
+
+          <div
+            class="p-0.5 rounded-full border-2"
+            style="border-color: var(--color-primary)"
+          >
+            <img
+              src="https://ui-avatars.com/api/?name=CH&background=6366f1&color=fff"
+              class="w-7 h-7 rounded-full"
+            />
+          </div>
+        </div>
+      </div>
+
+      <div
+        class="flex justify-center border-t h-12"
+        style="border-color: var(--color-border)"
+      >
+        <nav class="flex h-full w-full max-w-2xl">
+          <a
+            href="#"
+            class="group relative flex-1 flex items-center justify-center border-b-4"
+            style="
+              border-color: var(--color-primary);
+              color: var(--color-primary);
+            "
+          >
+            <i class="fas fa-home text-xl"></i>
+          </a>
+
+          <a
+            href="blogs.html"
+            class="group relative flex-1 flex items-center justify-center hover:bg-black/5 dark:hover:bg-white/5"
+            style="color: var(--color-text-sub)"
+          >
+            <i class="fas fa-newspaper text-xl"></i>
+          </a>
+
+          <a
+            href="#"
+            class="group relative flex-1 flex items-center justify-center hover:bg-black/5 dark:hover:bg-white/5"
+            style="color: var(--color-text-sub)"
+          >
+            <div class="relative">
+              <i class="fas fa-bell text-xl"></i>
+              <span
+                class="absolute top-0 right-0 w-2 h-2 rounded-full bg-rose-500 border border-white"
+              ></span>
+            </div>
+          </a>
+
+          <a
+            href="#"
+            class="group relative flex-1 flex items-center justify-center hover:bg-black/5 dark:hover:bg-white/5"
+            style="color: var(--color-text-sub)"
+          >
+            <i class="fas fa-comments text-xl"></i>
+          </a>
+
+          <a
+            href="#"
+            class="group relative flex-1 flex items-center justify-center hover:bg-black/5 dark:hover:bg-white/5"
+            style="color: var(--color-text-sub)"
+          >
+            <i class="fas fa-chart-line text-xl"></i>
+          </a>
+        </nav>
+      </div>
+    </header>
+
+    <main class="max-w-7xl mx-auto px-4 py-8 mt-20">
+      <nav
+        class="flex items-center gap-2 mb-8 text-[10px] font-bold uppercase tracking-widest"
+        style="color: var(--color-text-sub)"
+      >
+        <a href="#">Électronique</a> <span class="opacity-30">/</span>
+        <a href="#">Audio</a> <span class="opacity-30">/</span>
+        <span style="color: var(--color-primary)">Casque Bluetooth Pro</span>
+      </nav>
+
+      <div class="flex flex-col lg:flex-row gap-10">
+        <div class="lg:w-1/2 flex gap-4">
+          <div class="flex flex-col gap-3">
+            <div
+              class="w-16 h-16 rounded-xl border-2 overflow-hidden cursor-pointer"
+              style="border-color: var(--color-primary)"
+            >
+              <img
+                src="https://images.unsplash.com/photo-1505740420928-5e560c06d30e?q=80&w=200"
+                class="w-full h-full object-cover"
+              />
+            </div>
+            <div
+              class="w-16 h-16 rounded-xl border overflow-hidden cursor-pointer hover:border-primary"
+              style="border-color: var(--color-border)"
+            >
+              <img
+                src="https://images.unsplash.com/photo-1484704849700-f032a568e944?q=80&w=200"
+                class="w-full h-full object-cover"
+              />
+            </div>
+          </div>
+
+          <div
+            class="flex-1 rounded-3xl overflow-hidden border bg-white relative"
+            style="border-color: var(--color-border)"
+          >
+            <img
+              src="https://images.unsplash.com/photo-1505740420928-5e560c06d30e?q=80&w=800"
+              class="w-full h-auto object-contain"
+            />
+            <button
+              class="absolute top-4 right-4 w-10 h-10 rounded-full bg-white shadow-md flex items-center justify-center text-rose-500 hover:scale-110 transition-transform"
+            >
+              <i class="far fa-heart"></i>
+            </button>
+          </div>
+        </div>
+
+        <div class="lg:w-1/2 space-y-6">
+          <header>
+            <div class="flex items-center gap-2 mb-2">
+              <span
+                class="px-2 py-0.5 rounded text-[9px] font-black uppercase"
+                style="
+                  background-color: var(--color-accent);
+                  color: var(--color-pure);
+                "
+                >Top Vente</span
+              >
+              <div class="flex text-amber-400 text-xs">
+                <i class="fas fa-star"></i><i class="fas fa-star"></i
+                ><i class="fas fa-star"></i><i class="fas fa-star"></i
+                ><i class="fas fa-star-half-alt"></i>
+                <span class="ml-2 text-slate-400 font-bold"
+                  >(4.8/5 - 12 avis)</span
+                >
+              </div>
+            </div>
+            <h1
+              class="text-3xl font-black tracking-tighter"
+              style="color: var(--color-text-main)"
+            >
+              Casque Sans Fil Premium Noise Cancelling v2
+            </h1>
+            <p class="text-sm mt-2" style="color: var(--color-text-sub)">
+              Marque : <span class="font-bold">Sony Audio</span> | Référence :
+              CT-8829
+            </p>
+          </header>
+
+          <div
+            class="p-6 rounded-3xl border shadow-sm"
+            style="
+              background-color: var(--color-surface);
+              border-color: var(--color-border);
+            "
+          >
+            <div class="flex items-end gap-3 mb-4">
+              <span
+                class="text-4xl font-black"
+                style="color: var(--color-primary)"
+                >199.00 €</span
+              >
+              <span
+                class="text-lg line-through opacity-40 mb-1"
+                style="color: var(--color-text-main)"
+                >249.00 €</span
+              >
+            </div>
+            <div
+              class="flex items-center gap-2 text-xs font-bold text-emerald-500"
+            >
+              <i class="fas fa-check-circle"></i> En stock (15 unités
+              disponibles)
+            </div>
+          </div>
+
+          <div>
+            <p
+              class="text-xs font-black uppercase mb-3"
+              style="color: var(--color-text-main)"
+            >
+              Couleur : Noir Sidéral
+            </p>
+            <div class="flex gap-3">
+              <button
+                class="w-8 h-8 rounded-full border-2 p-0.5"
+                style="border-color: var(--color-primary)"
+              >
+                <div class="w-full h-full rounded-full bg-slate-900"></div>
+              </button>
+              <button
+                class="w-8 h-8 rounded-full border p-0.5 border-transparent"
+              >
+                <div
+                  class="w-full h-full rounded-full bg-slate-200 shadow-inner"
+                ></div>
+              </button>
+            </div>
+          </div>
+
+          <div class="flex gap-4">
+            <button
+              class="flex-1 py-4 rounded-2xl font-black transition-transform active:scale-95 shadow-lg shadow-indigo-100"
+              style="
+                background-color: var(--color-primary);
+                color: var(--color-pure);
+              "
+            >
+              <i class="fas fa-shopping-cart mr-2"></i> ACHETER MAINTENANT
+            </button>
+            <button
+              class="w-16 py-4 rounded-2xl border flex items-center justify-center transition-colors hover:bg-slate-50"
+              style="
+                border-color: var(--color-primary);
+                color: var(--color-primary);
+              "
+            >
+              <i class="fas fa-comment-dots text-xl"></i>
+            </button>
+          </div>
+
+          <div
+            class="flex items-center justify-between p-4 rounded-2xl border border-dashed"
+            style="border-color: var(--color-border)"
+          >
+            <div class="flex items-center gap-3">
+              <div
+                class="w-10 h-10 rounded-full bg-slate-100 flex items-center justify-center font-bold"
+              >
+                SM
+              </div>
+              <div>
+                <p
+                  class="text-xs font-bold"
+                  style="color: var(--color-text-main)"
+                >
+                  Sony Music Store
+                  <i class="fas fa-certificate text-blue-500 ml-1"></i>
+                </p>
+                <p class="text-[10px]" style="color: var(--color-text-sub)">
+                  Vendeur depuis 2023 • 98% d'avis positifs
+                </p>
+              </div>
+            </div>
+            <button
+              class="text-[10px] font-bold underline"
+              style="color: var(--color-primary)"
+            >
+              Voir la boutique
+            </button>
+          </div>
+        </div>
+      </div>
+
+      <section
+        class="mt-16 pt-10 border-t"
+        style="border-color: var(--color-border)"
+      >
+        <div class="max-w-3xl">
+          <h3
+            class="text-xl font-black mb-6 uppercase tracking-tighter"
+            style="color: var(--color-text-main)"
+          >
+            Description détaillée
+          </h3>
+          <p
+            class="text-sm leading-relaxed mb-8"
+            style="color: var(--color-text-sub)"
+          >
+            Découvrez une immersion sonore totale avec la réduction de bruit
+            active. Ce casque allie confort et performance avec une autonomie de
+            40 heures...
+          </p>
+
+          <div
+            class="grid grid-cols-2 gap-px overflow-hidden rounded-2xl border"
+            style="
+              border-color: var(--color-border);
+              background-color: var(--color-border);
+            "
+          >
+            <div
+              class="p-3 text-[11px] font-bold"
+              style="
+                background-color: var(--color-surface);
+                color: var(--color-text-main);
+              "
+            >
+              Bluetooth
+            </div>
+            <div
+              class="p-3 text-[11px]"
+              style="
+                background-color: var(--color-bg);
+                color: var(--color-text-sub);
+              "
+            >
+              v5.2 High Speed
+            </div>
+            <div
+              class="p-3 text-[11px] font-bold"
+              style="
+                background-color: var(--color-surface);
+                color: var(--color-text-main);
+              "
+            >
+              Poids
+            </div>
+            <div
+              class="p-3 text-[11px]"
+              style="
+                background-color: var(--color-bg);
+                color: var(--color-text-sub);
+              "
+            >
+              250g
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <section class="mt-20">
+        <div class="flex justify-between items-end mb-8">
+          <h3
+            class="text-2xl font-black tracking-tighter"
+            style="color: var(--color-text-main)"
+          >
+            Produits similaires
+          </h3>
+          <a
+            href="#"
+            class="text-xs font-bold"
+            style="color: var(--color-primary)"
+            >Tout voir</a
+          >
+        </div>
+        <div class="grid grid-cols-2 md:grid-cols-4 lg:grid-cols-5 gap-6">
+          <div class="group cursor-pointer">
+            <div
+              class="aspect-square rounded-2xl overflow-hidden bg-slate-50 border mb-3 transition-shadow group-hover:shadow-md"
+              style="border-color: var(--color-border)"
+            >
+              <img
+                src="https://images.unsplash.com/photo-1546435770-a3e426ff472b?q=80&w=200"
+                class="w-full h-full object-cover group-hover:scale-105 transition-transform"
+              />
+            </div>
+            <p
+              class="text-xs font-bold truncate"
+              style="color: var(--color-text-main)"
+            >
+              Écouteurs Sport Z
+            </p>
+            <p
+              class="text-sm font-black mt-1"
+              style="color: var(--color-primary)"
+            >
+              45.00 €
+            </p>
+          </div>
+        </div>
+      </section>
+    </main>
+  </body>
+</html>

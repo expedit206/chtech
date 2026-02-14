@@ -1,0 +1,495 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Document</title>
+    <link href="./output.css" rel="stylesheet" />
+    <link
+      rel="stylesheet"
+      href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css"
+    />
+  </head>
+  <body>
+    <header
+      class="fixed top-0 z-50 w-full shadow-sm border-b"
+      style="
+        background-color: var(--color-surface);
+        border-color: var(--color-border);
+      "
+    >
+      <div class="flex items-center justify-between px-4 h-14 gap-4">
+        <h1
+          class="text-xl font-black tracking-tighter flex-shrink-0"
+          style="color: var(--color-primary)"
+        >
+          chtech
+        </h1>
+
+        <div class="hidden md:flex flex-1 max-w-xl relative group">
+          <i
+            class="fas fa-search absolute left-3 top-1/2 -translate-y-1/2 text-xs transition-colors group-focus-within:text-primary"
+            style="color: var(--color-text-sub)"
+          ></i>
+
+          <input
+            type="text"
+            placeholder="Rechercher..."
+            class="w-full pl-10 pr-4 py-2 rounded-full text-sm border-none outline-none focus:ring-2 focus:ring-[var(--color-primary)] transition-all"
+            style="
+              background-color: var(--color-bg);
+              color: var(--color-text-main);
+            "
+          />
+        </div>
+
+        <div class="flex items-center gap-3 md:gap-4">
+          <button class="md:hidden" style="color: var(--color-text-main)">
+            <i class="fas fa-search text-lg"></i>
+          </button>
+
+          <div class="relative cursor-pointer">
+            <i
+              class="fas fa-shopping-cart text-lg"
+              style="color: var(--color-text-main)"
+            ></i>
+            <span
+              class="absolute -top-1.5 -right-1.5 flex items-center justify-center rounded-full text-[9px] font-bold"
+              style="
+                background-color: var(--color-accent);
+                color: var(--color-pure);
+                width: 16px;
+                height: 16px;
+                border: 2px solid var(--color-surface);
+              "
+            >
+              2
+            </span>
+          </div>
+
+          <button
+            class="w-8 h-8 rounded-full flex items-center justify-center shadow-md transition-transform active:scale-90"
+            style="
+              background-color: var(--color-primary);
+              color: var(--color-pure);
+            "
+          >
+            <i class="fas fa-plus text-sm"></i>
+          </button>
+
+          <div
+            class="p-0.5 rounded-full border-2"
+            style="border-color: var(--color-primary)"
+          >
+            <img
+              src="https://ui-avatars.com/api/?name=CH&background=6366f1&color=fff"
+              class="w-7 h-7 rounded-full"
+            />
+          </div>
+        </div>
+      </div>
+
+      <div
+        class="flex justify-center border-t h-12"
+        style="border-color: var(--color-border)"
+      >
+        <nav class="flex h-full w-full max-w-2xl">
+          <a
+            href="#"
+            class="group relative flex-1 flex items-center justify-center border-b-4"
+            style="
+              border-color: var(--color-primary);
+              color: var(--color-primary);
+            "
+          >
+            <i class="fas fa-home text-xl"></i>
+          </a>
+
+          <a
+            href="blogs.html"
+            class="group relative flex-1 flex items-center justify-center hover:bg-black/5 dark:hover:bg-white/5"
+            style="color: var(--color-text-sub)"
+          >
+            <i class="fas fa-newspaper text-xl"></i>
+          </a>
+
+          <a
+            href="#"
+            class="group relative flex-1 flex items-center justify-center hover:bg-black/5 dark:hover:bg-white/5"
+            style="color: var(--color-text-sub)"
+          >
+            <div class="relative">
+              <i class="fas fa-bell text-xl"></i>
+              <span
+                class="absolute top-0 right-0 w-2 h-2 rounded-full bg-rose-500 border border-white"
+              ></span>
+            </div>
+          </a>
+
+          <a
+            href="#"
+            class="group relative flex-1 flex items-center justify-center hover:bg-black/5 dark:hover:bg-white/5"
+            style="color: var(--color-text-sub)"
+          >
+            <i class="fas fa-comments text-xl"></i>
+          </a>
+
+          <a
+            href="#"
+            class="group relative flex-1 flex items-center justify-center hover:bg-black/5 dark:hover:bg-white/5"
+            style="color: var(--color-text-sub)"
+          >
+            <i class="fas fa-chart-line text-xl"></i>
+          </a>
+        </nav>
+      </div>
+    </header>
+
+    <main class="max-w-7xl mx-auto px-4 py-8 mt-24">
+      <div
+        class="mb-12 border-l-4 pl-6"
+        style="border-color: var(--color-primary)"
+      >
+        <h2
+          class="text-4xl font-black tracking-tighter uppercase"
+          style="color: var(--color-text-main)"
+        >
+          Conseils & Actualités
+        </h2>
+        <p class="text-lg" style="color: var(--color-text-sub)">
+          Apprenez à mieux vendre et achetez en toute sécurité.
+        </p>
+      </div>
+
+      <div
+        class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6"
+      >
+        <article
+          class="flex flex-col rounded-2xl overflow-hidden shadow-sm hover:shadow-xl hover:-translate-y-1 transition-all duration-300 border"
+          style="
+            background-color: var(--color-surface);
+            border-color: var(--color-border);
+          "
+        >
+          <div
+            class="relative aspect-[16/10] overflow-hidden group border-b"
+            style="border-color: var(--color-border)"
+          >
+            <img
+              src="https://images.unsplash.com/photo-1556742049-0cfed4f6a45d?q=80&w=800"
+              class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500"
+            />
+            <span
+              class="absolute top-3 left-3 text-[10px] font-bold px-3 py-1 rounded-full uppercase tracking-wider"
+              style="
+                background-color: var(--color-primary);
+                color: var(--color-pure);
+              "
+            >
+              Guide Vendeur
+            </span>
+          </div>
+          <div class="p-5 flex-1 flex flex-col">
+            <div class="flex items-center gap-2 mb-3">
+              <img
+                src="https://ui-avatars.com/api/?name=Admin&background=6366f1&color=fff"
+                class="w-6 h-6 rounded-full"
+              />
+              <span
+                class="text-[11px] font-bold"
+                style="color: var(--color-text-main)"
+                >Admin Chtech</span
+              >
+              <span class="text-[11px]" style="color: var(--color-text-sub)"
+                >• 1h</span
+              >
+            </div>
+            <h3
+              class="text-md font-bold mb-3 leading-snug line-clamp-2"
+              style="color: var(--color-text-main)"
+            >
+              5 astuces infaillibles pour rendre vos annonces plus attractives
+            </h3>
+            <p
+              class="text-xs line-clamp-3 mb-4 flex-1"
+              style="color: var(--color-text-sub)"
+            >
+              La qualité des photos et la précision de la description sont les
+              clés pour vendre vos articles en moins de 24h...
+            </p>
+            <div
+              class="flex justify-between items-center pt-4 border-t"
+              style="border-color: var(--color-border)"
+            >
+              <div class="flex items-center gap-1.5">
+                <span
+                  class="w-4 h-4 rounded-full flex items-center justify-center text-[7px]"
+                  style="
+                    background-color: var(--color-primary);
+                    color: var(--color-pure);
+                  "
+                  ><i class="fas fa-thumbs-up"></i
+                ></span>
+                <span
+                  class="text-[10px] font-medium"
+                  style="color: var(--color-text-sub)"
+                  >85</span
+                >
+              </div>
+              <div class="text-[10px]" style="color: var(--color-text-sub)">
+                <span>12 commentaires</span>
+              </div>
+            </div>
+          </div>
+          <div
+            class="grid grid-cols-3 border-t"
+            style="
+              border-color: var(--color-border);
+              background-color: var(--color-bg);
+            "
+          >
+            <button
+              class="py-3 text-[11px] font-bold flex items-center justify-center gap-1.5 hover:opacity-70"
+              style="color: var(--color-text-sub)"
+            >
+              <i class="far fa-thumbs-up"></i> Like
+            </button>
+            <button
+              class="py-3 text-[11px] font-bold border-x flex items-center justify-center gap-1.5 hover:opacity-70"
+              style="
+                color: var(--color-text-sub);
+                border-color: var(--color-border);
+              "
+            >
+              <i class="far fa-comment"></i> Note
+            </button>
+            <button
+              class="py-3 text-[11px] font-bold flex items-center justify-center gap-1.5 hover:opacity-70"
+              style="color: var(--color-text-sub)"
+            >
+              <i class="fas fa-share"></i>
+            </button>
+          </div>
+        </article>
+
+        <article
+          class="flex flex-col rounded-2xl overflow-hidden shadow-sm hover:shadow-xl hover:-translate-y-1 transition-all duration-300 border"
+          style="
+            background-color: var(--color-surface);
+            border-color: var(--color-border);
+          "
+        >
+          <div
+            class="relative aspect-[16/10] overflow-hidden group border-b"
+            style="border-color: var(--color-border)"
+          >
+            <img
+              src="https://images.unsplash.com/photo-1563013544-824ae1b704d3?q=80&w=800"
+              class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500"
+            />
+            <span
+              class="absolute top-3 left-3 text-[10px] font-bold px-3 py-1 rounded-full uppercase tracking-wider"
+              style="
+                background-color: var(--color-accent);
+                color: var(--color-pure);
+              "
+            >
+              Sécurité
+            </span>
+          </div>
+          <div class="p-5 flex-1 flex flex-col">
+            <div class="flex items-center gap-2 mb-3">
+              <img
+                src="https://ui-avatars.com/api/?name=Admin&background=6366f1&color=fff"
+                class="w-6 h-6 rounded-full"
+              />
+              <span
+                class="text-[11px] font-bold"
+                style="color: var(--color-text-main)"
+                >Admin Chtech</span
+              >
+              <span class="text-[11px]" style="color: var(--color-text-sub)"
+                >• 5h</span
+              >
+            </div>
+            <h3
+              class="text-md font-bold mb-3 leading-snug line-clamp-2"
+              style="color: var(--color-text-main)"
+            >
+              Comment acheter en toute sécurité : notre nouveau système de
+              vérification
+            </h3>
+            <p
+              class="text-xs line-clamp-3 mb-4 flex-1"
+              style="color: var(--color-text-sub)"
+            >
+              Nous avons renforcé nos protocoles de sécurité pour protéger
+              chaque transaction sur la plateforme...
+            </p>
+            <div
+              class="flex justify-between items-center pt-4 border-t"
+              style="border-color: var(--color-border)"
+            >
+              <div class="flex items-center gap-1.5">
+                <span
+                  class="w-4 h-4 rounded-full flex items-center justify-center text-[7px]"
+                  style="
+                    background-color: var(--color-primary);
+                    color: var(--color-pure);
+                  "
+                  ><i class="fas fa-thumbs-up"></i
+                ></span>
+                <span
+                  class="text-[10px] font-medium"
+                  style="color: var(--color-text-sub)"
+                  >210</span
+                >
+              </div>
+              <div class="text-[10px]" style="color: var(--color-text-sub)">
+                <span>45 commentaires</span>
+              </div>
+            </div>
+          </div>
+          <div
+            class="grid grid-cols-3 border-t"
+            style="
+              border-color: var(--color-border);
+              background-color: var(--color-bg);
+            "
+          >
+            <button
+              class="py-3 text-[11px] font-bold flex items-center justify-center gap-1.5 hover:opacity-70"
+              style="color: var(--color-text-sub)"
+            >
+              <i class="far fa-thumbs-up"></i> Like
+            </button>
+            <button
+              class="py-3 text-[11px] font-bold border-x flex items-center justify-center gap-1.5 hover:opacity-70"
+              style="
+                color: var(--color-text-sub);
+                border-color: var(--color-border);
+              "
+            >
+              <i class="far fa-comment"></i> Note
+            </button>
+            <button
+              class="py-3 text-[11px] font-bold flex items-center justify-center gap-1.5 hover:opacity-70"
+              style="color: var(--color-text-sub)"
+            >
+              <i class="fas fa-share"></i>
+            </button>
+          </div>
+        </article>
+
+        <article
+          class="flex flex-col rounded-2xl overflow-hidden shadow-sm hover:shadow-xl hover:-translate-y-1 transition-all duration-300 border"
+          style="
+            background-color: var(--color-surface);
+            border-color: var(--color-border);
+          "
+        >
+          <div
+            class="relative aspect-[16/10] overflow-hidden group border-b"
+            style="border-color: var(--color-border)"
+          >
+            <img
+              src="https://images.unsplash.com/photo-1586528116311-ad8dd3c8310d?q=80&w=800"
+              class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500"
+            />
+            <span
+              class="absolute top-3 left-3 text-[10px] font-bold px-3 py-1 rounded-full uppercase tracking-wider"
+              style="
+                background-color: var(--color-primary);
+                color: var(--color-pure);
+              "
+            >
+              Livraison
+            </span>
+          </div>
+          <div class="p-5 flex-1 flex flex-col">
+            <div class="flex items-center gap-2 mb-3">
+              <img
+                src="https://ui-avatars.com/api/?name=Admin&background=6366f1&color=fff"
+                class="w-6 h-6 rounded-full"
+              />
+              <span
+                class="text-[11px] font-bold"
+                style="color: var(--color-text-main)"
+                >Admin Chtech</span
+              >
+              <span class="text-[11px]" style="color: var(--color-text-sub)"
+                >• Hier</span
+              >
+            </div>
+            <h3
+              class="text-md font-bold mb-3 leading-snug line-clamp-2"
+              style="color: var(--color-text-main)"
+            >
+              Expédition d'articles volumineux : nos partenaires vous
+              accompagnent
+            </h3>
+            <p
+              class="text-xs line-clamp-3 mb-4 flex-1"
+              style="color: var(--color-text-sub)"
+            >
+              Plus besoin de vous soucier du transport de vos meubles ou
+              équipements lourds grâce à nos nouveaux tarifs...
+            </p>
+            <div
+              class="flex justify-between items-center pt-4 border-t"
+              style="border-color: var(--color-border)"
+            >
+              <div class="flex items-center gap-1.5">
+                <span
+                  class="w-4 h-4 rounded-full flex items-center justify-center text-[7px]"
+                  style="
+                    background-color: var(--color-primary);
+                    color: var(--color-pure);
+                  "
+                  ><i class="fas fa-thumbs-up"></i
+                ></span>
+                <span
+                  class="text-[10px] font-medium"
+                  style="color: var(--color-text-sub)"
+                  >156</span
+                >
+              </div>
+              <div class="text-[10px]" style="color: var(--color-text-sub)">
+                <span>30 commentaires</span>
+              </div>
+            </div>
+          </div>
+          <div
+            class="grid grid-cols-3 border-t"
+            style="
+              border-color: var(--color-border);
+              background-color: var(--color-bg);
+            "
+          >
+            <button
+              class="py-3 text-[11px] font-bold flex items-center justify-center gap-1.5 hover:opacity-70"
+              style="color: var(--color-text-sub)"
+            >
+              <i class="far fa-thumbs-up"></i> Like
+            </button>
+            <button
+              class="py-3 text-[11px] font-bold border-x flex items-center justify-center gap-1.5 hover:opacity-70"
+              style="
+                color: var(--color-text-sub);
+                border-color: var(--color-border);
+              "
+            >
+              <i class="far fa-comment"></i> Note
+            </button>
+            <button
+              class="py-3 text-[11px] font-bold flex items-center justify-center gap-1.5 hover:opacity-70"
+              style="color: var(--color-text-sub)"
+            >
+              <i class="fas fa-share"></i>
+            </button>
+          </div>
+        </article>
+      </div>
+    </main>
+  </body>
+</html>

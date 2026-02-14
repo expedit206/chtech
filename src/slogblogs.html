@@ -1,0 +1,440 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Document</title>
+    <link href="./output.css" rel="stylesheet" />
+    <link
+      rel="stylesheet"
+      href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css"
+    />
+  </head>
+  <body>
+    <header
+      class="fixed top-0 z-50 w-full shadow-sm border-b"
+      style="
+        background-color: var(--color-surface);
+        border-color: var(--color-border);
+      "
+    >
+      <div class="flex items-center justify-between px-4 h-14 gap-4">
+        <h1
+          class="text-xl font-black tracking-tighter flex-shrink-0"
+          style="color: var(--color-primary)"
+        >
+          chtech
+        </h1>
+
+        <div class="hidden md:flex flex-1 max-w-xl relative group">
+          <i
+            class="fas fa-search absolute left-3 top-1/2 -translate-y-1/2 text-xs transition-colors group-focus-within:text-primary"
+            style="color: var(--color-text-sub)"
+          ></i>
+
+          <input
+            type="text"
+            placeholder="Rechercher..."
+            class="w-full pl-10 pr-4 py-2 rounded-full text-sm border-none outline-none focus:ring-2 focus:ring-[var(--color-primary)] transition-all"
+            style="
+              background-color: var(--color-bg);
+              color: var(--color-text-main);
+            "
+          />
+        </div>
+
+        <div class="flex items-center gap-3 md:gap-4">
+          <button class="md:hidden" style="color: var(--color-text-main)">
+            <i class="fas fa-search text-lg"></i>
+          </button>
+
+          <div class="relative cursor-pointer">
+            <i
+              class="fas fa-shopping-cart text-lg"
+              style="color: var(--color-text-main)"
+            ></i>
+            <span
+              class="absolute -top-1.5 -right-1.5 flex items-center justify-center rounded-full text-[9px] font-bold"
+              style="
+                background-color: var(--color-accent);
+                color: var(--color-pure);
+                width: 16px;
+                height: 16px;
+                border: 2px solid var(--color-surface);
+              "
+            >
+              2
+            </span>
+          </div>
+
+          <button
+            class="w-8 h-8 rounded-full flex items-center justify-center shadow-md transition-transform active:scale-90"
+            style="
+              background-color: var(--color-primary);
+              color: var(--color-pure);
+            "
+          >
+            <i class="fas fa-plus text-sm"></i>
+          </button>
+
+          <div
+            class="p-0.5 rounded-full border-2"
+            style="border-color: var(--color-primary)"
+          >
+            <img
+              src="https://ui-avatars.com/api/?name=CH&background=6366f1&color=fff"
+              class="w-7 h-7 rounded-full"
+            />
+          </div>
+        </div>
+      </div>
+
+      <div
+        class="flex justify-center border-t h-12"
+        style="border-color: var(--color-border)"
+      >
+        <nav class="flex h-full w-full max-w-2xl">
+          <a
+            href="#"
+            class="group relative flex-1 flex items-center justify-center border-b-4"
+            style="
+              border-color: var(--color-primary);
+              color: var(--color-primary);
+            "
+          >
+            <i class="fas fa-home text-xl"></i>
+          </a>
+
+          <a
+            href="blogs.html"
+            class="group relative flex-1 flex items-center justify-center hover:bg-black/5 dark:hover:bg-white/5"
+            style="color: var(--color-text-sub)"
+          >
+            <i class="fas fa-newspaper text-xl"></i>
+          </a>
+
+          <a
+            href="#"
+            class="group relative flex-1 flex items-center justify-center hover:bg-black/5 dark:hover:bg-white/5"
+            style="color: var(--color-text-sub)"
+          >
+            <div class="relative">
+              <i class="fas fa-bell text-xl"></i>
+              <span
+                class="absolute top-0 right-0 w-2 h-2 rounded-full bg-rose-500 border border-white"
+              ></span>
+            </div>
+          </a>
+
+          <a
+            href="#"
+            class="group relative flex-1 flex items-center justify-center hover:bg-black/5 dark:hover:bg-white/5"
+            style="color: var(--color-text-sub)"
+          >
+            <i class="fas fa-comments text-xl"></i>
+          </a>
+
+          <a
+            href="#"
+            class="group relative flex-1 flex items-center justify-center hover:bg-black/5 dark:hover:bg-white/5"
+            style="color: var(--color-text-sub)"
+          >
+            <i class="fas fa-chart-line text-xl"></i>
+          </a>
+        </nav>
+      </div>
+    </header>
+
+    <main class="max-w-7xl mx-auto px-4 py-8 mt-24">
+      <div class="flex flex-col lg:flex-row gap-12">
+        <div class="lg:w-2/3">
+          <nav
+            class="flex items-center gap-2 mb-6 text-[10px] font-bold uppercase tracking-widest"
+            style="color: var(--color-text-sub)"
+          >
+            <a href="#" class="hover:text-primary transition-colors">Accueil</a>
+            <span class="opacity-30">/</span>
+            <a href="#" class="hover:text-primary transition-colors">Blog</a>
+            <span class="opacity-30">/</span>
+            <span style="color: var(--color-primary)">Guide Vendeur</span>
+          </nav>
+
+          <header class="mb-8">
+            <h1
+              class="text-3xl md:text-4xl font-black tracking-tighter mb-6 leading-tight"
+              style="color: var(--color-text-main)"
+            >
+              Comment réussir ses ventes dès la première semaine ?
+            </h1>
+
+            <div
+              class="flex items-center gap-3 pb-6 border-b"
+              style="border-color: var(--color-border)"
+            >
+              <div
+                class="w-9 h-9 rounded-full flex items-center justify-center font-bold text-[10px]"
+                style="
+                  background-color: var(--color-primary);
+                  color: var(--color-pure);
+                "
+              >
+                CT
+              </div>
+              <div>
+                <p
+                  class="text-xs font-bold"
+                  style="color: var(--color-text-main)"
+                >
+                  Équipe Chtech Marketplace
+                </p>
+                <p class="text-[10px]" style="color: var(--color-text-sub)">
+                  Il y a 2 jours • 5 min de lecture
+                </p>
+              </div>
+            </div>
+          </header>
+
+          <article class="prose-sm mb-10" style="color: var(--color-text-main)">
+            <div class="rounded-2xl overflow-hidden mb-6 shadow-sm">
+              <img
+                src="https://images.unsplash.com/photo-1556742049-0cfed4f6a45d?q=80&w=1200"
+                class="w-full h-auto"
+              />
+            </div>
+            <p class="text-base leading-relaxed mb-6">
+              Vendre sur une marketplace demande de la rigueur. Dans ce guide,
+              nous vous expliquons comment passer du statut de débutant à celui
+              de vendeur certifié...
+            </p>
+          </article>
+
+          <div
+            class="grid grid-cols-3 border-y mb-8"
+            style="border-color: var(--color-border)"
+          >
+            <button
+              class="flex items-center justify-center gap-2 py-3 hover:opacity-60 transition-opacity"
+              style="color: var(--color-text-sub)"
+            >
+              <i class="far fa-thumbs-up"></i>
+              <span class="text-xs font-bold">124</span>
+            </button>
+
+            <button
+              class="flex items-center justify-center gap-2 py-3 border-x hover:opacity-60 transition-opacity"
+              style="
+                color: var(--color-text-sub);
+                border-color: var(--color-border);
+              "
+            >
+              <i class="far fa-comment"></i>
+              <span class="text-xs font-bold">24</span>
+            </button>
+
+            <button
+              class="flex items-center justify-center gap-2 py-3 hover:opacity-60 transition-opacity"
+              style="color: var(--color-text-sub)"
+            >
+              <i class="fas fa-share"></i>
+              <span class="text-xs font-bold">Partager</span>
+            </button>
+          </div>
+
+          <section class="space-y-6">
+            <div class="flex gap-3 items-start">
+              <img
+                src="https://ui-avatars.com/api/?name=User"
+                class="w-8 h-8 rounded-full flex-shrink-0"
+              />
+
+              <div
+                class="flex-1 relative rounded-2xl p-3 border border-transparent transition-all ring-offset-0 focus-within:ring-2 focus-within:ring-[var(--color-primary)]"
+                style="background-color: var(--color-surface)"
+              >
+                <textarea
+                  class="w-full bg-transparent border-none focus:ring-0 outline-none text-sm resize-none p-0 pr-10 placeholder:text-slate-400"
+                  rows="2"
+                  placeholder="Écrire un commentaire..."
+                  style="color: var(--color-text-main)"
+                ></textarea>
+
+                <button
+                  class="absolute bottom-2 right-2 w-8 h-8 flex items-center justify-center rounded-full transition-all active:scale-90"
+                  style="color: var(--color-primary)"
+                >
+                  <i class="fas fa-paper-plane text-sm"></i>
+                </button>
+              </div>
+            </div>
+
+            <div class="flex gap-3 items-start group">
+              <img
+                src="https://ui-avatars.com/api/?name=JD"
+                class="w-8 h-8 rounded-full flex-shrink-0"
+              />
+
+              <div
+                class="flex-1 shadow-sm border p-3 rounded-2xl relative"
+                style="
+                  background-color: var(--color-bg);
+                  border-color: var(--color-border);
+                "
+              >
+                <div class="flex items-center justify-between mb-1">
+                  <div class="flex items-center gap-2">
+                    <p
+                      class="text-[11px] font-black uppercase tracking-tight"
+                      style="color: var(--color-text-main)"
+                    >
+                      Jean Dupont
+                    </p>
+                    <span
+                      class="text-[9px] font-medium opacity-50"
+                      style="color: var(--color-text-sub)"
+                    >
+                      • 14 fév. 2026
+                    </span>
+                  </div>
+
+                  <button
+                    class="opacity-40 hover:opacity-100 transition-opacity p-1 focus:outline-none"
+                  >
+                    <i
+                      class="fas fa-ellipsis-h text-[10px]"
+                      style="color: var(--color-text-main)"
+                    ></i>
+                  </button>
+                </div>
+
+                <p
+                  class="text-xs leading-relaxed"
+                  style="color: var(--color-text-sub)"
+                >
+                  Super article ! Ça m'aide beaucoup pour mes prochaines ventes.
+                </p>
+              </div>
+            </div>
+          </section>
+        </div>
+
+        <aside class="lg:w-1/3 space-y-8">
+          <!-- <div
+            class="p-8 rounded-3xl border shadow-sm text-center"
+            style="
+              background-color: var(--color-surface);
+              border-color: var(--color-border);
+            "
+          >
+            <div
+              class="w-16 h-16 rounded-2xl flex items-center justify-center mx-auto mb-4 shadow-inner"
+              style="background-color: var(--color-primary)"
+            >
+              <i class="fas fa-shopping-bag text-2xl text-white"></i>
+            </div>
+            <h4
+              class="text-xl font-black mb-2"
+              style="color: var(--color-text-main)"
+            >
+              Prêt à vendre ?
+            </h4>
+            <p class="text-xs mb-6" style="color: var(--color-text-sub)">
+              Rejoignez des milliers de vendeurs et commencez à générer des
+              revenus dès aujourd'hui.
+            </p>
+            <button
+              class="w-full py-3 rounded-xl font-bold transition-transform active:scale-95"
+              style="
+                background-color: var(--color-primary);
+                color: var(--color-pure);
+              "
+            >
+              Déposer une annonce
+            </button>
+          </div> -->
+
+          <div
+            class="p-6 rounded-3xl border"
+            style="
+              background-color: var(--color-bg);
+              border-color: var(--color-border);
+            "
+          >
+            <h4
+              class="font-bold mb-6 text-sm uppercase tracking-widest"
+              style="color: var(--color-text-main)"
+            >
+              Continuer la lecture
+            </h4>
+            <div class="space-y-6">
+              <a href="#" class="flex gap-4 group">
+                <div class="w-16 h-16 rounded-xl overflow-hidden flex-shrink-0">
+                  <img
+                    src="https://images.unsplash.com/photo-1563013544-824ae1b704d3?q=80&w=150"
+                    class="w-full h-full object-cover"
+                  />
+                </div>
+                <div>
+                  <p
+                    class="text-[10px] font-bold"
+                    style="color: var(--color-accent)"
+                  >
+                    SÉCURITÉ
+                  </p>
+                  <h5
+                    class="text-xs font-bold group-hover:text-primary transition-colors"
+                    style="color: var(--color-text-main)"
+                  >
+                    Éviter les fraudes au paiement
+                  </h5>
+                </div>
+              </a>
+              <a href="#" class="flex gap-4 group">
+                <div class="w-16 h-16 rounded-xl overflow-hidden flex-shrink-0">
+                  <img
+                    src="https://images.unsplash.com/photo-1586528116311-ad8dd3c8310d?q=80&w=150"
+                    class="w-full h-full object-cover"
+                  />
+                </div>
+                <div>
+                  <p
+                    class="text-[10px] font-bold"
+                    style="color: var(--color-primary)"
+                  >
+                    LOGISTIQUE
+                  </p>
+                  <h5
+                    class="text-xs font-bold group-hover:text-primary transition-colors"
+                    style="color: var(--color-text-main)"
+                  >
+                    Bien emballer vos colis fragiles
+                  </h5>
+                </div>
+              </a>
+            </div>
+          </div>
+
+          <div
+            class="p-6 rounded-3xl border-2 border-dashed"
+            style="border-color: var(--color-border)"
+          >
+            <h4
+              class="text-sm font-bold mb-2"
+              style="color: var(--color-text-main)"
+            >
+              Besoin d'aide ?
+            </h4>
+            <p class="text-xs mb-4" style="color: var(--color-text-sub)">
+              Consultez notre FAQ ou contactez le support Marketplace.
+            </p>
+            <a
+              href="#"
+              class="text-xs font-black"
+              style="color: var(--color-primary)"
+              >CENTRE D'AIDE <i class="fas fa-external-link-alt ml-1"></i
+            ></a>
+          </div>
+        </aside>
+      </div>
+    </main>
+  </body>
+</html>
