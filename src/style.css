@@ -1,0 +1,215 @@
+@import "tailwindcss";
+
+@layer base {
+  :root {
+    --color-bg: #ffffff;
+    --color-surface: #f8fafc;
+    --color-text-main: #0f172a;
+    --color-text-sub: #64748b;
+    --color-border: #e2e8f0;
+    --color-primary: #6366f1;
+    --color-accent: #ec4899;
+    --color-pure: #ffffff;
+    --color-rating: #f59e0b; /* Jaune ambré pour les étoiles */
+  }
+
+  @media (prefers-color-scheme: dark) {
+    :root {
+      --color-bg: #020617;
+      --color-surface: #0f172a;
+      --color-text-main: #f8fafc;
+      --color-text-sub: #94a3b8;
+      --color-border: #1e293b;
+      --color-primary: #818cf8;
+      --color-rating: #fbbf24; /* Jaune ambré plus clair pour les étoiles en mode sombre */
+    }
+  }
+}
+
+body {
+  margin: 0;
+  font-family:
+    -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue",
+    Arial, sans-serif;
+  background-color: var(--color-bg);
+  color: var(--color-text-main);
+}
+
+/* Positionnement précis du point rouge sur l'icône */
+.nav-badge {
+  position: absolute;
+  top: -1px;
+  right: -1px;
+  width: 10px;
+  height: 10px;
+  background-color: var(--color-accent);
+  border: 2px solid var(--color-surface);
+  border-radius: 50%;
+}
+
+/* Tooltip (Affiché uniquement au survol) */
+.tooltip-text {
+  visibility: hidden;
+  opacity: 0;
+  background-color: #1e293b;
+  color: #fff;
+  padding: 4px 10px;
+  border-radius: 4px;
+  position: absolute;
+  bottom: -40px;
+  font-size: 11px;
+  white-space: nowrap;
+  transition: 0.2s;
+  z-index: 100;
+}
+
+.group:hover .tooltip-text {
+  visibility: visible;
+  opacity: 1;
+}
+
+/* Style categories */
+/* Animation de translation infinie */
+/* Animation fluide */
+@keyframes scrollCategories {
+  0% {
+    transform: translateX(0);
+  }
+  100% {
+    transform: translateX(-50%);
+  }
+}
+
+.scroll-track {
+  display: flex;
+  width: max-content;
+  animation: scrollCategories 40s linear infinite; /* 40s pour que ce soit lent et pro */
+  will-change: transform; /* Optimisation performance */
+}
+
+/* Interaction : On fige au survol */
+.scroll-track:hover {
+  animation-play-state: paused;
+}
+
+/* Style des cartes catégories */
+.category-card {
+  display: flex;
+  flex-direction: column;
+  align-items: center; /* Correction ici */
+  justify-content: center;
+  gap: 0.5rem;
+  padding: 0.75rem 2.5rem;
+  flex-shrink: 0;
+  transition: all 0.3s ease;
+  cursor: pointer;
+  color: var(--color-text-sub);
+  border-bottom: 2px solid transparent;
+}
+
+/* Effet au survol d'une catégorie précise */
+.category-card:hover {
+  color: var(--color-primary);
+  background-color: var(--color-surface);
+  /* On ne met pas de border-radius ici pour garder l'alignement avec la ligne de séparation */
+}
+
+/* État Actif (quand on a cliqué) */
+.category-card.active {
+  color: var(--color-primary);
+  border-bottom: 2px solid var(--color-primary);
+}
+
+/* produits list */
+
+/* Badge de catégorie */
+.category-badge {
+  background-color: var(--color-surface);
+  color: var(--color-primary);
+  font-size: 9px;
+  font-weight: 800;
+  padding: 2px 8px;
+  border-radius: 4px;
+  border: 1px solid var(--color-border);
+  text-transform: uppercase;
+}
+
+/* Style pour les vues */
+.view-count {
+  display: flex;
+  align-items: center;
+  gap: 4px;
+  font-size: 10px;
+  color: var(--color-text-sub);
+}
+
+/* Grille Responsive */
+.product-grid {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr); /* 2 par ligne sur mobile */
+  gap: 1rem;
+}
+
+@media (min-width: 1024px) {
+  .product-grid {
+    grid-template-columns: repeat(5, 1fr); /* 5 par ligne sur desktop */
+  }
+}
+
+/* Card Style */
+.product-card {
+  background-color: var(--color-surface);
+  border: 1px solid var(--color-border);
+  border-radius: 12px;
+  overflow: hidden;
+  transition:
+    transform 0.3s ease,
+    box-shadow 0.3s ease;
+}
+
+.product-card:hover {
+  transform: translateY(-5px);
+  box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1);
+}
+
+.like-btn {
+  color: var(--color-text-sub);
+  transition: color 0.3s;
+}
+
+.like-btn.active,
+.like-btn:hover {
+  color: var(--color-accent); /* Ton rouge/rose */
+}
+
+/* affiche dedails si mobile */
+
+/* Affichage des vues avec icône */
+.view-badge {
+  display: flex;
+  align-items: center;
+  gap: 3px;
+  background-color: rgba(0, 0, 0, 0.05);
+  padding: 2px 6px;
+  border-radius: 4px;
+  font-size: 10px;
+  font-weight: 600;
+  color: var(--color-text-sub);
+}
+
+/* Bouton adaptatif */
+.btn-details {
+  background-color: var(--color-primary);
+  color: var(--color-pure);
+  border-radius: 8px;
+  font-weight: bold;
+  transition: all 0.2s;
+}
+
+/* Sur mobile on peut le rendre plus compact si besoin */
+@media (max-width: 640px) {
+  .btn-details {
+    padding: 6px 10px;
+    font-size: 9px;
+  }
+}
