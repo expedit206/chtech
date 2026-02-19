@@ -51,6 +51,19 @@
           <p class="text-sm">Aucune conversation</p>
         </div>
 
+        <!-- <div
+          v-else
+          v-for="conv in conversations"
+          :key="conv.user_id"
+          @click="$emit('select-conversation', conv.user_id)"
+          class="group p-3 rounded-xl cursor-pointer transition-all duration-200 flex items-center gap-3 relative overflow-hidden hover:bg-black/5 hover:bg-(--color-border)"
+          :class="[
+            activeConversationId == conv.user_id
+              ? 'bg-[var(--color-primary)]/10'
+              : 'hover:bg-opacity-5 hover:bg-black dark:hover:bg-white/5',
+          ]"
+        > -->
+
         <div
           v-else
           v-for="conv in conversations"
@@ -59,8 +72,8 @@
           class="group p-3 rounded-xl cursor-pointer transition-all duration-200 flex items-center gap-3 relative overflow-hidden"
           :class="[
             activeConversationId == conv.user_id
-              ? 'bg-[var(--color-primary)]/10'
-              : 'hover:bg-opacity-5 hover:bg-black dark:hover:bg-white/5',
+              ? 'bg-(--color-primary)/10'
+              : 'hover:bg-(--color-primary)/10',
           ]"
         >
           <!-- Active Indicator Strip -->
