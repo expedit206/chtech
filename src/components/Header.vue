@@ -116,7 +116,7 @@
           <span class="tooltip-text">Blogs</span>
         </RouterLink>
 
-        <RouterLink
+        <a
           href="#"
           class="group relative flex-1 flex items-center justify-center hover:bg-black/5 transition-colors"
           :style="{ color: 'var(--color-text-sub)' }"
@@ -126,7 +126,7 @@
             <span class="nav-badge"></span>
           </div>
           <span class="tooltip-text">Notifications</span>
-        </RouterLink>
+        </a>
 
         <RouterLink
           to="/messages"
@@ -137,14 +137,14 @@
           <span class="tooltip-text">Messages</span>
         </RouterLink>
 
-        <RouterLink
-          to="/analyses"
+        <a
+
           class="group relative flex-1 flex items-center justify-center hover:bg-black/5 transition-colors"
           :style="{ color: 'var(--color-text-sub)' }"
         >
           <i class="fas fa-chart-line text-xl"></i>
           <span class="tooltip-text">Analyses</span>
-        </RouterLink>
+        </a>
       </nav>
     </div>
   </header>
