@@ -166,9 +166,12 @@
       />
     </div>
   </div>
+  <!-- importation du foo -->
+
 </template>
 
 <script setup>
+
 import { ref } from "vue";
 import { useRouter } from "vue-router";
 import CategoryCard from "../components/CategoryCard.vue";

@@ -24,11 +24,13 @@
       />
     </div>
   </main>
+
 </template>
 
 <script setup>
 import { ref } from 'vue'
 import BlogCard from '../components/BlogCard.vue'
+
 
 const blogs = ref([
   {
