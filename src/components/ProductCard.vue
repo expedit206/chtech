@@ -1,62 +1,77 @@
 <template>
-  <div
-    class="flex flex-col rounded-2xl overflow-hidden shadow-sm hover:shadow-xl hover:-translate-y-1 transition-all duration-300 border cursor-pointer"
-    :style="{
-      backgroundColor: 'var(--color-surface)',
-      borderColor: 'var(--color-border)',
-    }"
-  >
-    <!-- Image -->
+  <article class="product-card group relative flex flex-col h-full shadow-sm">
     <div
-      class="relative aspect-[4/3] overflow-hidden group border-b"
+      class="aspect-square w-full overflow-hidden relative bg-white border-b"
       :style="{ borderColor: 'var(--color-border)' }"
     >
       <img
         :src="product.image"
         :alt="product.name"
-        class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500"
+        class="w-full h-full object-cover"
       />
+
+      <div
+        class="absolute top-2 left-2 view-badge"
+        style="
+          background-color: rgba(255, 255, 255, 0.9);
+          backdrop-filter: blur(4px);
+        "
+      >
+        <i class="fas fa-eye" style="color: var(--color-primary)"></i>
+        <span>{{ product.views || "1,425" }}</span>
+      </div>
+
+      <button
+        class="absolute top-2 right-2 w-7 h-7 rounded-full bg-white/90 flex items-center justify-center shadow-sm"
+      >
+        <i
+          class="fas fa-heart text-xs"
+          style="color: var(--color-text-sub)"
+        ></i>
+      </button>
     </div>
 
-    <!-- Content -->
-    <div class="p-4 flex-1 flex flex-col">
-      <!-- Name -->
-      <h3 
-        class="font-bold mb-2 line-clamp-2 text-sm"
-        :style="{ color: 'var(--color-text-main)' }"
+    <div class="p-3 flex flex-col flex-grow">
+      <span
+        class="text-[9px] font-black uppercase tracking-widest mb-1"
+        style="color: var(--color-primary)"
+        >{{ product.category || "Accessoires" }}</span
+      >
+
+      <h3
+        class="text-xs font-bold line-clamp-2 mb-2"
+        style="color: var(--color-text-main)"
       >
         {{ product.name }}
       </h3>
 
-      <!-- Rating & Reviews -->
-      <div class="flex items-center gap-2 mb-3 text-xs">
-        <div class="flex items-center gap-1">
-          <i class="fas fa-star text-yellow-400"></i>
-          <span class="font-bold" :style="{ color: 'var(--color-text-main)' }">{{ product.rating }}</span>
+      <div class="flex items-center gap-1 mb-3">
+        <div class="flex text-[8px]" style="color: var(--color-rating)">
+          <i
+            class="fas fa-star"
+            v-for="n in 5"
+            :key="n"
+            :class="{ 'text-gray-300': n > Math.round(product.rating) }"
+          ></i>
         </div>
-        <span :style="{ color: 'var(--color-text-sub)' }">({{ product.reviews }})</span>
       </div>
 
-      <!-- Price -->
-      <p 
-        class="font-bold mb-4 text-lg"
-        :style="{ color: 'var(--color-primary)' }"
-      >
-        {{ product.price }}
-      </p>
+      <div class="mt-auto flex items-center justify-between">
+        <span
+          class="text-sm font-black"
+          style="color: var(--color-text-main)"
+          >{{ product.price }}</span
+        >
 
-      <!-- Add to Cart Button -->
-      <button
-        class="w-full py-2 rounded-lg font-bold text-sm transition-all active:scale-95"
-        :style="{
-          backgroundColor: 'var(--color-primary)',
-          color: 'var(--color-pure)',
-        }"
-      >
-        <i class="fas fa-shopping-cart mr-1"></i> Ajouter
-      </button>
+        <button
+          class="btn-details flex items-center gap-1 p-1.5 rounded transition hover:bg-black/5 dark:hover:bg-white/5"
+        >
+          <span class="hidden sm:inline">VOIR</span>
+          <i class="fas fa-arrow-right hidden sm:inline text-[10px]"></i>
+        </button>
+      </div>
     </div>
-  </div>
+  </article>
 </template>
 
 <script setup>
@@ -71,7 +86,7 @@ defineProps({
       image: String,
       rating: Number,
       reviews: Number,
-    }
-  }
-})
+    },
+  },
+});
 </script>
