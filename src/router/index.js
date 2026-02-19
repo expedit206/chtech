@@ -18,6 +18,11 @@ const routes = [
     path: '/produit/:id',
     name: 'DetailProduit',
     component: DetailProduit
+  },
+  {
+    path: '/messages/:receiverId?',
+    name: 'messages',
+    component: () => import('../views/Messages.vue')
   }
 ]
 

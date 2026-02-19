@@ -152,12 +152,13 @@
               </p>
             </div>
           </div>
-          <button
-            class="w-full py-2 rounded-lg text-sm font-semibold"
+          <router-link
+            :to="{ name: 'messages', params: { receiverId: product.id } }"
+            class="w-full py-2 rounded-lg text-sm font-semibold block text-center mt-2 hover:bg-gray-100 transition"
             :style="{ color: 'var(--color-primary)' }"
           >
             Contacter le vendeur
-          </button>
+          </router-link>
         </div>
       </div>
     </div>
