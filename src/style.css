@@ -10,9 +10,10 @@
     --color-primary: #6366f1;
     --color-accent: #ec4899;
     --color-pure: #ffffff;
-    --color-rating: #f59e0b; /* Jaune ambré pour les étoiles */
+    --color-rating: #f59e0b;
   }
 
+  /* Support both system preference AND manual toggle class */
   @media (prefers-color-scheme: dark) {
     :root {
       --color-bg: #020617;
@@ -21,8 +22,31 @@
       --color-text-sub: #94a3b8;
       --color-border: #1e293b;
       --color-primary: #818cf8;
-      --color-rating: #fbbf24; /* Jaune ambré plus clair pour les étoiles en mode sombre */
+      --color-rating: #fbbf24;
     }
+  }
+
+  /* Manual toggle overrides system preference */
+  :root.dark {
+    --color-bg: #020617;
+    --color-surface: #0f172a;
+    --color-text-main: #f8fafc;
+    --color-text-sub: #94a3b8;
+    --color-border: #1e293b;
+    --color-primary: #818cf8;
+    --color-rating: #fbbf24;
+  }
+
+  :root.light {
+    --color-bg: #ffffff;
+    --color-surface: #f8fafc;
+    --color-text-main: #0f172a;
+    --color-text-sub: #64748b;
+    --color-border: #e2e8f0;
+    --color-primary: #6366f1;
+    --color-accent: #ec4899;
+    --color-pure: #ffffff;
+    --color-rating: #f59e0b;
   }
 }
 

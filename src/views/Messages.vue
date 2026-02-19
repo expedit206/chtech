@@ -13,10 +13,17 @@
       :active-conversation-id="messageStore.selectedConversation?.user_id"
     />
 
-    <div class="bg-white h-full w-full flex flex-col">
+    <div
+      class="h-full w-full flex flex-col"
+      :style="{ backgroundColor: 'var(--color-bg)' }"
+    >
       <!-- Header -->
       <div
-        class="flex border-b items-center px-4 bg-white flex-shrink-0 min-h-[60px]"
+        class="flex border-b items-center px-4 flex-shrink-0 min-h-[60px]"
+        :style="{
+          backgroundColor: 'var(--color-surface)',
+          borderColor: 'var(--color-border)',
+        }"
       >
         <button
           v-if="
@@ -25,13 +32,15 @@
             messageStore.selectedConversation
           "
           @click="messageStore.toggleSidebar"
-          class="text-gray-800 p-2 rounded-full hover:bg-gray-100 transition mr-2"
+          class="p-2 rounded-full hover:bg-gray-100 transition mr-2"
+          :style="{ color: 'var(--color-text-main)' }"
         >
           <i class="fas fa-arrow-left text-xl"></i>
         </button>
         <h2
           v-if="messageStore.selectedConversation"
-          class="text-xl font-semibold text-gray-800 p-4 flex items-center"
+          class="text-xl font-semibold p-4 flex items-center"
+          :style="{ color: 'var(--color-text-main)' }"
         >
           {{ messageStore.selectedConversation.name }}
         </h2>
@@ -39,7 +48,8 @@
 
       <!-- Content -->
       <div
-        class="bg-white shadow-md transition-all duration-300 flex flex-col flex-1 h-full overflow-hidden w-full relative"
+        class="shadow-md transition-all duration-300 flex flex-col flex-1 h-full overflow-hidden w-full relative"
+        :style="{ backgroundColor: 'var(--color-bg)' }"
       >
         <Content
           v-if="messageStore.selectedConversation"
@@ -53,7 +63,7 @@
         />
 
         <div v-else class="flex items-center justify-center h-full">
-          <p class="text-gray-400 text-lg">
+          <p class="text-lg" :style="{ color: 'var(--color-text-sub)' }">
             {{ t("select_conversation_to_start") }}
           </p>
         </div>

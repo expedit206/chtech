@@ -39,6 +39,18 @@
           <i class="fas fa-search text-lg"></i>
         </button>
 
+        <!-- Theme Toggle -->
+        <button
+          @click="toggleTheme"
+          class="w-8 h-8 rounded-full flex items-center justify-center transition-colors hover:bg-black/5"
+          :style="{ color: 'var(--color-text-main)' }"
+        >
+          <i
+            :class="theme === 'dark' ? 'fas fa-sun' : 'fas fa-moon'"
+            class="text-lg"
+          ></i>
+        </button>
+
         <div class="relative cursor-pointer group">
           <i
             class="fas fa-shopping-cart text-lg"
@@ -117,7 +129,7 @@
         </a>
 
         <a
-          href="#"
+          href="/messages"
           class="group relative flex-1 flex items-center justify-center hover:bg-black/5 transition-colors"
           :style="{ color: 'var(--color-text-sub)' }"
         >
@@ -140,7 +152,10 @@
 
 <script setup>
 import { useRoute } from "vue-router";
+import { useTheme } from "../composables/useTheme.js";
+
 const route = useRoute();
+const { theme, toggleTheme } = useTheme();
 const isActive = (path) => route.path === path;
 
 const activeStyle = {

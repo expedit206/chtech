@@ -1,13 +1,27 @@
 <template>
-  <div class="px-4 py-3 bg-white border-t border-gray-100">
+  <div
+    class="px-4 py-3 border-t"
+    :style="{
+      backgroundColor: 'var(--color-surface)',
+      borderColor: 'var(--color-border)',
+    }"
+  >
     <div class="max-w-4xl mx-auto flex items-end gap-2 relative">
       <!-- Product Tag (Popup/Floating) -->
       <transition name="slide-up">
         <div
           v-if="product?.id"
-          class="absolute -top-12 left-0 bg-white shadow-lg border border-gray-100 rounded-lg p-2 flex items-center gap-3 z-10 text-sm"
+          class="absolute -top-12 left-0 shadow-lg border rounded-lg p-2 flex items-center gap-3 z-10 text-sm"
+          :style="{
+            backgroundColor: 'var(--color-surface)',
+            borderColor: 'var(--color-border)',
+            color: 'var(--color-text-main)',
+          }"
         >
-          <div class="w-8 h-8 rounded bg-gray-100 overflow-hidden">
+          <div
+            class="w-8 h-8 rounded overflow-hidden"
+            :style="{ backgroundColor: 'var(--color-bg)' }"
+          >
             <img
               v-if="product.photo_url"
               :src="product.photo_url"
@@ -31,11 +45,16 @@
       <transition name="slide-up">
         <div
           v-if="pendingFile"
-          class="absolute bottom-full left-0 w-full mb-2 bg-white rounded-lg shadow-xl border border-gray-100 p-3 z-20"
+          class="absolute bottom-full left-0 w-full mb-2 rounded-lg shadow-xl border p-3 z-20"
+          :style="{
+            backgroundColor: 'var(--color-surface)',
+            borderColor: 'var(--color-border)',
+          }"
         >
           <div class="flex flex-col gap-3">
             <div
-              class="relative w-full rounded-lg overflow-hidden bg-gray-100 max-h-60 flex items-center justify-center"
+              class="relative w-full rounded-lg overflow-hidden max-h-60 flex items-center justify-center"
+              :style="{ backgroundColor: 'var(--color-bg)' }"
             >
               <img
                 v-if="pendingFileType === 'image'"
@@ -64,7 +83,12 @@
                 type="text"
                 placeholder="Ajouter une légende..."
                 @keydown.enter.prevent="sendAttachment"
-                class="flex-1 bg-gray-50 border border-gray-200 rounded-full px-4 py-2 text-sm focus:outline-none focus:ring-1 focus:ring-[var(--color-primary)]"
+                class="flex-1 border rounded-full px-4 py-2 text-sm focus:outline-none focus:ring-1 focus:ring-[var(--color-primary)]"
+                :style="{
+                  backgroundColor: 'var(--color-bg)',
+                  borderColor: 'var(--color-border)',
+                  color: 'var(--color-text-main)',
+                }"
               />
               <button
                 @click="sendAttachment"
@@ -115,7 +139,8 @@
 
       <!-- Main Input Area -->
       <div
-        class="flex-1 bg-gray-100 rounded-[1.5rem] flex items-center min-h-[48px] px-2 transition-colors focus-within:bg-gray-50 focus-within:ring-1 focus-within:ring-gray-300 focus-within:shadow-sm"
+        class="flex-1 rounded-[1.5rem] flex items-center min-h-[48px] px-2 transition-colors focus-within:ring-1 focus-within:ring-gray-300 focus-within:shadow-sm"
+        :style="{ backgroundColor: 'var(--color-bg)' }"
       >
         <!-- Text Area -->
         <textarea
@@ -125,7 +150,8 @@
           @keydown.enter.prevent="$emit('send-message')"
           rows="1"
           placeholder="Message..."
-          class="w-full bg-transparent border-none focus:ring-0 px-4 py-3 text-gray-700 placeholder-gray-400 resize-none max-h-32 overflow-y-auto"
+          class="w-full bg-transparent border-none focus:ring-0 px-4 py-3 placeholder-gray-400 resize-none max-h-32 overflow-y-auto"
+          :style="{ color: 'var(--color-text-main)' }"
           ref="textAreaRef"
           style="min-height: 48px; box-shadow: none !important"
         ></textarea>

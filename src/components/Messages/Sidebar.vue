@@ -2,18 +2,35 @@
   <transition name="slide-fade">
     <div
       v-if="isSidebarOpen || !isMobile"
-      class="bg-white border-r border-gray-100 flex flex-col h-full transition-all duration-300 z-20"
+      class="border-r flex flex-col h-full transition-all duration-300 z-20"
       :class="isMobile ? 'fixed inset-0 w-full' : 'w-80 md:w-96'"
+      :style="{
+        backgroundColor: 'var(--color-surface)',
+        borderColor: 'var(--color-border)',
+      }"
     >
       <!-- Header -->
       <div
-        class="p-4 border-b border-gray-100 flex items-center justify-between bg-white sticky top-0 z-10"
+        class="p-4 border-b flex items-center justify-between sticky top-0 z-10"
+        :style="{
+          backgroundColor: 'var(--color-surface)',
+          borderColor: 'var(--color-border)',
+        }"
       >
-        <h2 class="text-xl font-bold text-gray-800">Messages</h2>
+        <h2
+          class="text-xl font-bold"
+          :style="{ color: 'var(--color-text-main)' }"
+        >
+          Messages
+        </h2>
         <button
           v-if="isMobile"
           @click="$emit('toggle-sidebar')"
-          class="w-8 h-8 rounded-full bg-gray-100 text-gray-600 flex items-center justify-center hover:bg-gray-200"
+          class="w-8 h-8 rounded-full flex items-center justify-center transition-colors"
+          :style="{
+            backgroundColor: 'var(--color-bg)',
+            color: 'var(--color-text-sub)',
+          }"
         >
           <i class="fas fa-times"></i>
         </button>
@@ -43,7 +60,7 @@
           :class="[
             activeConversationId == conv.user_id
               ? 'bg-[var(--color-primary)]/10'
-              : 'hover:bg-gray-50',
+              : 'hover:bg-opacity-5 hover:bg-black dark:hover:bg-white/5',
           ]"
         >
           <!-- Active Indicator Strip -->
@@ -58,7 +75,8 @@
             @click.stop="$emit('view-profile', conv.user_id)"
           >
             <div
-              class="w-12 h-12 rounded-full bg-gray-200 overflow-hidden ring-2 ring-transparent group-hover:ring-gray-100 transition-all"
+              class="w-12 h-12 rounded-full overflow-hidden ring-2 ring-transparent group-hover:ring-gray-100 transition-all"
+              :style="{ backgroundColor: 'var(--color-bg)' }"
             >
               <img
                 v-if="conv.profile_photo"
@@ -85,16 +103,23 @@
           <div class="flex-1 min-w-0">
             <div class="flex justify-between items-baseline mb-0.5">
               <h3
-                class="font-semibold text-gray-900 truncate pr-2"
+                class="font-semibold truncate pr-2"
                 :class="{
                   'text-[var(--color-primary)]':
                     activeConversationId == conv.user_id,
+                }"
+                :style="{
+                  color:
+                    activeConversationId != conv.user_id
+                      ? 'var(--color-text-main)'
+                      : '',
                 }"
               >
                 {{ conv.name }}
               </h3>
               <span
-                class="text-[10px] text-gray-400 font-medium whitespace-nowrap"
+                class="text-[10px] font-medium whitespace-nowrap"
+                :style="{ color: 'var(--color-text-sub)' }"
               >
                 {{ formatTime(conv.updated_at) }}
               </span>
@@ -102,7 +127,8 @@
 
             <div class="flex items-center justify-between">
               <div
-                class="flex items-center gap-1.5 min-w-0 text-sm text-gray-500"
+                class="flex items-center gap-1.5 min-w-0 text-sm"
+                :style="{ color: 'var(--color-text-sub)' }"
               >
                 <!-- Icon based on type -->
                 <i
@@ -121,7 +147,13 @@
                 <span
                   class="truncate block"
                   :class="{
-                    'font-medium text-gray-800': conv.unread_count > 0,
+                    'font-medium': conv.unread_count > 0,
+                  }"
+                  :style="{
+                    color:
+                      conv.unread_count > 0
+                        ? 'var(--color-text-main)'
+                        : 'var(--color-text-sub)',
                   }"
                 >
                   {{
