@@ -111,13 +111,14 @@
         <!-- Actions -->
         <div class="flex gap-3 pt-4">
           <button
-            class="flex-1 py-3 rounded-lg font-bold transition-all active:scale-95"
+            @click="handleAddToCart"
+            class="flex-1 py-3 rounded-lg font-bold transition-all active:scale-95 flex items-center justify-center gap-2"
             :style="{
               backgroundColor: 'var(--color-primary)',
               color: 'var(--color-pure)',
             }"
           >
-            <i class="fas fa-shopping-cart mr-2"></i> Ajouter au panier
+            <i class="fas fa-shopping-cart"></i> Ajouter au panier
           </button>
           <button
             @click="handleToggleFavorite"
@@ -129,7 +130,10 @@
             }"
             :title="isFavorited ? 'Retirer des favoris' : 'Ajouter aux favoris'"
           >
-            <i class="fas fa-heart" :class="{ 'text-red-500': isFavorited }"></i>
+            <i
+              class="fas fa-heart"
+              :class="{ 'text-red-500': isFavorited }"
+            ></i>
           </button>
           <button
             @click="handleShare"
@@ -154,15 +158,19 @@
         >
           <div class="flex items-center gap-3 mb-3">
             <img
-              :src="product.user?.photo || `https://ui-avatars.com/api/?name=${product.user?.nom || 'Vendeur'}&background=6366f1&color=fff`"
+              :src="
+                product.user?.photo ||
+                `https://ui-avatars.com/api/?name=${product.user?.nom || 'Vendeur'}&background=6366f1&color=fff`
+              "
               class="w-10 h-10 rounded-full object-cover"
             />
             <div>
               <p class="font-bold" :style="{ color: 'var(--color-text-main)' }">
-                {{ product.user?.nom || 'Vendeur' }}
+                {{ product.user?.nom || "Vendeur" }}
               </p>
               <p class="text-sm" :style="{ color: 'var(--color-text-sub)' }">
-                Vendeur {{ product.user?.id ? 'vérifiée' : '' }} ⭐ {{ product.rating }}
+                Vendeur {{ product.user?.id ? "vérifiée" : "" }} ⭐
+                {{ product.rating }}
               </p>
             </div>
           </div>
@@ -195,11 +203,13 @@ import { useRoute, RouterLink } from "vue-router";
 import { useProductStore } from "../stores/products.js";
 import { useInteractionStore } from "../stores/interactions.js";
 import { useAuthStore } from "../stores/auth.js";
+import { useCartStore } from "../stores/cart.js";
 
 const route = useRoute();
 const productStore = useProductStore();
 const interactionStore = useInteractionStore();
 const authStore = useAuthStore();
+const cartStore = useCartStore();
 const loading = ref(true);
 const error = ref(null);
 
@@ -221,6 +231,20 @@ const isFavorited = computed(() => {
   return interactionStore.isFavorited(product.value.id);
 });
 
+const handleAddToCart = async () => {
+  try {
+    await cartStore.addToCart({
+      id: product.value.id,
+      name: product.value.name,
+      price: product.value.price_raw, // We'll add this mapping
+      image: product.value.image,
+      category: product.value.category,
+    });
+  } catch (err) {
+    console.error("Erreur ajout panier:", err);
+  }
+};
+
 onMounted(async () => {
   try {
     const productId = route.params.id;
@@ -235,8 +259,11 @@ onMounted(async () => {
     product.value = {
       id: produit.id,
       name: produit.nom,
-      price: `${produit.prix}€`,
-      image: produit.photos?.[0] ? getImageUrl(produit.photos[0]) : "/placeholder.png",
+      price_raw: produit.prix,
+      price: `${produit.prix.toLocaleString()} FCFA`,
+      image: produit.photos?.[0]
+        ? getImageUrl(produit.photos[0])
+        : "/placeholder.png",
       rating: parseFloat(produit.note_moyenne || 4.5),
       reviews: produit.nombre_avis || 0,
       description: produit.description || "Aucune description disponible",
@@ -248,7 +275,7 @@ onMounted(async () => {
       specs: [
         `Catégorie: ${produit.category?.nom}`,
         `Quantité disponible: ${produit.quantite}`,
-        `Condition: ${produit.condition || 'Neuf'}`,
+        `Condition: ${produit.condition || "Neuf"}`,
       ],
     };
 
@@ -263,22 +290,22 @@ onMounted(async () => {
 });
 
 const getImageUrl = (photo) => {
-  if (typeof photo === 'string') {
-    if (photo.startsWith('http')) return photo;
+  if (typeof photo === "string") {
+    if (photo.startsWith("http")) return photo;
     return `http://localhost:8000/storage/${photo}`;
   }
-  return '/placeholder.png';
+  return "/placeholder.png";
 };
 
 const handleToggleFavorite = async () => {
   try {
     if (!authStore.isAuthenticated) {
-      alert('Veuillez vous connecter pour ajouter en favori');
+      alert("Veuillez vous connecter pour ajouter en favori");
       return;
     }
     await interactionStore.toggleFavorite(product.value.id);
   } catch (err) {
-    console.error('Erreur favori:', err);
+    console.error("Erreur favori:", err);
   }
 };
 
@@ -288,16 +315,16 @@ const handleShare = async () => {
       await navigator.share({
         title: product.value.name,
         text: `Découvrez: ${product.value.name}`,
-        url: window.location.href
+        url: window.location.href,
       });
       await interactionStore.shareProduct(product.value.id);
     } else {
       await interactionStore.shareProduct(product.value.id);
-      alert('Lien copié! 📋');
+      alert("Lien copié! 📋");
     }
   } catch (err) {
-    if (err.name !== 'AbortError') {
-      console.error('Erreur partage:', err);
+    if (err.name !== "AbortError") {
+      console.error("Erreur partage:", err);
     }
   }
 };

@@ -51,13 +51,17 @@
           ></i>
         </button>
 
-        <RouterLink to="/cart" class="relative cursor-pointer group">
+        <div
+          @click="cart.isSidebarOpen = true"
+          class="relative cursor-pointer group"
+        >
           <i
-            class="fas fa-shopping-cart text-lg"
+            class="fas fa-shopping-cart text-lg transition-transform group-hover:scale-110"
             :style="{ color: 'var(--color-text-main)' }"
           ></i>
           <span
-            class="absolute -top-1.5 -right-1.5 flex items-center justify-center rounded-full text-[9px] font-bold"
+            v-if="cart.count > 0"
+            class="absolute -top-1.5 -right-1.5 flex items-center justify-center rounded-full text-[9px] font-bold animate-bounce-subtle"
             :style="{
               backgroundColor: 'var(--color-accent)',
               color: 'var(--color-pure)',
@@ -66,10 +70,10 @@
               border: '2px solid var(--color-surface)',
             }"
           >
-            {{ cartCount }}
+            {{ cart.count }}
           </span>
           <span class="tooltip-text">Panier</span>
-        </RouterLink>
+        </div>
 
         <button
           class="w-8 h-8 rounded-full flex items-center justify-center shadow-md transition-transform active:scale-90"
@@ -130,7 +134,7 @@
 
         <RouterLink
           to="/messages"
-       class="group relative flex-1 flex items-center justify-center border-b-4 transition-colors"
+          class="group relative flex-1 flex items-center justify-center border-b-4 transition-colors"
           :style="isActive('/messages') ? activeStyle : inactiveStyle"
         >
           <i class="fas fa-comments text-xl"></i>
@@ -138,7 +142,6 @@
         </RouterLink>
 
         <a
-
           class="group relative flex-1 flex items-center justify-center hover:bg-black/5 transition-colors"
           :style="{ color: 'var(--color-text-sub)' }"
         >
@@ -153,9 +156,8 @@
 <script setup>
 import { useRoute } from "vue-router";
 import { useTheme } from "../composables/useTheme.js";
-import { useCartStore } from '../stores/cart.js';
+import { useCartStore } from "../stores/cart.js";
 const cart = useCartStore();
-const cartCount = cart.count;
 
 const route = useRoute();
 const { theme, toggleTheme } = useTheme();
@@ -170,3 +172,18 @@ const inactiveStyle = {
   color: "var(--color-text-sub)",
 };
 </script>
+
+<style scoped>
+@keyframes bounce-subtle {
+  0%,
+  100% {
+    transform: translateY(0);
+  }
+  50% {
+    transform: translateY(-2px);
+  }
+}
+.animate-bounce-subtle {
+  animation: bounce-subtle 2s infinite;
+}
+</style>
