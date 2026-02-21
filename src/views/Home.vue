@@ -166,10 +166,17 @@
       />
     </div>
   </div>
+  <!-- importation du foo -->
+
 </template>
 
 <script setup>
+<<<<<<< HEAD
 import { ref, onMounted, computed } from "vue";
+=======
+
+import { ref } from "vue";
+>>>>>>> 0cb2c08a712626ffc3cc5d8a4b49d57563470bb6
 import { useRouter } from "vue-router";
 import { useProductStore } from "../stores/products.js";
 import CategoryCard from "../components/CategoryCard.vue";
