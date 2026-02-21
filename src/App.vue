@@ -15,5 +15,20 @@
 </template>
 
 <script setup>
+import { onMounted } from "vue";
 import Header from "./components/Header.vue";
+import { useAuthStore } from "./stores/auth.js";
+import { useInteractionStore } from "./stores/interactions.js";
+
+const authStore = useAuthStore();
+const interactionStore = useInteractionStore();
+
+onMounted(async () => {
+  // Initialiser les stores au démarrage
+  if (authStore.isAuthenticated) {
+    // Charger les favoris si l'utilisateur est authentifié
+    await interactionStore.loadUserFavorites();
+  }
+});
 </script>
+

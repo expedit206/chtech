@@ -51,7 +51,7 @@
           ></i>
         </button>
 
-        <div class="relative cursor-pointer group">
+        <RouterLink to="/cart" class="relative cursor-pointer group">
           <i
             class="fas fa-shopping-cart text-lg"
             :style="{ color: 'var(--color-text-main)' }"
@@ -66,10 +66,10 @@
               border: '2px solid var(--color-surface)',
             }"
           >
-            2
+            {{ cartCount }}
           </span>
           <span class="tooltip-text">Panier</span>
-        </div>
+        </RouterLink>
 
         <button
           class="w-8 h-8 rounded-full flex items-center justify-center shadow-md transition-transform active:scale-90"
@@ -153,6 +153,9 @@
 <script setup>
 import { useRoute } from "vue-router";
 import { useTheme } from "../composables/useTheme.js";
+import { useCartStore } from '../stores/cart.js';
+const cart = useCartStore();
+const cartCount = cart.count;
 
 const route = useRoute();
 const { theme, toggleTheme } = useTheme();

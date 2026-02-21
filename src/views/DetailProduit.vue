@@ -120,13 +120,27 @@
             <i class="fas fa-shopping-cart mr-2"></i> Ajouter au panier
           </button>
           <button
+            @click="handleToggleFavorite"
             class="px-6 py-3 rounded-lg font-bold border transition-all active:scale-95"
+            :class="{ 'bg-red-100': isFavorited }"
+            :style="{
+              borderColor: isFavorited ? 'red' : 'var(--color-primary)',
+              color: isFavorited ? 'red' : 'var(--color-primary)',
+            }"
+            :title="isFavorited ? 'Retirer des favoris' : 'Ajouter aux favoris'"
+          >
+            <i class="fas fa-heart" :class="{ 'text-red-500': isFavorited }"></i>
+          </button>
+          <button
+            @click="handleShare"
+            class="px-4 py-3 rounded-lg font-bold border transition-all active:scale-95"
             :style="{
               borderColor: 'var(--color-primary)',
               color: 'var(--color-primary)',
             }"
+            title="Partager"
           >
-            <i class="fas fa-heart"></i>
+            <i class="fas fa-share-alt"></i>
           </button>
         </div>
 
@@ -140,25 +154,35 @@
         >
           <div class="flex items-center gap-3 mb-3">
             <img
-              src="https://ui-avatars.com/api/?name=Seller&background=6366f1&color=fff"
-              class="w-10 h-10 rounded-full"
+              :src="product.user?.photo || `https://ui-avatars.com/api/?name=${product.user?.nom || 'Vendeur'}&background=6366f1&color=fff`"
+              class="w-10 h-10 rounded-full object-cover"
             />
             <div>
               <p class="font-bold" :style="{ color: 'var(--color-text-main)' }">
-                Tech Store
+                {{ product.user?.nom || 'Vendeur' }}
               </p>
               <p class="text-sm" :style="{ color: 'var(--color-text-sub)' }">
-                Vendeur vérifiée ⭐ 4.9
+                Vendeur {{ product.user?.id ? 'vérifiée' : '' }} ⭐ {{ product.rating }}
               </p>
             </div>
           </div>
-          <router-link
-            :to="{ name: 'messages', params: { receiverId: product.id } }"
+          <RouterLink
+            v-if="product.user?.id"
+            :to="{ name: 'messages', params: { receiverId: product.user.id } }"
+            @click="handleContactSeller"
             class="w-full py-2 rounded-lg text-sm font-semibold block text-center mt-2 hover:bg-gray-100 transition"
             :style="{ color: 'var(--color-primary)' }"
           >
             Contacter le vendeur
-          </router-link>
+          </RouterLink>
+          <button
+            v-else
+            class="w-full py-2 rounded-lg text-sm font-semibold opacity-50 cursor-not-allowed"
+            :style="{ color: 'var(--color-primary)' }"
+            disabled
+          >
+            Données vendeur indisponibles
+          </button>
         </div>
       </div>
     </div>
@@ -166,24 +190,122 @@
 </template>
 
 <script setup>
-import { ref } from "vue";
+import { ref, computed, onMounted } from "vue";
+import { useRoute, RouterLink } from "vue-router";
+import { useProductStore } from "../stores/products.js";
+import { useInteractionStore } from "../stores/interactions.js";
+import { useAuthStore } from "../stores/auth.js";
+
+const route = useRoute();
+const productStore = useProductStore();
+const interactionStore = useInteractionStore();
+const authStore = useAuthStore();
+const loading = ref(true);
+const error = ref(null);
 
 const product = ref({
-  id: 1,
-  name: "Intel Core i9-13900K",
-  price: "$589.99",
-  image:
-    "https://images.unsplash.com/photo-1591290619762-b5f0d4c9d1a8?q=80&w=800",
-  rating: 4.8,
-  reviews: 245,
-  description:
-    "Le processeur Intel Core i9-13900K offre des performances exceptionnelles pour les applications exigeantes. Avec 24 cœurs et une fréquence jusqu'à 5.8 GHz, il est idéal pour le gaming, le streaming et le travail professionnel.",
-  specs: [
-    "24 cores (8 P-cores + 16 E-cores)",
-    "Fréquence jusqu'à 5.8 GHz",
-    "Cache jusqu'à 36 MB",
-    "TDP 253W",
-    "Socket LGA1700",
-  ],
+  id: null,
+  name: "Chargement...",
+  price: "N/A",
+  image: "/placeholder.png",
+  rating: 0,
+  reviews: 0,
+  description: "Chargement...",
+  specs: [],
+  category: "Autre",
+  quantity: 0,
+  user: null,
 });
+
+const isFavorited = computed(() => {
+  return interactionStore.isFavorited(product.value.id);
+});
+
+onMounted(async () => {
+  try {
+    const productId = route.params.id;
+    if (!productId) {
+      throw new Error("ID du produit manquant");
+    }
+
+    // Récupérer les détails du produit depuis l'API
+    const produit = await productStore.getProductById(productId);
+
+    // Mapper les données du backend au format du composant
+    product.value = {
+      id: produit.id,
+      name: produit.nom,
+      price: `${produit.prix}€`,
+      image: produit.photos?.[0] ? getImageUrl(produit.photos[0]) : "/placeholder.png",
+      rating: parseFloat(produit.note_moyenne || 4.5),
+      reviews: produit.nombre_avis || 0,
+      description: produit.description || "Aucune description disponible",
+      category: produit.category?.nom || "Autre",
+      quantity: produit.quantite || 0,
+      user: produit.user,
+      condition: produit.condition || "Neuf",
+      ville: produit.ville || "Non spécifiée",
+      specs: [
+        `Catégorie: ${produit.category?.nom}`,
+        `Quantité disponible: ${produit.quantite}`,
+        `Condition: ${produit.condition || 'Neuf'}`,
+      ],
+    };
+
+    // Enregistrer la vue
+    interactionStore.recordView(productId);
+  } catch (err) {
+    error.value = err.message;
+    console.error("Erreur lors du chargement du produit:", err);
+  } finally {
+    loading.value = false;
+  }
+});
+
+const getImageUrl = (photo) => {
+  if (typeof photo === 'string') {
+    if (photo.startsWith('http')) return photo;
+    return `http://localhost:8000/storage/${photo}`;
+  }
+  return '/placeholder.png';
+};
+
+const handleToggleFavorite = async () => {
+  try {
+    if (!authStore.isAuthenticated) {
+      alert('Veuillez vous connecter pour ajouter en favori');
+      return;
+    }
+    await interactionStore.toggleFavorite(product.value.id);
+  } catch (err) {
+    console.error('Erreur favori:', err);
+  }
+};
+
+const handleShare = async () => {
+  try {
+    if (navigator.share) {
+      await navigator.share({
+        title: product.value.name,
+        text: `Découvrez: ${product.value.name}`,
+        url: window.location.href
+      });
+      await interactionStore.shareProduct(product.value.id);
+    } else {
+      await interactionStore.shareProduct(product.value.id);
+      alert('Lien copié! 📋');
+    }
+  } catch (err) {
+    if (err.name !== 'AbortError') {
+      console.error('Erreur partage:', err);
+    }
+  }
+};
+
+const handleContactSeller = () => {
+  if (product.value.user?.id) {
+    interactionStore.recordContact(product.value.id);
+    // Naviguer vers les messages avec le vendeur
+  }
+};
 </script>

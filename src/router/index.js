@@ -23,6 +23,11 @@ const routes = [
     path: '/messages/:receiverId?',
     name: 'messages',
     component: () => import('../views/Messages.vue')
+  },
+  {
+    path: '/cart',
+    name: 'Cart',
+    component: () => import('../views/Cart.vue')
   }
 ]
 

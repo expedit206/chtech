@@ -169,170 +169,39 @@
 </template>
 
 <script setup>
-import { ref } from "vue";
+import { ref, onMounted, computed } from "vue";
 import { useRouter } from "vue-router";
+import { useProductStore } from "../stores/products.js";
 import CategoryCard from "../components/CategoryCard.vue";
 import ProductCard from "../components/ProductCard.vue";
 
-// Importing images
-import img1 from "../assets/image.png";
-import img2 from "../assets/img2.jpeg";
-import img3 from "../assets/img3.jpeg";
-import img4 from "../assets/img4.jpeg";
-import img5 from "../assets/img5.jpeg";
-import img6 from "../assets/img6.jpeg";
-import img7 from "../assets/img7.jpeg";
-
 const router = useRouter();
+const productStore = useProductStore();
 
-const categories = ref([
-  { id: 1, name: "Processeurs", icon: "fas fa-microchip", active: true },
-  { id: 2, name: "Laptops", icon: "fas fa-laptop", active: false },
-  { id: 3, name: "Processeurs", icon: "fas fa-microchip", active: false },
-  { id: 4, name: "Laptops", icon: "fas fa-laptop", active: false },
-  { id: 5, name: "Processeurs", icon: "fas fa-microchip", active: true },
-]);
+// Récupérer les catégories depuis le store
+const categories = computed(() => {
+  return productStore.categories.map(cat => ({
+    id: cat.id,
+    name: cat.nom,
+    icon: "fas fa-box",
+    active: false
+  }));
+});
 
-const productsPart1 = ref([
-  {
-    id: 1,
-    name: "Montre Minimaliste Edition Limitée",
-    price: "89,00€",
-    image: img1,
-    rating: 5,
-    views: "1,425",
-    category: "Accessoires",
-  },
-  {
-    id: 2,
-    name: "Montre Minimaliste Edition Limitée",
-    price: "89,00€",
-    image: img2,
-    rating: 5,
-    views: "1,425",
-    category: "Accessoires",
-  },
-  {
-    id: 3,
-    name: "Montre Minimaliste Edition Limitée",
-    price: "89,00€",
-    image: img3,
-    rating: 5,
-    views: "1,425",
-    category: "Accessoires",
-  },
-  {
-    id: 4,
-    name: "Montre Minimaliste Edition Limitée",
-    price: "89,00€",
-    image: img4,
-    rating: 5,
-    views: "1,425",
-    category: "Accessoires",
-  },
-  {
-    id: 5,
-    name: "Montre Minimaliste Edition Limitée",
-    price: "89,00€",
-    image: img5,
-    rating: 5,
-    views: "1,425",
-    category: "Accessoires",
-  },
-  {
-    id: 6,
-    name: "Montre Minimaliste Edition Limitée",
-    price: "89,00€",
-    image: img6,
-    rating: 5,
-    views: "1,425",
-    category: "Accessoires",
-  },
-  {
-    id: 7,
-    name: "Montre Minimaliste Edition Limitée",
-    price: "89,00€",
-    image: img7,
-    rating: 5,
-    views: "1,425",
-    category: "Accessoires",
-  },
-  {
-    id: 8,
-    name: "Montre Minimaliste Edition Limitée",
-    price: "89,00€",
-    image: img6,
-    rating: 5,
-    views: "1,425",
-    category: "Accessoires",
-  },
-  {
-    id: 9,
-    name: "Montre Minimaliste Edition Limitée",
-    price: "89,00€",
-    image: img6,
-    rating: 5,
-    views: "1,425",
-    category: "Accessoires",
-  },
-]);
+// Charger les données au montage du composant
+onMounted(async () => {
+  await productStore.fetchCategories();
+  await productStore.fetchProducts();
+});
 
-const productsPart2 = ref([
-  {
-    id: 10,
-    name: "Montre Minimaliste Edition Limitée",
-    price: "89,00€",
-    image: img5,
-    rating: 5,
-    views: "1,425",
-    category: "Accessoires",
-  },
-  {
-    id: 11,
-    name: "Montre Minimaliste Edition Limitée",
-    price: "89,00€",
-    image: img6,
-    rating: 5,
-    views: "1,425",
-    category: "Accessoires",
-  },
-  {
-    id: 12,
-    name: "Montre Minimaliste Edition Limitée",
-    price: "89,00€",
-    image: img1,
-    rating: 5,
-    views: "1,425",
-    category: "Accessoires",
-  },
-  {
-    id: 13,
-    name: "Montre Minimaliste Edition Limitée",
-    price: "89,00€",
-    image: img1,
-    rating: 5,
-    views: "1,425",
-    category: "Accessoires",
-  },
-  {
-    id: 14,
-    name: "Montre Minimaliste Edition Limitée",
-    price: "89,00€",
-    image: img1,
-    rating: 5,
-    views: "1,425",
-    category: "Accessoires",
-  },
-  {
-    id: 15,
-    name: "Montre Minimaliste Edition Limitée",
-    price: "89,00€",
-    image: img1,
-    rating: 5,
-    views: "1,425",
-    category: "Accessoires",
-  },
-]);
+// Diviser les produits en deux parties pour les deux grilles
+const productsPart1 = computed(() => {
+  return productStore.productsWithImages.slice(0, 9);
+});
+
+const productsPart2 = computed(() => {
+  return productStore.productsWithImages.slice(9, 15);
+});
 
 const goToProduct = (id) => {
   router.push(`/produit/${id}`);
