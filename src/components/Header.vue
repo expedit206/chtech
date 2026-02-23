@@ -89,10 +89,13 @@
           class="p-0.5 rounded-full border-2"
           :style="{ borderColor: 'var(--color-primary)' }"
         >
-          <img
+        <RouterLink to="/profile">
+           <img
             src="https://ui-avatars.com/api/?name=CH&background=6366f1&color=fff"
             class="w-7 h-7 rounded-full"
+        
           />
+        </RouterLink>
         </div>
       </div>
     </div>
@@ -157,6 +160,7 @@
 import { useRoute } from "vue-router";
 import { useTheme } from "../composables/useTheme.js";
 import { useCartStore } from "../stores/cart.js";
+import { RouterLink } from "vue-router";
 const cart = useCartStore();
 
 const route = useRoute();
