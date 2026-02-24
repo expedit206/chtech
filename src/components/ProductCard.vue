@@ -6,9 +6,8 @@
       backgroundColor: 'var(--color-surface)',
     }"
   >
-    <!-- Image Container -->
     <div
-      class="aspect-square w-full overflow-hidden relative bg-white border-b"
+      class="aspect-square w-full overflow-hidden relative bg-white border-b h-[10rem]"
       :style="{ borderColor: 'var(--color-border)' }"
     >
       <img

@@ -14,7 +14,7 @@
           fontFamily: 'Open Sans, sans-serif',
         }"
       >
-        chtech
+        <RouterLink to="/"> chtech </RouterLink>
       </h1>
 
       <div class="hidden md:flex flex-1 max-w-xl relative group">
@@ -201,13 +201,14 @@
           <span class="tooltip-text">Messages</span>
         </RouterLink>
 
-        <a
+        <RouterLink
+          to="/profile"
           class="group relative flex-1 flex items-center justify-center hover:bg-black/5 transition-colors"
           :style="{ color: 'var(--color-text-sub)' }"
         >
           <ChartLine class="text-lg" :stroke-width="3" />
           <span class="tooltip-text">Analyses</span>
-        </a>
+        </RouterLink>
       </nav>
     </div>
   </header>

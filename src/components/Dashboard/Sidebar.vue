@@ -6,19 +6,6 @@
       class="fixed inset-0 bg-black/50 z-40 md:hidden transition-opacity"
     ></div>
 
-    <!-- <aside
-      :class="[
-        'fixed md:sticky top-0 left-0 h-screen z-50 transition-all duration-300 ease-in-out border-r',
-        'bg-[var(--color-surface)] border-[var(--color-border)] z-10000',
-        // Logique Desktop (Width)
-        isCollapsed ? 'md:w-20' : 'md:w-64',
-        // Logique Mobile (Translation)
-        isMobileOpen
-          ? 'translate-x-0 w-64'
-          : '-translate-x-full md:translate-x-0',
-      ]"
-    > -->
-
     <aside
       :class="[
         'fixed top-0 left-0 h-screen z-[70] transition-all duration-300 ease-in-out border-r',
@@ -70,7 +57,6 @@
           @click="isMobileOpen = false"
           class="md:hidden p-2 text-[var(--color-text-sub)]"
         >
-          <!-- <i class="fa-solid fa-xmark text-xl"></i> -->
           <X class="text-xl" :size="24" />
         </button>
       </div>
@@ -128,16 +114,21 @@
 
     <!-- <button
       @click="isMobileOpen = true"
-      class="md:hidden fixed bottom-6 right-6 w-14 h-14 bg-[var(--color-primary)] text-white rounded-full shadow-lg z-30 flex items-center justify-center"
-    >
-      <i class="fa-solid fa-bars text-xl"></i>
-    </button> -->
-    <button
-      @click="isMobileOpen = true"
       class="md:hidden fixed top-30 left-4 w-12 h-12 bg-[var(--color-surface)] border border-[var(--color-border)] text-[var(--color-primary)] rounded-xl shadow-md z-30 flex items-center justify-center transition-transform active:scale-95"
     >
-      <!-- <i class="fa-solid fa-bars-staggered text-xl"></i> -->
       <AlignLeft class="text-xl" :size="24" />
+    </button> -->
+
+    <button
+      @click="isMobileOpen = true"
+      v-if="!isMobileOpen"
+      class="md:hidden fixed top-1/2 -translate-y-1/2 left-0 w-6 h-16 bg-[var(--color-primary)] text-white rounded-r-xl shadow-lg z-30 flex items-center justify-center transition-all hover:w-8 active:scale-95 group"
+    >
+      <ChevronRight
+        class="transition-transform group-hover:translate-x-0.5"
+        :size="20"
+        :stroke-width="3"
+      />
     </button>
   </div>
 </template>
@@ -156,17 +147,11 @@ import {
   Settings,
   Headphones,
   LogOut,
+  ChevronRight,
 } from "lucide-vue-next";
 const isCollapsed = ref(false); // État Desktop
 const isMobileOpen = ref(false); // État Mobile
 
-// const menuItems = [
-//   { name: "Tableau de bord", icon: "fa-house", route: "/profile" },
-//   { name: "Mes Commandes", icon: "fa-box", route: "/profile/orders" },
-//   { name: "Mes Favoris", icon: "fa-heart", route: "/profile/wishlist" },
-//   { name: "Paramètres", icon: "fa-user-gear", route: "/profile/settings" },
-//   { name: "Aide & Support", icon: "fa-headset", route: "/profile/support" },
-// ];
 const menuItems = [
   { name: "Tableau de bord", icon: LayoutDashboard, route: "/profile" },
   { name: "Mes Commandes", icon: Package, route: "/profile/orders" },

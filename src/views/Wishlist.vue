@@ -14,7 +14,8 @@
       <button
         class="flex items-center gap-2 px-4 py-2 bg-[var(--color-primary)]/10 text-[var(--color-primary)] rounded-xl font-bold text-sm hover:bg-[var(--color-primary)]/20 transition-all"
       >
-        <i class="fa-solid fa-cart-plus"></i> Tout ajouter au panier
+        <ShoppingCart class="text-lg" :stroke-width="3" />
+        Tout ajouter au panier
       </button>
     </header>
 
@@ -47,7 +48,7 @@
           @click="removeFavorite(product.id)"
           class="absolute top-4 right-4 z-10 w-8 h-8 flex items-center justify-center bg-white/80 backdrop-blur-sm border border-[var(--color-border)] text-[var(--color-text-sub)] rounded-full hover:text-red-500 hover:bg-white transition-all"
         >
-          <i class="fa-solid fa-heart-crack"></i>
+          <Heart class="text-lg" :stroke-width="3" />
         </button>
 
         <div
@@ -62,7 +63,7 @@
 
         <div class="space-y-2">
           <div class="flex items-center gap-1 text-yellow-400 text-xs">
-            <i class="fa-solid fa-star" v-for="s in 5" :key="s"></i>
+            <Star v-for="s in 5" :key="s" :size="12" class="fill-current" />
             <span class="text-[var(--color-text-sub)] ml-1"
               >({{ product.reviews || 0 }})</span
             >
@@ -88,12 +89,11 @@
           @click="addToCart(product)"
           class="w-full mt-4 py-3 bg-[var(--color-primary)] text-white rounded-xl font-bold flex items-center justify-center gap-2 hover:opacity-90 shadow-lg shadow-indigo-500/20 transition-all"
         >
-          <i class="fa-solid fa-bag-shopping"></i>
+          <ShoppingCart class="text-lg" />
           Ajouter au panier
         </button>
       </div>
     </div>
-
     <!-- Empty state -->
     <div
       v-else
@@ -104,10 +104,11 @@
         class="w-20 h-20 rounded-full mx-auto flex items-center justify-center"
         :style="{ backgroundColor: 'var(--color-surface)' }"
       >
-        <i
-          class="fas fa-heart text-4xl opacity-20"
+        <Heart
+          class="text-4xl opacity-20"
+          :size="48"
           :style="{ color: 'var(--color-text-sub)' }"
-        ></i>
+        />
       </div>
       <div>
         <h2
@@ -138,6 +139,7 @@
 import { ref, onMounted } from "vue";
 import { useInteractionStore } from "../stores/interactions.js";
 import { useCartStore } from "../stores/cart.js";
+import { ShoppingCart, Heart, Star } from "lucide-vue-next";
 import SkeletonWishlistCard from "../components/skeletons/SkeletonWishlistCard.vue";
 
 const interactionStore = useInteractionStore();

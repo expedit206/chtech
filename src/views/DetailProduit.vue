@@ -94,9 +94,11 @@
       class="inline-flex items-center gap-2 mb-6 text-sm font-semibold group"
       :style="{ color: 'var(--color-primary)' }"
     >
-      <i
-        class="fas fa-arrow-left transition-transform group-hover:-translate-x-1"
-      ></i>
+      <ArrowLeft
+        :size="16"
+        :stroke-width="3"
+        class="transition-transform group-hover:-translate-x-1"
+      />
       Retour aux produits
     </RouterLink>
 
@@ -296,28 +298,22 @@
         </div>
 
         <!-- Rating -->
-        <div class="flex items-center gap-3">
-          <div class="flex items-center gap-0.5">
-            <i
-              v-for="n in 5"
-              :key="n"
-              class="fas fa-star text-sm"
-              :class="
-                n <= Math.round(product.rating)
-                  ? 'text-yellow-400'
-                  : 'text-gray-300'
-              "
-            ></i>
+        <div class="flex items-center gap-4">
+          <div class="flex items-center gap-1">
+            <Star
+              :size="16"
+              :stroke-width="3"
+              class="text-yellow-400 fill-yellow-400"
+            />
+            <span
+              class="font-bold"
+              :style="{ color: 'var(--color-text-main)' }"
+              >{{ product.rating }}</span
+            >
+            <span :style="{ color: 'var(--color-text-sub)' }"
+              >({{ product.reviews }} avis)</span
+            >
           </div>
-          <span
-            class="text-sm font-bold"
-            :style="{ color: 'var(--color-text-main)' }"
-          >
-            {{ product.rating.toFixed(1) }}
-          </span>
-          <span class="text-sm" :style="{ color: 'var(--color-text-sub)' }">
-            ({{ product.reviews }} avis)
-          </span>
         </div>
 
         <!-- Description -->
@@ -389,10 +385,11 @@
             }"
             :title="isFavorited ? 'Retirer des favoris' : 'Ajouter aux favoris'"
           >
-            <i
-              class="fas fa-heart"
-              :class="isFavorited ? 'text-red-500' : ''"
-            ></i>
+            <Heart
+              :size="16"
+              :stroke-width="3"
+              :class="{ 'text-red-500 fill-red-500': isFavorited }"
+            />
           </button>
 
           <button
@@ -404,7 +401,8 @@
             }"
             title="Partager"
           >
-            <i class="fas fa-share-alt"></i>
+            <!-- <i class="fas fa-share-alt"></i> -->
+            <Forward :size="16" :stroke-width="3" />
           </button>
         </div>
 
@@ -479,7 +477,8 @@ import { useProductStore } from "../stores/products.js";
 import { useInteractionStore } from "../stores/interactions.js";
 import { useAuthStore } from "../stores/auth.js";
 import { useCartStore } from "../stores/cart.js";
-
+import { ArrowLeft } from "lucide-vue-next";
+import { Heart, Star, Forward } from "lucide-vue-next";
 const route = useRoute();
 const router = useRouter();
 const productStore = useProductStore();
