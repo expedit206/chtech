@@ -18,10 +18,10 @@
       </h1>
 
       <div class="hidden md:flex flex-1 max-w-xl relative group">
-        <i
-          class="fas fa-search absolute left-3 top-1/2 -translate-y-1/2 text-xs transition-colors"
+        <Search
           :style="{ color: 'var(--color-text-sub)' }"
-        ></i>
+          class="absolute left-3 top-1/2 -translate-y-1/2 transition-colors text-xs"
+        />
         <input
           type="text"
           placeholder="Rechercher..."
@@ -36,7 +36,7 @@
 
       <div class="flex items-center gap-3 md:gap-4">
         <button class="md:hidden" :style="{ color: 'var(--color-text-main)' }">
-          <i class="fas fa-search text-lg"></i>
+          <Search class="text-lg" />
         </button>
 
         <!-- Theme Toggle -->
@@ -45,20 +45,23 @@
           class="w-8 h-8 rounded-full flex items-center justify-center transition-colors hover:bg-black/5"
           :style="{ color: 'var(--color-text-main)' }"
         >
-          <i
-            :class="theme === 'dark' ? 'fas fa-sun' : 'fas fa-moon'"
+          <component
+            :is="themeIcon"
+            :size="20"
+            :stroke-width="3"
             class="text-lg"
-          ></i>
+          />
         </button>
 
         <div
           @click="cart.isSidebarOpen = true"
           class="relative cursor-pointer group"
         >
-          <i
-            class="fas fa-shopping-cart text-lg transition-transform group-hover:scale-110"
+          <ShoppingCart
+            :stroke-width="3"
             :style="{ color: 'var(--color-text-main)' }"
-          ></i>
+            class="text-lg transition-transform group-hover:scale-110"
+          />
           <span
             v-if="cart.count > 0"
             class="absolute -top-1.5 -right-1.5 flex items-center justify-center rounded-full text-[9px] font-bold animate-bounce-subtle"
@@ -82,7 +85,7 @@
             color: 'var(--color-pure)',
           }"
         >
-          <i class="fas fa-plus text-sm"></i>
+          <Plus :size="16" :stroke-width="3" class="text-sm" />
         </button>
 
         <div v-if="auth.isAuthenticated" class="group relative">
@@ -128,14 +131,14 @@
               class="flex items-center gap-3 px-4 py-2.5 text-sm transition-colors hover:bg-black/5"
               :style="{ color: 'var(--color-text-main)' }"
             >
-              <i class="fas fa-user-circle opacity-70"></i>
+              <UserCircle class="w-4 h-4 opacity-70" />
               <span>Mon Profil</span>
             </router-link>
             <button
               @click="auth.logout"
               class="w-full flex items-center gap-3 px-4 py-2.5 text-sm text-red-500 transition-colors hover:bg-red-500/10"
             >
-              <i class="fas fa-sign-out-alt"></i>
+              <LogOut class="w-4 h-4" />
               <span>Déconnexion</span>
             </button>
           </div>
@@ -164,7 +167,7 @@
           class="group relative flex-1 flex items-center justify-center border-b-4 transition-colors"
           :style="isActive('/') ? activeStyle : inactiveStyle"
         >
-          <i class="fas fa-home text-xl"></i>
+          <House :stroke-width="3" class="text-lg" />
           <span class="tooltip-text">Accueil</span>
         </RouterLink>
 
@@ -173,7 +176,7 @@
           class="group relative flex-1 flex items-center justify-center border-b-4 transition-colors"
           :style="isActive('/blogs') ? activeStyle : inactiveStyle"
         >
-          <i class="fas fa-newspaper text-xl"></i>
+          <Newspaper :stroke-width="3" class="text-lg" />
           <span class="tooltip-text">Blogs</span>
         </RouterLink>
 
@@ -183,7 +186,7 @@
           :style="{ color: 'var(--color-text-sub)' }"
         >
           <div class="relative">
-            <i class="fas fa-bell text-xl"></i>
+            <Bell class="text-lg" :stroke-width="3" />
             <span class="nav-badge"></span>
           </div>
           <span class="tooltip-text">Notifications</span>
@@ -194,7 +197,7 @@
           class="group relative flex-1 flex items-center justify-center border-b-4 transition-colors"
           :style="isActive('/messages') ? activeStyle : inactiveStyle"
         >
-          <i class="fas fa-comments text-xl"></i>
+          <MessageCircle class="text-lg" :stroke-width="3" />
           <span class="tooltip-text">Messages</span>
         </RouterLink>
 
@@ -202,7 +205,7 @@
           class="group relative flex-1 flex items-center justify-center hover:bg-black/5 transition-colors"
           :style="{ color: 'var(--color-text-sub)' }"
         >
-          <i class="fas fa-chart-line text-xl"></i>
+          <ChartLine class="text-lg" :stroke-width="3" />
           <span class="tooltip-text">Analyses</span>
         </a>
       </nav>
@@ -211,16 +214,35 @@
 </template>
 
 <script setup>
-import { useRoute } from "vue-router";
+import { computed } from "vue";
+import { useRoute, RouterLink } from "vue-router";
 import { useTheme } from "../composables/useTheme.js";
 import { useCartStore } from "../stores/cart.js";
 import { useAuthStore } from "../stores/auth.js";
+import {
+  Search,
+  House,
+  Newspaper,
+  Bell,
+  MessageCircle,
+  ChartLine,
+  ShoppingCart,
+  Sun,
+  Moon,
+  Plus,
+  UserCircle,
+  LogOut,
+} from "lucide-vue-next";
 
 const cart = useCartStore();
 const auth = useAuthStore();
-
 const route = useRoute();
 const { theme, toggleTheme } = useTheme();
+
+const themeIcon = computed(() => {
+  return theme.value === "dark" ? Sun : Moon;
+});
+
 const isActive = (path) => route.path === path;
 
 const activeStyle = {

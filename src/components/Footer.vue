@@ -1,6 +1,6 @@
 <script setup lang="ts">
-import FooterActions from './FooterActions.vue';
-
+import FooterActions from "./FooterActions.vue";
+import { Facebook, Twitter, Instagram, Linkedin } from "lucide-vue-next";
 </script>
 
 <template>
@@ -62,18 +62,23 @@ import FooterActions from './FooterActions.vue';
           révolutionnaires. Achetez, vendez et innovez.
         </p>
         <div class="flex gap-4">
-          <a href="#" class="hover:opacity-70 transition-opacity"
-            ><i class="fab fa-facebook-f"></i
-          ></a>
-          <a href="#" class="hover:opacity-70 transition-opacity"
-            ><i class="fab fa-twitter"></i
-          ></a>
-          <a href="#" class="hover:opacity-70 transition-opacity"
-            ><i class="fab fa-instagram"></i
-          ></a>
-          <a href="#" class="hover:opacity-70 transition-opacity"
-            ><i class="fab fa-linkedin-in"></i
-          ></a>
+          <a href="#" class="hover:opacity-70 transition-opacity">
+            <!-- <i class="fab fa-facebook-f"></i
+          > -->
+            <Facebook :stroke-width="3" />
+          </a>
+          <a href="#" class="hover:opacity-70 transition-opacity">
+            <Twitter :stroke-width="3" />
+          </a>
+          <a href="#" class="hover:opacity-70 transition-opacity">
+            <Instagram :stroke-width="3" />
+          </a>
+          <a href="#" class="hover:opacity-70 transition-opacity">
+    
+            <!-- <i class="fab fa-linkedin-in"></i
+          > -->
+          <Linkedin :stroke-width="3" />
+        </a>
         </div>
       </div>
 

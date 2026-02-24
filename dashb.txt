@@ -1,0 +1,60 @@
+1. Tableau de bord (🏠 Dashboard)
+C'est le résumé de tout. Ne mets pas trop de détails, juste des cartes visuelles :
+
+Dernière commande : Statut "En préparation" avec une barre de progression.
+
+Solde / Points : Un petit encadré avec ses points de fidélité.
+
+Favoris récents : Les 3 derniers articles ajoutés à la Wishlist.
+
+Message de bienvenue : "Bonjour [Nom], ravi de vous revoir !"
+
+
+
+
+
+
+
+2. Mes Commandes (📦 Orders)
+C'est la page la plus consultée. Elle doit être très claire :
+
+Liste chronologique : Chaque ligne est une commande (Image du produit, Date, Prix, Statut).
+
+Bouton "Détails" : Pour voir la facture ou le suivi transporteur.
+
+Bouton "Recommander" : Pour racheter le même produit en un clic.
+
+
+
+
+
+
+3. Mes Favoris (❤️ Wishlist)
+Une grille d'images (comme une boutique) mais uniquement avec les produits qu'il a aimés :
+
+Bouton "Ajouter au panier" bien visible sous chaque article.
+
+Alerte Prix : Si un article favori est en promo (comme ta bannière rose !), mets un petit badge "PROMO".
+
+
+
+
+
+
+
+
+4. Paramètres du compte (⚙️ Settings)
+Ici, c'est du formulaire pur :
+
+Profil : Nom, Email, Téléphone (avec bouton "Modifier").
+
+Adresses : Une carte pour l'adresse de "Maison" et une pour "Bureau".
+
+Sécurité : Option pour changer le mot de passe.
+
+5. Aide & Support (🎧 Support)
+FAQ : Les questions posées souvent.
+
+Bouton Chat : Pour parler à un conseiller en direct.
+
+Ticket : "Envoyer un message au support".

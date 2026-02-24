@@ -23,7 +23,7 @@
           backdrop-filter: blur(4px);
         "
       >
-        <i class="fas fa-eye" style="color: var(--color-primary)"></i>
+        <Eye class="text-xs" :style="{ color: 'var(--color-primary)' }" />
         <span>{{ formatNumber(displayViews) }}</span>
       </div>
 
@@ -36,11 +36,12 @@
             @click.stop="handleToggleFavorite"
             :title="isFavorited ? 'Retirer des favoris' : 'Ajouter aux favoris'"
           >
-            <i
-              class="fas fa-heart text-sm transition-all"
-              :class="{ 'text-red-500 scale-110': isFavorited }"
-              :style="{ color: !isFavorited ? 'var(--color-text-sub)' : 'red' }"
-            ></i>
+            <Heart
+              class="text-sm transition-all"
+              :class="{ 'fill-red-500 text-red-500 scale-110': isFavorited }"
+              :style="{ color: !isFavorited ? 'var(--color-text-sub)' : '' }"
+              :size="16"
+            />
           </button>
           <span class="text-[8px]" style="color: var(--color-text-sub)">{{
             formatNumber(displayCounts.favorites)
@@ -53,10 +54,12 @@
             @click.stop="handleShare"
             title="Partager"
           >
-            <i
-              class="fas fa-share-alt text-xs"
-              style="color: var(--color-text-sub)"
-            ></i>
+            <Forward
+              :size="16"
+              :stroke-width="3"
+              class="text-xs"
+              :style="{ color: 'var(--color-text-sub)' }"
+            />
           </button>
           <span class="text-[8px]" style="color: var(--color-text-sub)">{{
             formatNumber(displayCounts.shares)
@@ -105,10 +108,6 @@
         </span>
       </div>
 
-      <!-- Interactions Stats -->
-      <!-- ...existing code... -->
-      <!-- Price & Button -->
-
       <div class="mt-auto flex items-center justify-between gap-2">
         <span class="text-sm font-black" style="color: var(--color-text-main)">
           {{ product.price }}
@@ -120,14 +119,14 @@
           @click.stop="$emit('click')"
         >
           <span class="text-white">VOIR</span>
-          <i class="fas fa-arrow-right text-[9px]"></i>
+          <ArrowRight :size="16" :stroke-width="3" class="text-white" />
         </button>
 
         <button
           class="btn-cart flex items-center gap-1 px-2 py-1.5 rounded text-xs font-bold transition bg-green-500 hover:bg-green-600 text-white"
           @click.stop="handleAddToCart"
         >
-          <i class="fas fa-shopping-cart"></i>
+          <ShoppingCart :size="14" class="mr-1" />
           <span>Ajouter au panier</span>
         </button>
       </div>
@@ -141,12 +140,14 @@ import { useInteractionStore } from "../stores/interactions.js";
 import { useAuthStore } from "../stores/auth.js";
 import { useCartStore } from "../stores/cart.js";
 import { useRouter, useRoute } from "vue-router";
+import { Eye, Heart, Forward, ArrowRight, ShoppingCart } from "lucide-vue-next";
 
 const interactionStore = useInteractionStore();
 const authStore = useAuthStore();
 const cartStore = useCartStore();
 const router = useRouter();
 const route = useRoute();
+
 // localViews
 const localViews = ref(null);
 const localCounts = ref({
