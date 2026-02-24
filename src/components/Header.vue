@@ -85,15 +85,72 @@
           <i class="fas fa-plus text-sm"></i>
         </button>
 
-        <div
-          class="p-0.5 rounded-full border-2"
-          :style="{ borderColor: 'var(--color-primary)' }"
-        >
-          <img
-            src="https://ui-avatars.com/api/?name=CH&background=6366f1&color=fff"
-            class="w-7 h-7 rounded-full"
-          />
+        <div v-if="auth.isAuthenticated" class="group relative">
+          <div
+            class="p-0.5 rounded-full border-2 cursor-pointer transition-transform hover:scale-105"
+            :style="{ borderColor: 'var(--color-primary)' }"
+          >
+            <img
+              :src="
+                auth.user?.avatar ||
+                `https://ui-avatars.com/api/?name=${auth.user?.nom || 'U'}&background=6366f1&color=fff`
+              "
+              class="w-7 h-7 rounded-full object-cover"
+            />
+          </div>
+
+          <div
+            class="absolute right-0 mt-2 w-48 rounded-2xl shadow-2xl border backdrop-blur-xl opacity-0 invisible group-hover:opacity-100 group-hover:visible transition-all duration-300 py-2 z-[60]"
+            :style="{
+              backgroundColor: 'var(--color-surface)',
+              borderColor: 'var(--color-border)',
+            }"
+          >
+            <div
+              class="px-4 py-2 border-b mb-1"
+              :style="{ borderColor: 'var(--color-border)' }"
+            >
+              <p
+                class="text-xs font-bold truncate"
+                :style="{ color: 'var(--color-primary)' }"
+              >
+                {{ auth.user?.nom }}
+              </p>
+              <p
+                class="text-[10px] opacity-60 truncate"
+                :style="{ color: 'var(--color-text-sub)' }"
+              >
+                {{ auth.user?.telephone || auth.user?.email }}
+              </p>
+            </div>
+            <router-link
+              to="/profile"
+              class="flex items-center gap-3 px-4 py-2.5 text-sm transition-colors hover:bg-black/5"
+              :style="{ color: 'var(--color-text-main)' }"
+            >
+              <i class="fas fa-user-circle opacity-70"></i>
+              <span>Mon Profil</span>
+            </router-link>
+            <button
+              @click="auth.logout"
+              class="w-full flex items-center gap-3 px-4 py-2.5 text-sm text-red-500 transition-colors hover:bg-red-500/10"
+            >
+              <i class="fas fa-sign-out-alt"></i>
+              <span>Déconnexion</span>
+            </button>
+          </div>
         </div>
+        <router-link
+          v-else
+          to="/login"
+          class="px-4 py-1.5 rounded-full text-xs font-bold transition-all hover:opacity-90 active:scale-95"
+          :style="{
+            backgroundColor: 'var(--color-primary)',
+            color: 'var(--color-pure)',
+          }"
+        >
+          Connexion
+        </router-link>
       </div>
     </div>
 
@@ -157,7 +214,10 @@
 import { useRoute } from "vue-router";
 import { useTheme } from "../composables/useTheme.js";
 import { useCartStore } from "../stores/cart.js";
+import { useAuthStore } from "../stores/auth.js";
+
 const cart = useCartStore();
+const auth = useAuthStore();
 
 const route = useRoute();
 const { theme, toggleTheme } = useTheme();

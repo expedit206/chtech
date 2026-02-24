@@ -174,15 +174,14 @@
               </p>
             </div>
           </div>
-          <RouterLink
+          <button
             v-if="product.user?.id"
-            :to="{ name: 'messages', params: { receiverId: product.user.id } }"
             @click="handleContactSeller"
             class="w-full py-2 rounded-lg text-sm font-semibold block text-center mt-2 hover:bg-gray-100 transition"
             :style="{ color: 'var(--color-primary)' }"
           >
             Contacter le vendeur
-          </RouterLink>
+          </button>
           <button
             v-else
             class="w-full py-2 rounded-lg text-sm font-semibold opacity-50 cursor-not-allowed"
@@ -199,13 +198,14 @@
 
 <script setup>
 import { ref, computed, onMounted } from "vue";
-import { useRoute, RouterLink } from "vue-router";
+import { useRoute, useRouter, RouterLink } from "vue-router";
 import { useProductStore } from "../stores/products.js";
 import { useInteractionStore } from "../stores/interactions.js";
 import { useAuthStore } from "../stores/auth.js";
 import { useCartStore } from "../stores/cart.js";
 
 const route = useRoute();
+const router = useRouter(); // Added router
 const productStore = useProductStore();
 const interactionStore = useInteractionStore();
 const authStore = useAuthStore();
@@ -300,7 +300,7 @@ const getImageUrl = (photo) => {
 const handleToggleFavorite = async () => {
   try {
     if (!authStore.isAuthenticated) {
-      alert("Veuillez vous connecter pour ajouter en favori");
+      router.push({ path: "/login", query: { redirect: route.fullPath } });
       return;
     }
     await interactionStore.toggleFavorite(product.value.id);
@@ -330,9 +330,16 @@ const handleShare = async () => {
 };
 
 const handleContactSeller = () => {
+  if (!authStore.isAuthenticated) {
+    router.push({ path: "/login", query: { redirect: route.fullPath } });
+    return;
+  }
   if (product.value.user?.id) {
     interactionStore.recordContact(product.value.id);
-    // Naviguer vers les messages avec le vendeur
+    router.push({
+      name: "messages",
+      params: { receiverId: product.value.user.id },
+    });
   }
 };
 </script>

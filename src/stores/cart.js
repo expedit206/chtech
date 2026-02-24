@@ -1,6 +1,6 @@
 import { defineStore } from "pinia";
 import { ref, computed, watch } from "vue";
-import axios from "axios";
+import apiClient from "../api/index.js";
 
 export const useCartStore = defineStore("cart", () => {
   const items = ref(JSON.parse(localStorage.getItem("cart_items")) || []);
@@ -21,7 +21,7 @@ export const useCartStore = defineStore("cart", () => {
   async function fetchCart() {
     loading.value = true;
     try {
-      const res = await axios.get("/api/cart");
+      const res = await apiClient.get("/cart");
       if (res.data.success) {
         items.value = res.data.data || [];
       }
@@ -53,7 +53,7 @@ export const useCartStore = defineStore("cart", () => {
       }
 
       // Sync with backend if logged in
-      await axios.post("/api/cart/add", {
+      await apiClient.post("/cart/add", {
         product_id: product.id,
         quantity,
       });
@@ -72,7 +72,7 @@ export const useCartStore = defineStore("cart", () => {
   async function removeFromCart(productId) {
     try {
       items.value = items.value.filter((i) => i.id !== productId);
-      await axios.post("/api/cart/remove", {
+      await apiClient.post("/cart/remove", {
         product_id: productId,
       });
       await fetchCart();
@@ -88,7 +88,7 @@ export const useCartStore = defineStore("cart", () => {
       const item = items.value.find((i) => i.id === productId);
       if (item) item.quantity = quantity;
 
-      await axios.post("/api/cart/update", {
+      await apiClient.post("/cart/update", {
         product_id: productId,
         quantity,
       });
@@ -101,11 +101,16 @@ export const useCartStore = defineStore("cart", () => {
   async function clearCart() {
     try {
       items.value = [];
-      await axios.post("/api/cart/clear");
+      await apiClient.post("/cart/clear");
       await fetchCart();
     } catch (e) {
       error.value = e;
     }
+  }
+
+  function clearLocal() {
+    items.value = [];
+    localStorage.removeItem("cart_items");
   }
 
   function toggleSidebar() {
@@ -134,6 +139,7 @@ export const useCartStore = defineStore("cart", () => {
     removeFromCart,
     updateQuantity,
     clearCart,
+    clearLocal,
     toggleSidebar,
     total,
     count,

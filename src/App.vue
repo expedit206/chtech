@@ -17,7 +17,7 @@
 </template>
 
 <script setup>
-import { onMounted } from "vue";
+import { onMounted, watch } from "vue";
 import Footer from "./components/Footer.vue";
 import Header from "./components/Header.vue";
 import CartSidebar from "./components/CartSidebar.vue";
@@ -29,12 +29,29 @@ const authStore = useAuthStore();
 const interactionStore = useInteractionStore();
 const cartStore = useCartStore();
 
-onMounted(async () => {
-  // Initialiser les stores au démarrage
+const loadUserData = async () => {
   if (authStore.isAuthenticated) {
-    // Charger les favoris et le panier si l'utilisateur est authentifié
-    await interactionStore.loadUserFavorites();
-    await cartStore.fetchCart();
+    await Promise.all([
+      interactionStore.loadUserFavorites(),
+      cartStore.fetchCart(),
+    ]);
   }
+};
+
+onMounted(() => {
+  loadUserData();
 });
+
+// Watch for login/logout
+watch(
+  () => authStore.isAuthenticated,
+  (val) => {
+    if (val) {
+      loadUserData();
+    } else {
+      interactionStore.reset();
+      cartStore.clearLocal();
+    }
+  },
+);
 </script>

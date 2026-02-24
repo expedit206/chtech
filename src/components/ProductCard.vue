@@ -140,10 +140,13 @@ import { ref, computed, onMounted } from "vue";
 import { useInteractionStore } from "../stores/interactions.js";
 import { useAuthStore } from "../stores/auth.js";
 import { useCartStore } from "../stores/cart.js";
+import { useRouter, useRoute } from "vue-router";
 
 const interactionStore = useInteractionStore();
 const authStore = useAuthStore();
 const cartStore = useCartStore();
+const router = useRouter();
+const route = useRoute();
 // localViews
 const localViews = ref(null);
 const localCounts = ref({
@@ -211,8 +214,10 @@ const recordViewOnce = () => {
 const handleToggleFavorite = async () => {
   try {
     if (!authStore.isAuthenticated) {
-      alert("Veuillez vous connecter pour ajouter en favori");
-      // TODO: Rediriger vers la page de connexion
+      router.push({
+        path: "/login",
+        query: { redirect: route.fullPath },
+      });
       return;
     }
 

@@ -120,7 +120,7 @@
                         class="text-2xl font-serif font-black tracking-tight"
                         :style="{ color: 'var(--color-primary)' }"
                       >
-                        {{ (parseInt(item.price) *  parseInt(item.quantity)).toLocaleString() }}
+                        {{ (parseInt(item.price)  *  parseInt(item.quantity)).toLocaleString() }}
                         <span class="text-xs">FCFA</span>
                       </p>
                     </div>

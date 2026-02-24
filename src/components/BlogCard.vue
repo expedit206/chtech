@@ -19,7 +19,10 @@
       <span
         class="absolute top-3 left-3 text-[10px] font-bold px-3 py-1 rounded-full uppercase tracking-wider"
         :style="{
-          backgroundColor: blog.categoryType === 'primary' ? 'var(--color-primary)' : 'var(--color-accent)',
+          backgroundColor:
+            blog.categoryType === 'primary'
+              ? 'var(--color-primary)'
+              : 'var(--color-accent)',
           color: 'var(--color-pure)',
         }"
       >
@@ -35,7 +38,10 @@
           src="https://ui-avatars.com/api/?name=Admin&background=6366f1&color=fff"
           class="w-6 h-6 rounded-full"
         />
-        <span class="text-[11px] font-bold" :style="{ color: 'var(--color-text-main)' }">
+        <span
+          class="text-[11px] font-bold"
+          :style="{ color: 'var(--color-text-main)' }"
+        >
           {{ blog.author }}
         </span>
         <span class="text-[11px]" :style="{ color: 'var(--color-text-sub)' }">
@@ -74,7 +80,10 @@
           >
             <i class="fas fa-thumbs-up"></i>
           </span>
-          <span class="text-[10px] font-medium" :style="{ color: 'var(--color-text-sub)' }">
+          <span
+            class="text-[10px] font-medium"
+            :style="{ color: 'var(--color-text-sub)' }"
+          >
             {{ blog.likes }}
           </span>
         </div>
@@ -93,12 +102,14 @@
       }"
     >
       <button
+        @click="handleInteraction"
         class="py-3 text-[11px] font-bold flex items-center justify-center gap-1.5 hover:opacity-70 transition-opacity"
         :style="{ color: 'var(--color-text-sub)' }"
       >
         <i class="far fa-thumbs-up"></i> Like
       </button>
       <button
+        @click="handleInteraction"
         class="py-3 text-[11px] font-bold flex items-center justify-center gap-1.5 hover:opacity-70 transition-opacity border-x"
         :style="{
           color: 'var(--color-text-sub)',
@@ -118,6 +129,13 @@
 </template>
 
 <script setup>
+import { useRouter, useRoute } from "vue-router";
+import { useAuthStore } from "../stores/auth.js";
+
+const router = useRouter();
+const route = useRoute();
+const authStore = useAuthStore();
+
 defineProps({
   blog: {
     type: Object,
@@ -133,7 +151,15 @@ defineProps({
       description: String,
       likes: Number,
       comments: Number,
-    }
+    },
+  },
+});
+
+const handleInteraction = () => {
+  if (!authStore.isAuthenticated) {
+    router.push({ path: "/login", query: { redirect: route.fullPath } });
+    return false;
   }
-})
+  return true;
+};
 </script>
