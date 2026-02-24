@@ -3,9 +3,8 @@
     class="product-card group relative flex flex-col h-full shadow-sm border rounded-lg overflow-hidden transition hover:shadow-md"
     :style="{ borderColor: 'var(--color-border)' }"
   >
-    <!-- Image Container -->
     <div
-      class="aspect-square w-full overflow-hidden relative bg-white border-b"
+      class="aspect-square w-full overflow-hidden relative bg-white border-b h-[10rem]"
       :style="{ borderColor: 'var(--color-border)' }"
     >
       <img
@@ -15,7 +14,6 @@
         @load="recordViewOnce"
       />
 
-      <!-- Views Badge -->
       <div
         class="absolute top-2 left-2 view-badge px-2 py-1 rounded-full text-xs font-semibold flex items-center gap-1"
         style="
@@ -23,80 +21,52 @@
           backdrop-filter: blur(4px);
         "
       >
-        <!-- <i class="fas fa-eye" style="color: var(--color-primary)"></i> -->
-        <Eye class="text-xs" :style="{ color: 'var(--color-primary)' }" />
-        <span>{{ formatNumber(displayViews) }}</span>
+        <!-- <Eye class="text-xs" :style="{ color: 'var(--color-primary)' }" /> -->
+        <span> {{ product.category?.nom || "Autre" }}</span>
       </div>
 
-      <!-- Action Buttons -->
-      <div class="absolute top-2 right-2 flex flex-col gap-2">
-        <!-- Favorite Button with Count -->
+      <div class="absolute top-2 right-1 flex flex-col gap-2">
         <div class="flex items-center gap-1">
           <button
             class="w-8 h-8 rounded-full bg-white/90 flex items-center justify-center shadow-sm hover:bg-white transition"
             @click.stop="handleToggleFavorite"
             :title="isFavorited ? 'Retirer des favoris' : 'Ajouter aux favoris'"
           >
-            <!-- <i
-              class="fas fa-heart text-sm transition-all"
-              :class="{ 'text-red-500 scale-110': isFavorited }"
-              :style="{ color: !isFavorited ? 'var(--color-text-sub)' : 'red' }"
-            ></i> -->
-            <!-- <Heart
-              v-if="isFavorited"
-              :stroke-width="3"
-              class="text-xs"
-              :style="{ color: 'red' }"
-            />
-            <Heart
-              v-else
-              :stroke-width="3"
-              class="text-xs"
-              :style="{ color: 'var(--color-text-sub)' }"
-            /> -->
-
-            <!-- <template>
-              <Heart
-                :size="16"
-                class="transition-all duration-300 cursor-pointer"
-                :class="{ 'text-red-500 scale-110': isFavorited }"
-                :stroke-width="isFavorited ? 0 : 2"
-                :fill="isFavorited ? 'red' : 'none'"
-                :style="{
-                  color: !isFavorited ? 'var(--color-text-sub)' : 'red',
-                }"
-              />
-            </template> -->
-
-            <!-- <template> -->
-            <Heart
+            <Eye
               class="text-sm transition-all"
               :class="{ 'fill-red-500 text-red-500 scale-110': isFavorited }"
               :style="{ color: !isFavorited ? 'var(--color-text-sub)' : '' }"
               :size="16"
             />
-            <!-- </template> -->
+          </button>
+          <span class="text-[8px]" style="color: var(--color-text-sub)">
+            {{ formatNumber(displayViews) }}
+          </span>
+        </div>
+        <div class="flex items-center gap-1">
+          <button
+            class="w-8 h-8 rounded-full bg-white/90 flex items-center justify-center shadow-sm hover:bg-white transition"
+            @click.stop="handleToggleFavorite"
+            :title="isFavorited ? 'Retirer des favoris' : 'Ajouter aux favoris'"
+          >
+            <Heart
+              class="text-xs md:text-sm transition-all "
+              :class="{ 'fill-red-500 text-red-500 scale-110': isFavorited }"
+              :style="{ color: !isFavorited ? 'var(--color-text-sub)' : '' }"
+              :size="16"
+            />
           </button>
           <span class="text-[8px]" style="color: var(--color-text-sub)">{{
             formatNumber(displayCounts.favorites)
           }}</span>
         </div>
-        <!-- Share Button with Count -->
+
         <div class="flex items-center gap-1">
           <button
             class="w-8 h-8 rounded-full bg-white/90 flex items-center justify-center shadow-sm hover:bg-white transition"
             @click.stop="handleShare"
             title="Partager"
           >
-            <!-- <i
-              class="fas fa-share-alt text-xs"
-              style="color: var(--color-text-sub)"
-            ></i> -->
-            <!-- <Share
-              :stroke-width="3"
-              class="text-xs"
-              :style="{ color: 'var(--color-text-sub)' } "
-            /> -->
             <Forward
               :size="16"
               :stroke-width="3"
@@ -120,7 +90,71 @@
     </div>
 
     <!-- Content -->
-    <div class="p-3 flex flex-col flex-grow">
+
+    <div class="p-4 py-2 flex flex-col flex-grow">
+      <!-- Catégorie -->
+      <!-- <span
+        class="text-[10px] font-bold uppercase tracking-widest mb-1"
+        style="color: var(--color-primary)"
+      >
+        {{ product.category?.nom || "Autre" }}
+      </span> -->
+
+      <!-- Nom -->
+      <h3
+        class="text-sm font-bold  cursor-pointer hover:opacity-70 line-clamp-1"   
+        style="color: var(--color-text-main)"
+        @click="$emit('click')"
+      >
+        {{ product.name }}
+      </h3>
+
+      <!-- Rating -->
+      <div class="flex items-center gap-2 mb-1">
+        <div class="flex text-xs" style="color: var(--color-rating)">
+          <i
+            class="fas fa-star"
+            v-for="n in 5"
+            :key="n"
+            :class="{ 'text-gray-300': n > Math.round(product.rating) }"
+          ></i>
+        </div>
+      </div>
+
+      <!-- Prix -->
+      <div class="flex items-between gap-2">
+        <div class="text-lg font-black" style="color: var(--color-text-main)">
+          {{ product.price }}
+        </div>
+        
+      </div>
+      <!-- Actions -->
+      <!-- <div class="mt-auto flex flex-col gap-2"> -->
+      <div class="flex flex-col gap-2 mt-1">
+        <button
+          class="w-full flex items-center justify-center gap-2 py-2 rounded font-bold text-sm text-white transition hover:bg-black/5 dark:hover:bg-white/10 "
+          @click.stop="handleAddToCart"
+          style="background: var(--color-primary)"
+        >
+          <i class="fas fa-shopping-cart"></i>
+          Ajouter au panier
+        </button>
+
+        <!-- <button
+          class="w-full flex items-center justify-center gap-2 py-2 rounded font-bold text-sm border transition hover:bg-black/5 dark:hover:bg-white/10"
+          style="
+            color: var(--color-primary);
+            border-color: var(--color-primary);
+          "
+          @click.stop="$emit('click')"
+        >
+          Voir le produit
+          <ArrowRight :size="16" :stroke-width="3" />
+        </button> -->
+      </div>
+    </div>
+
+    <!-- <div class="p-3 flex flex-col flex-grow">
       <span
         class="text-[9px] font-black uppercase tracking-widest mb-1"
         style="color: var(--color-primary)"
@@ -136,7 +170,7 @@
         {{ product.name }}
       </h3>
 
-      <!-- Rating -->
+
       <div class="flex items-center gap-2 mb-3">
         <div class="flex text-[8px]" style="color: var(--color-rating)">
           <i
@@ -151,10 +185,6 @@
         </span>
       </div>
 
-      <!-- Interactions Stats -->
-      <!-- ...existing code... -->
-      <!-- Price & Button -->
-
       <div class="mt-auto flex items-center justify-between gap-2">
         <span class="text-sm font-black" style="color: var(--color-text-main)">
           {{ product.price }}
@@ -166,9 +196,9 @@
           @click.stop="$emit('click')"
         >
           <span class="text-white">VOIR</span>
-          <!-- <i class="fas fa-arrow-right text-[9px]"></i> -->
        
-          <ArrowRight :size="16" :stroke-width="3"  class="text-white"/>
+
+          <ArrowRight :size="16" :stroke-width="3" class="text-white" />
         </button>
 
         <button
@@ -179,7 +209,7 @@
           <span>Ajouter au panier</span>
         </button>
       </div>
-    </div>
+    </div> -->
   </article>
 </template>
 

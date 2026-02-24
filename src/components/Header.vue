@@ -110,7 +110,7 @@
           class="p-0.5 rounded-full border-2"
           :style="{ borderColor: 'var(--color-primary)' }"
         >
-          <RouterLink to="/profile">
+          <RouterLink to="/profile/settings">
             <img
               src="https://ui-avatars.com/api/?name=CH&background=6366f1&color=fff"
               class="w-7 h-7 rounded-full"
@@ -170,13 +170,15 @@
           <span class="tooltip-text">Messages</span>
         </RouterLink>
 
-        <a
+        <RouterLink
+          to="/profile"
           class="group relative flex-1 flex items-center justify-center hover:bg-black/5 transition-colors"
           :style="{ color: 'var(--color-text-sub)' }"
         >
           <ChartLine class="text-lg" :stroke-width="3" />
           <span class="tooltip-text">Analyses</span>
-        </a>
+        </RouterLink
+        to="/analytics">
       </nav>
     </div>
   </header>
