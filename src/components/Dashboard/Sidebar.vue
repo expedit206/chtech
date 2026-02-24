@@ -41,7 +41,8 @@
           <div
             class="w-8 h-8 bg-[var(--color-primary)] rounded-lg flex items-center justify-center shrink-0"
           >
-            <i class="fa-solid fa-bolt text-white"></i>
+            <!-- <i class="fa-solid fa-bolt text-white"></i> -->
+            <CloudLightning :size="16" :stroke-width="3" class="text-white" />
           </div>
           <span class="font-bold text-[var(--color-text-main)] truncate"
             >CH-TECH</span
@@ -52,19 +53,25 @@
           @click="isCollapsed = !isCollapsed"
           class="hidden md:block p-2 rounded-lg hover:bg-[var(--color-primary)]/10 text-[var(--color-text-sub)]"
         >
-          <i
+          <!-- <i
             :class="[
               'fa-solid transition-transform',
               isCollapsed ? 'fa-indent' : 'fa-outdent',
             ]"
-          ></i>
+          ></i> -->
+          <component
+            :is="isCollapsed ? Indent : Outdent"
+            class="transition-transform duration-200"
+            :size="20"
+          />
         </button>
 
         <button
           @click="isMobileOpen = false"
           class="md:hidden p-2 text-[var(--color-text-sub)]"
         >
-          <i class="fa-solid fa-xmark text-xl"></i>
+          <!-- <i class="fa-solid fa-xmark text-xl"></i> -->
+          <X class="text-xl" :size="24" />
         </button>
       </div>
 
@@ -76,7 +83,14 @@
           class="flex items-center gap-4 p-3 rounded-xl transition-all group relative text-[var(--color-text-sub)] hover:text-[var(--color-primary)] hover:bg-[var(--color-primary)]/10"
         >
           <div class="w-6 flex justify-center items-center shrink-0">
-            <i :class="['fa-solid', item.icon, 'text-lg']"></i>
+            <!-- <i :class="['fa-solid', item.icon, 'text-lg']"></i>
+           -->
+
+            <component
+              :is="item.icon"
+              :size="20"
+              class="transition-transform group-hover:scale-110"
+            />
           </div>
 
           <span
@@ -100,7 +114,8 @@
           class="flex items-center gap-4 p-3 w-full rounded-xl text-[var(--color-accent)] hover:bg-[var(--color-accent)]/10"
         >
           <div class="w-6 flex justify-center items-center shrink-0">
-            <i class="fa-solid fa-right-from-bracket text-lg"></i>
+            <!-- <i class="fa-solid fa-right-from-bracket text-lg"></i> -->
+            <LogOut :size="20" class="text-[var(--color-accent)]" />
           </div>
           <span
             v-show="!isCollapsed || isMobileOpen"
@@ -121,22 +136,42 @@
       @click="isMobileOpen = true"
       class="md:hidden fixed top-30 left-4 w-12 h-12 bg-[var(--color-surface)] border border-[var(--color-border)] text-[var(--color-primary)] rounded-xl shadow-md z-30 flex items-center justify-center transition-transform active:scale-95"
     >
-      <i class="fa-solid fa-bars-staggered text-xl"></i>
+      <!-- <i class="fa-solid fa-bars-staggered text-xl"></i> -->
+      <AlignLeft class="text-xl" :size="24" />
     </button>
   </div>
 </template>
 
 <script setup>
 import { ref } from "vue";
-
+import {
+  Indent,
+  Outdent,
+  X,
+  AlignLeft,
+  CloudLightning,
+  LayoutDashboard,
+  Package,
+  Heart,
+  Settings,
+  Headphones,
+  LogOut,
+} from "lucide-vue-next";
 const isCollapsed = ref(false); // État Desktop
 const isMobileOpen = ref(false); // État Mobile
 
+// const menuItems = [
+//   { name: "Tableau de bord", icon: "fa-house", route: "/profile" },
+//   { name: "Mes Commandes", icon: "fa-box", route: "/profile/orders" },
+//   { name: "Mes Favoris", icon: "fa-heart", route: "/profile/wishlist" },
+//   { name: "Paramètres", icon: "fa-user-gear", route: "/profile/settings" },
+//   { name: "Aide & Support", icon: "fa-headset", route: "/profile/support" },
+// ];
 const menuItems = [
-  { name: "Tableau de bord", icon: "fa-house", route: "/profile" },
-  { name: "Mes Commandes", icon: "fa-box", route: "/profile/orders" },
-  { name: "Mes Favoris", icon: "fa-heart", route: "/profile/wishlist" },
-  { name: "Paramètres", icon: "fa-user-gear", route: "/profile/settings" },
-  { name: "Aide & Support", icon: "fa-headset", route: "/profile/support" },
+  { name: "Tableau de bord", icon: LayoutDashboard, route: "/profile" },
+  { name: "Mes Commandes", icon: Package, route: "/profile/orders" },
+  { name: "Mes Favoris", icon: Heart, route: "/profile/wishlist" },
+  { name: "Paramètres", icon: Settings, route: "/profile/settings" },
+  { name: "Aide & Support", icon: Headphones, route: "/profile/support" },
 ];
 </script>

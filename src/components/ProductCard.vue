@@ -23,7 +23,8 @@
           backdrop-filter: blur(4px);
         "
       >
-        <i class="fas fa-eye" style="color: var(--color-primary)"></i>
+        <!-- <i class="fas fa-eye" style="color: var(--color-primary)"></i> -->
+        <Eye class="text-xs" :style="{ color: 'var(--color-primary)' }" />
         <span>{{ formatNumber(displayViews) }}</span>
       </div>
 
@@ -36,11 +37,45 @@
             @click.stop="handleToggleFavorite"
             :title="isFavorited ? 'Retirer des favoris' : 'Ajouter aux favoris'"
           >
-            <i
+            <!-- <i
               class="fas fa-heart text-sm transition-all"
               :class="{ 'text-red-500 scale-110': isFavorited }"
               :style="{ color: !isFavorited ? 'var(--color-text-sub)' : 'red' }"
-            ></i>
+            ></i> -->
+            <!-- <Heart
+              v-if="isFavorited"
+              :stroke-width="3"
+              class="text-xs"
+              :style="{ color: 'red' }"
+            />
+            <Heart
+              v-else
+              :stroke-width="3"
+              class="text-xs"
+              :style="{ color: 'var(--color-text-sub)' }"
+            /> -->
+
+            <!-- <template>
+              <Heart
+                :size="16"
+                class="transition-all duration-300 cursor-pointer"
+                :class="{ 'text-red-500 scale-110': isFavorited }"
+                :stroke-width="isFavorited ? 0 : 2"
+                :fill="isFavorited ? 'red' : 'none'"
+                :style="{
+                  color: !isFavorited ? 'var(--color-text-sub)' : 'red',
+                }"
+              />
+            </template> -->
+
+            <!-- <template> -->
+            <Heart
+              class="text-sm transition-all"
+              :class="{ 'fill-red-500 text-red-500 scale-110': isFavorited }"
+              :style="{ color: !isFavorited ? 'var(--color-text-sub)' : '' }"
+              :size="16"
+            />
+            <!-- </template> -->
           </button>
           <span class="text-[8px]" style="color: var(--color-text-sub)">{{
             formatNumber(displayCounts.favorites)
@@ -53,10 +88,21 @@
             @click.stop="handleShare"
             title="Partager"
           >
-            <i
+            <!-- <i
               class="fas fa-share-alt text-xs"
               style="color: var(--color-text-sub)"
-            ></i>
+            ></i> -->
+            <!-- <Share
+              :stroke-width="3"
+              class="text-xs"
+              :style="{ color: 'var(--color-text-sub)' } "
+            /> -->
+            <Forward
+              :size="16"
+              :stroke-width="3"
+              class="text-xs"
+              :style="{ color: 'var(--color-text-sub)' }"
+            />
           </button>
           <span class="text-[8px]" style="color: var(--color-text-sub)">{{
             formatNumber(displayCounts.shares)
@@ -120,7 +166,9 @@
           @click.stop="$emit('click')"
         >
           <span class="text-white">VOIR</span>
-          <i class="fas fa-arrow-right text-[9px]"></i>
+          <!-- <i class="fas fa-arrow-right text-[9px]"></i> -->
+       
+          <ArrowRight :size="16" :stroke-width="3"  class="text-white"/>
         </button>
 
         <button
@@ -140,6 +188,7 @@ import { ref, computed, onMounted } from "vue";
 import { useInteractionStore } from "../stores/interactions.js";
 import { useAuthStore } from "../stores/auth.js";
 import { useCartStore } from "../stores/cart.js";
+import { Eye, Heart, Forward, ArrowRight } from "lucide-vue-next";
 
 const interactionStore = useInteractionStore();
 const authStore = useAuthStore();
