@@ -8,7 +8,15 @@
       class="inline-flex items-center gap-2 mb-8 text-sm font-semibold"
       :style="{ color: 'var(--color-primary)' }"
     >
-      <i class="fas fa-arrow-left"></i> Retour aux produits
+      <!-- <i class="fas fa-arrow-left">
+        
+      </i> -->
+      <ArrowLeft
+        :size="16"
+        :stroke-width="3"
+        class="text-[var(--color-primary)] hover:bg-[var(--color-text-sub)] hover:p-4 hover:rounded-full flex justify-center items-center hover:text-white"
+      />
+      Retour aux produits
     </RouterLink>
 
     <!-- Product Details -->
@@ -59,7 +67,8 @@
         <!-- Rating -->
         <div class="flex items-center gap-4">
           <div class="flex items-center gap-1">
-            <i class="fas fa-star text-yellow-400"></i>
+            <!-- <i class="fas fa-star text-yellow-400"></i> -->
+            <Star :size="16" :stroke-width="3" class="text-yellow-400" />
             <span
               class="font-bold"
               :style="{ color: 'var(--color-text-main)' }"
@@ -130,10 +139,15 @@
             }"
             :title="isFavorited ? 'Retirer des favoris' : 'Ajouter aux favoris'"
           >
-            <i
+            <!-- <i
               class="fas fa-heart"
               :class="{ 'text-red-500': isFavorited }"
-            ></i>
+            ></i> -->
+            <Heart
+              :size="16"
+              :stroke-width="3"
+              :class="{ 'text-red-500': isFavorited }"
+            />
           </button>
           <button
             @click="handleShare"
@@ -144,7 +158,8 @@
             }"
             title="Partager"
           >
-            <i class="fas fa-share-alt"></i>
+            <!-- <i class="fas fa-share-alt"></i> -->
+            <Forward :size="16" :stroke-width="3" />
           </button>
         </div>
 
@@ -204,7 +219,8 @@ import { useProductStore } from "../stores/products.js";
 import { useInteractionStore } from "../stores/interactions.js";
 import { useAuthStore } from "../stores/auth.js";
 import { useCartStore } from "../stores/cart.js";
-
+import { ArrowLeft } from "lucide-vue-next";
+import { Heart, Star, Forward } from "lucide-vue-next";
 const route = useRoute();
 const productStore = useProductStore();
 const interactionStore = useInteractionStore();

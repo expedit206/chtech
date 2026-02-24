@@ -14,7 +14,9 @@
           fontFamily: 'Open Sans, sans-serif',
         }"
       >
+      <RouterLink to="/">
         chtech
+      </RouterLink>
       </h1>
 
       <div class="hidden md:flex flex-1 max-w-xl relative group">
