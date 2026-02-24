@@ -8,7 +8,12 @@
         color: 'var(--color-text-main)',
       }"
     >
-      <i class="fas fa-question text-lg"></i>
+      <!-- <i class="fas fa-question text-lg"></i> <CircleQuestionMark :size="16" :stroke-width="3" />-->
+      <CircleQuestionMark
+        :stroke-width="3"
+        class="text-lg"
+        :style="{ color: 'var(--color-text-main)' }"
+      />
       <span
         class="absolute right-14 px-3 py-1.5 rounded-lg text-xs font-bold opacity-0 group-hover:opacity-100 transition-opacity whitespace-nowrap pointer-events-none shadow-sm"
         :style="{
@@ -28,12 +33,14 @@
         color: 'var(--color-pure)',
       }"
     >
-      <i class="fas fa-arrow-up text-lg"></i>
+      <!-- <i class="fas fa-arrow-up text-lg"></i> -->
+      <ArrowUp :stroke-width="3" class="text-lg" />
     </button>
   </div>
 </template>
 
 <script setup>
+import { CircleQuestionMark, ArrowUp } from "lucide-vue-next";
 const scrollToTop = () => {
   window.scrollTo({
     top: 0,

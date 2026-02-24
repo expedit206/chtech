@@ -18,10 +18,14 @@
       </h1>
 
       <div class="hidden md:flex flex-1 max-w-xl relative group">
-        <i
+        <!-- <i
           class="fas fa-search absolute left-3 top-1/2 -translate-y-1/2 text-xs transition-colors"
           :style="{ color: 'var(--color-text-sub)' }"
-        ></i>
+        ></i> -->
+        <Search
+          :style="{ color: 'var(--color-text-sub)' }"
+          class="absolute left-3 top-1/2 -translate-y-1/2 transition-colors text-xs"
+        />
         <input
           type="text"
           placeholder="Rechercher..."
@@ -36,7 +40,8 @@
 
       <div class="flex items-center gap-3 md:gap-4">
         <button class="md:hidden" :style="{ color: 'var(--color-text-main)' }">
-          <i class="fas fa-search text-lg"></i>
+          <!-- <i class="fas fa-search text-lg"></i> -->
+          <Search class="text-lg" />
         </button>
 
         <!-- Theme Toggle -->
@@ -45,20 +50,31 @@
           class="w-8 h-8 rounded-full flex items-center justify-center transition-colors hover:bg-black/5"
           :style="{ color: 'var(--color-text-main)' }"
         >
-          <i
+          <!-- <i
             :class="theme === 'dark' ? 'fas fa-sun' : 'fas fa-moon'"
             class="text-lg"
-          ></i>
+          ></i> -->
+          <component
+            :is="themeIcon"
+            :size="20"
+            :stroke-width="3"
+            class="text-lg"
+          />
         </button>
 
         <div
           @click="cart.isSidebarOpen = true"
           class="relative cursor-pointer group"
         >
-          <i
+          <!-- <i
             class="fas fa-shopping-cart text-lg transition-transform group-hover:scale-110"
             :style="{ color: 'var(--color-text-main)' }"
-          ></i>
+          ></i> -->
+          <ShoppingCart
+            :stroke-width="3"
+            :style="{ color: 'var(--color-text-main)' }"
+            class="text-lg transition-transform group-hover:scale-110"
+          />
           <span
             v-if="cart.count > 0"
             class="absolute -top-1.5 -right-1.5 flex items-center justify-center rounded-full text-[9px] font-bold animate-bounce-subtle"
@@ -82,17 +98,22 @@
             color: 'var(--color-pure)',
           }"
         >
-          <i class="fas fa-plus text-sm"></i>
+          <!-- <i class="fas fa-plus text-sm"></i>
+            -->
+          <Plus :size="16" :stroke-width="3" class="text-sm" />
+         
         </button>
 
         <div
           class="p-0.5 rounded-full border-2"
           :style="{ borderColor: 'var(--color-primary)' }"
         >
-          <img
-            src="https://ui-avatars.com/api/?name=CH&background=6366f1&color=fff"
-            class="w-7 h-7 rounded-full"
-          />
+          <RouterLink to="/profile">
+            <img
+              src="https://ui-avatars.com/api/?name=CH&background=6366f1&color=fff"
+              class="w-7 h-7 rounded-full"
+            />
+          </RouterLink>
         </div>
       </div>
     </div>
@@ -107,7 +128,10 @@
           class="group relative flex-1 flex items-center justify-center border-b-4 transition-colors"
           :style="isActive('/') ? activeStyle : inactiveStyle"
         >
-          <i class="fas fa-home text-xl"></i>
+          <!-- <i class="fas fa-home text-xl"></i> -->
+          <!-- <House :stroke-width="1"  class="text-lg"/>
+             -->
+          <House :stroke-width="3" class="text-lg" />
           <span class="tooltip-text">Accueil</span>
         </RouterLink>
 
@@ -116,7 +140,8 @@
           class="group relative flex-1 flex items-center justify-center border-b-4 transition-colors"
           :style="isActive('/blogs') ? activeStyle : inactiveStyle"
         >
-          <i class="fas fa-newspaper text-xl"></i>
+          <!-- <i class="fas fa-newspaper text-xl"></i> -->
+          <Newspaper :stroke-width="3" class="text-lg" />
           <span class="tooltip-text">Blogs</span>
         </RouterLink>
 
@@ -126,7 +151,8 @@
           :style="{ color: 'var(--color-text-sub)' }"
         >
           <div class="relative">
-            <i class="fas fa-bell text-xl"></i>
+            <!-- <i class="fas fa-bell text-xl"></i> -->
+            <Bell class="text-lg" :stroke-width="3" />
             <span class="nav-badge"></span>
           </div>
           <span class="tooltip-text">Notifications</span>
@@ -137,7 +163,8 @@
           class="group relative flex-1 flex items-center justify-center border-b-4 transition-colors"
           :style="isActive('/messages') ? activeStyle : inactiveStyle"
         >
-          <i class="fas fa-comments text-xl"></i>
+          <!-- <i class="fas fa-comments text-xl"></i> -->
+          <MessageCircle class="text-lg" :stroke-width="3" />
           <span class="tooltip-text">Messages</span>
         </RouterLink>
 
@@ -145,7 +172,7 @@
           class="group relative flex-1 flex items-center justify-center hover:bg-black/5 transition-colors"
           :style="{ color: 'var(--color-text-sub)' }"
         >
-          <i class="fas fa-chart-line text-xl"></i>
+          <ChartLine class="text-lg" :stroke-width="3" />
           <span class="tooltip-text">Analyses</span>
         </a>
       </nav>
@@ -155,9 +182,30 @@
 
 <script setup>
 import { useRoute } from "vue-router";
+import { computed } from "vue";
 import { useTheme } from "../composables/useTheme.js";
 import { useCartStore } from "../stores/cart.js";
+import { RouterLink } from "vue-router";
 const cart = useCartStore();
+import {
+  Search,
+  House,
+  Newspaper,
+  Bell,
+  MessageCircle,
+  ChartLine,
+  ShoppingCart,
+  Sun,
+  Moon,
+  Plus,
+} from "lucide-vue-next";
+// On imagine que 'theme' est une ref ou une prop
+const props = defineProps(["theme"]);
+
+// Utiliser une propriété calculée pour retourner le COMPOSANT, pas du texte
+const themeIcon = computed(() => {
+  return props.theme === "dark" ? Sun : Moon;
+});
 
 const route = useRoute();
 const { theme, toggleTheme } = useTheme();
