@@ -74,11 +74,10 @@ import { Facebook, Twitter, Instagram, Linkedin } from "lucide-vue-next";
             <Instagram :stroke-width="3" />
           </a>
           <a href="#" class="hover:opacity-70 transition-opacity">
-    
             <!-- <i class="fab fa-linkedin-in"></i
           > -->
-          <Linkedin :stroke-width="3" />
-        </a>
+            <Linkedin :stroke-width="3" />
+          </a>
         </div>
       </div>
 
@@ -192,11 +191,17 @@ import { Facebook, Twitter, Instagram, Linkedin } from "lucide-vue-next";
       <div
         class="max-w-7xl mx-auto px-4 flex flex-col md:row justify-between items-center gap-4 text-[10px] uppercase tracking-widest opacity-60"
       >
-        <p>© 2026 CHTECH. TOUS DROITS RÉSERVÉS.</p>
+        <p>© {{ new Date().getFullYear() }} CHTECH. TOUS DROITS RÉSERVÉS.</p>
         <div class="flex gap-6">
-          <a href="#">Mentions Légales</a>
-          <a href="#">CGV</a>
-          <a href="#">Confidentialité</a>
+          <RouterLink to="/ressources/mentions-legales"
+            >Mentions Légales</RouterLink
+          >
+          <RouterLink to="/ressources/conditions-generales-d-utilisation"
+            >Conditions Générales d'Utilisation</RouterLink
+          >
+          <RouterLink to="/ressources/politique-de-confidentialite"
+            >Confidentialité</RouterLink
+          >
         </div>
       </div>
     </div>

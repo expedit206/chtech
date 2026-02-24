@@ -6,7 +6,9 @@
         <p class="text-[var(--color-text-sub)]">Retrouvez les articles que vous avez aimés.</p>
       </div>
       <button class="flex items-center gap-2 px-4 py-2 bg-[var(--color-primary)]/10 text-[var(--color-primary)] rounded-xl font-bold text-sm hover:bg-[var(--color-primary)]/20 transition-all">
-        <i class="fa-solid fa-cart-plus"></i> Tout ajouter au panier
+        <!-- <i class="fa-solid fa-cart-plus"></i> -->
+        <ShoppingCart class="text-lg" :stroke-width="3" />  
+         Tout ajouter au panier
       </button>
     </header>
 
@@ -24,19 +26,17 @@
         </div>
 
         <button class="absolute top-4 right-4 z-10 w-8 h-8 flex items-center justify-center bg-white/80 backdrop-blur-sm border border-[var(--color-border)] text-[var(--color-text-sub)] rounded-full hover:text-red-500 hover:bg-white transition-all">
-          <i class="fa-solid fa-heart-crack"></i>
+          <!-- <i class="fa-solid fa-heart-crack"></i> -->
+          <Heart class="text-lg" :stroke-width="3" />
         </button>
 
         <div class="aspect-square bg-white rounded-2xl mb-4 p-4 flex items-center justify-center border border-[var(--color-border)]/50">
           <img :src="product.image" :alt="product.name" class="max-h-full object-contain group-hover:scale-110 transition-transform duration-500">
         </div>
 
-        <div class="space-y-2">
-          <div class="flex items-center gap-1 text-[var(--color-rating)] text-xs">
-            <i class="fa-solid fa-star" v-for="s in 5" :key="s"></i>
-            <span class="text-[var(--color-text-sub)] ml-1">(45)</span>
-          </div>
-          <h4 class="font-bold text-[var(--color-text-main)] leading-tight line-clamp-2 min-h-[3rem]">
+        <div class="">
+      
+          <h4 class="font-bold text-[var(--color-text-main)] leading-tight line-clamp-1 max-h-[2rem]">
             {{ product.name }}
           </h4>
           
@@ -57,7 +57,7 @@
 
 <script setup>
 import { ref } from 'vue';
-
+import { ShoppingCart, Heart } from "lucide-vue-next"
 const favorites = ref([
   {
     id: 1,

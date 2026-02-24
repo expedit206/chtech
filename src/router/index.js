@@ -60,6 +60,27 @@ const routes = [
       },
     ],
   },
+  {
+    path: "/ressources",
+    children: [
+      {
+        path: "politique-de-confidentialite", // Correspond à /profile/orders
+        name: "Politique de Confidentialité",
+        component: () => import("../views/PrivacyPolicy.vue"),
+      },
+      {
+        path: "conditions-generales-d-utilisation",
+        name: "Conditions Générales d'Utilisation",
+        component: () => import("../views/TermsOfService.vue"),
+      },
+      {
+        path: "mentions-legales",
+        name: "Mentions Légales",
+        component: () => import("../views/LegalNotice.vue"),
+      },
+      
+    ],
+  },
 ];
 
 const router = createRouter({
