@@ -6,6 +6,7 @@ import { useAuthStore } from './auth.js';
 export const useInteractionStore = defineStore('interactions', () => {
   const authStore = useAuthStore();
   const favorited = ref(new Set()); // Set des IDs favorisés
+  const favorites = ref([]); // Liste complète des objets produits favoris
   const productCounts = ref({}); // Compte des interactions par produit
   const loading = ref(false);
 
@@ -178,22 +179,25 @@ export const useInteractionStore = defineStore('interactions', () => {
   }
 
   /**
-   * Charger les favoris de l'utilisateur
+   * Charger les favoris de l'utilisateur (liste complète d'objets)
    */
-  async function loadUserFavorites() {
+  async function fetchFavorites() {
     if (!authStore.isAuthenticated) return;
-
+    loading.value = true;
     try {
       const response = await apiClient.get('/favorites');
-
       if (response.data.success && response.data.data.products) {
-        // Remplir le Set des favoris
-        response.data.data.products.forEach(product => {
-          favorited.value.add(product.id);
-        });
+        favorites.value = response.data.data.products;
+        // Mettre à jour aussi le Set des IDs
+        favorited.value = new Set(favorites.value.map(p => p.id));
+      } else if (response.data.data) {
+        favorites.value = response.data.data;
+        favorited.value = new Set(favorites.value.map(p => p.id));
       }
     } catch (err) {
       console.error('Erreur lors du chargement des favoris:', err);
+    } finally {
+      loading.value = false;
     }
   }
 
@@ -202,11 +206,13 @@ export const useInteractionStore = defineStore('interactions', () => {
    */
   function reset() {
     favorited.value.clear();
+    favorites.value = [];
     productCounts.value = {};
   }
 
   return {
     favorited,
+    favorites,
     productCounts,
     loading,
     isFavorited,
@@ -218,7 +224,7 @@ export const useInteractionStore = defineStore('interactions', () => {
     toggleFavorite,
     shareProduct,
     fetchProductCounts,
-    loadUserFavorites,
+    fetchFavorites,
     reset
   };
 });

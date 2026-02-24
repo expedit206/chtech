@@ -13,7 +13,7 @@ export const useProductStore = defineStore('products', () => {
     return products.value.map(produit => ({
       id: produit.id,
       name: produit.nom,
-      price: `${produit.prix}€` || 'N/A',
+      price: produit.prix ? `${Number(produit.prix).toLocaleString('fr-FR')} FCFA` : 'N/A',
       image: produit.photos && produit.photos.length > 0 ? getImageUrl(produit.photos[0]) : '/placeholder.png',
       rating: produit.note_moyenne || 5,
       views: produit.vues_count || produit.views_count || '0',

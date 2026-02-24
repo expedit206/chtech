@@ -1,7 +1,6 @@
 <template>
   <div>
-    <!-- Wrapper div to avoid fragment issues if any -->
-    <!-- Categories -->
+    <!-- Categories strip (always shown, even loading) -->
     <section>
       <div
         class="w-full overflow-hidden border-b"
@@ -10,8 +9,16 @@
           borderColor: 'var(--color-border)',
         }"
       >
-        <div class="scroll-track">
-          <!-- Duplicating categories for infinite scroll effect as per index.html strategy -->
+        <!-- Skeleton categories -->
+        <div v-if="isLoading" class="flex gap-4 px-4 py-3 overflow-hidden">
+          <div
+            v-for="i in 8"
+            :key="i"
+            class="flex-shrink-0 h-8 w-24 rounded-full bg-gray-200 dark:bg-gray-700 animate-pulse"
+          ></div>
+        </div>
+
+        <div v-else class="scroll-track">
           <CategoryCard
             v-for="(category, index) in [
               ...categories,
@@ -28,7 +35,7 @@
       </div>
     </section>
 
-    <!-- Promo Section 1 -->
+    <!-- Promo banner 1 -->
     <section class="mx-auto max-w-7xl px-4 mb-4 mt-4">
       <div
         class="flex flex-col md:flex-row items-center justify-between p-4 rounded-2xl shadow-lg border"
@@ -49,47 +56,29 @@
             VOIR PLUS...
           </button>
         </div>
-
         <div class="flex items-center gap-3 mt-4 md:mt-0">
           <span class="text-xs font-bold text-white/90 uppercase"
             >Fin dans :</span
           >
-          <div class="flex items-center gap-2">
-            <div
-              class="flex items-center gap-1 bg-white px-3 py-2 rounded-xl shadow-inner"
+          <div
+            class="flex items-center gap-1 bg-white px-3 py-2 rounded-xl shadow-inner"
+          >
+            <span
+              class="text-sm font-black"
+              style="color: var(--color-accent)"
+              >{{ countdown }}</span
             >
-              <span
-                class="text-sm font-black"
-                style="color: var(--color-accent)"
-                >14j</span
-              >
-              <span class="opacity-30">:</span>
-              <span
-                class="text-sm font-black"
-                style="color: var(--color-accent)"
-                >12h</span
-              >
-              <span class="opacity-30">:</span>
-              <span
-                class="text-sm font-black"
-                style="color: var(--color-accent)"
-                >35m</span
-              >
-              <span class="opacity-30">:</span>
-              <span
-                class="text-sm font-black"
-                style="color: var(--color-accent)"
-                >23s</span
-              >
-            </div>
           </div>
         </div>
       </div>
     </section>
 
-    <!-- Product Grid 1 (9 items) -->
+    <!-- Product Grid 1 -->
     <div class="product-grid px-4 py-8 pt-2 max-w-7xl mx-auto">
+      <!-- Skeleton cards -->
+      <SkeletonProductCard v-if="isLoading" v-for="i in 9" :key="`s1-${i}`" />
       <ProductCard
+        v-else
         v-for="product in productsPart1"
         :key="product.id"
         :product="product"
@@ -97,7 +86,7 @@
       />
     </div>
 
-    <!-- Promo Section 2 -->
+    <!-- Promo banner 2 -->
     <section class="mx-auto max-w-7xl px-4 mb-8 mt-4">
       <div
         class="flex flex-col md:flex-row items-center justify-between p-4 rounded-2xl shadow-lg border"
@@ -118,47 +107,28 @@
             VOIR PLUS...
           </button>
         </div>
-
         <div class="flex items-center gap-3 mt-4 md:mt-0">
           <span class="text-xs font-bold text-white/90 uppercase"
             >Fin dans :</span
           >
-          <div class="flex items-center gap-2">
-            <div
-              class="flex items-center gap-1 bg-white px-3 py-2 rounded-xl shadow-inner"
+          <div
+            class="flex items-center gap-1 bg-white px-3 py-2 rounded-xl shadow-inner"
+          >
+            <span
+              class="text-sm font-black"
+              style="color: var(--color-accent)"
+              >{{ countdown }}</span
             >
-              <span
-                class="text-sm font-black"
-                style="color: var(--color-accent)"
-                >14j</span
-              >
-              <span class="opacity-30">:</span>
-              <span
-                class="text-sm font-black"
-                style="color: var(--color-accent)"
-                >12h</span
-              >
-              <span class="opacity-30">:</span>
-              <span
-                class="text-sm font-black"
-                style="color: var(--color-accent)"
-                >35m</span
-              >
-              <span class="opacity-30">:</span>
-              <span
-                class="text-sm font-black"
-                style="color: var(--color-accent)"
-                >23s</span
-              >
-            </div>
           </div>
         </div>
       </div>
     </section>
 
-    <!-- Product Grid 2 (6 items) -->
+    <!-- Product Grid 2 -->
     <div class="product-grid px-4 py-8 max-w-7xl mx-auto">
+      <SkeletonProductCard v-if="isLoading" v-for="i in 6" :key="`s2-${i}`" />
       <ProductCard
+        v-else
         v-for="product in productsPart2"
         :key="product.id"
         :product="product"
@@ -166,47 +136,71 @@
       />
     </div>
   </div>
-  <!-- importation du foo -->
-
 </template>
 
 <script setup>
-import { ref, onMounted, computed } from "vue";
-
+import { ref, onMounted, onUnmounted, computed } from "vue";
 import { useRouter } from "vue-router";
 import { useProductStore } from "../stores/products.js";
 import CategoryCard from "../components/CategoryCard.vue";
 import ProductCard from "../components/ProductCard.vue";
+import SkeletonProductCard from "../components/skeletons/SkeletonProductCard.vue";
 
 const router = useRouter();
 const productStore = useProductStore();
+const isLoading = ref(true);
 
-// Récupérer les catégories depuis le store
-const categories = computed(() => {
-  return productStore.categories.map(cat => ({
+// Countdown (live timer)
+const countdown = ref("");
+let timerInterval = null;
+
+const updateCountdown = () => {
+  // Target: promo ends in 14j 12h 35m (static demo)
+  const target = new Date();
+  target.setDate(target.getDate() + 14);
+  target.setHours(target.getHours() + 12, 35, 23);
+  const diff = target - Date.now();
+  if (diff <= 0) {
+    countdown.value = "Terminé";
+    return;
+  }
+  const d = Math.floor(diff / 86400000);
+  const h = Math.floor((diff % 86400000) / 3600000);
+  const m = Math.floor((diff % 3600000) / 60000);
+  const s = Math.floor((diff % 60000) / 1000);
+  countdown.value = `${d}j ${h}h ${m}m ${s}s`;
+};
+
+const categories = computed(() =>
+  productStore.categories.map((cat) => ({
     id: cat.id,
     name: cat.nom,
     icon: "fas fa-box",
-    active: false
-  }));
-});
+    active: false,
+  })),
+);
 
-// Charger les données au montage du composant
+const productsPart1 = computed(() =>
+  productStore.productsWithImages.slice(0, 9),
+);
+const productsPart2 = computed(() =>
+  productStore.productsWithImages.slice(9, 15),
+);
+
 onMounted(async () => {
-  await productStore.fetchCategories();
-  await productStore.fetchProducts();
+  updateCountdown();
+  timerInterval = setInterval(updateCountdown, 1000);
+  try {
+    await Promise.all([
+      productStore.fetchCategories(),
+      productStore.fetchProducts(),
+    ]);
+  } finally {
+    isLoading.value = false;
+  }
 });
 
-// Diviser les produits en deux parties pour les deux grilles
-const productsPart1 = computed(() => {
-  return productStore.productsWithImages.slice(0, 9);
-});
+onUnmounted(() => clearInterval(timerInterval));
 
-const productsPart2 = computed(() => {
-  return productStore.productsWithImages.slice(9, 15);
-});
-
-const goToProduct = (id) => {
-  router.push(`/produit/${id}`);
-};
+const goToProduct = (id) => router.push(`/produit/${id}`);
 </script>
