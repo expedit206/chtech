@@ -11,12 +11,6 @@
           Retrouvez les articles que vous avez aimés.
         </p>
       </div>
-      <button
-        class="flex items-center gap-2 px-4 py-2 bg-[var(--color-primary)]/10 text-[var(--color-primary)] rounded-xl font-bold text-sm hover:bg-[var(--color-primary)]/20 transition-all"
-      >
-        <ShoppingCart class="text-lg" :stroke-width="3" />
-        Tout ajouter au panier
-      </button>
     </header>
 
     <!-- Skeleton grid -->
@@ -32,67 +26,14 @@
       v-else-if="favorites.length > 0"
       class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6"
     >
-      <div
+      <ProductCard
         v-for="product in favorites"
         :key="product.id"
-        class="group relative bg-[var(--color-surface)] border border-[var(--color-border)] rounded-3xl p-4 transition-all hover:shadow-xl hover:-translate-y-1"
-      >
-        <div
-          v-if="product.onSale"
-          class="absolute top-4 left-4 z-10 bg-[var(--color-accent)] text-white text-[10px] font-black px-3 py-1 rounded-full uppercase tracking-widest animate-pulse"
-        >
-          Promo
-        </div>
-
-        <button
-          @click="removeFavorite(product.id)"
-          class="absolute top-4 right-4 z-10 w-8 h-8 flex items-center justify-center bg-white/80 backdrop-blur-sm border border-[var(--color-border)] text-[var(--color-text-sub)] rounded-full hover:text-red-500 hover:bg-white transition-all"
-        >
-          <Heart class="text-lg" :stroke-width="3" />
-        </button>
-
-        <div
-          class="aspect-square bg-white rounded-2xl mb-4 p-4 flex items-center justify-center border border-[var(--color-border)]/50"
-        >
-          <img
-            :src="product.image"
-            :alt="product.name"
-            class="max-h-full object-contain group-hover:scale-110 transition-transform duration-500"
-          />
-        </div>
-
-        <div class="space-y-2">
-          <div class="flex items-center gap-1 text-yellow-400 text-xs">
-            <Star v-for="s in 5" :key="s" :size="12" class="fill-current" />
-            <span class="text-[var(--color-text-sub)] ml-1"
-              >({{ product.reviews || 0 }})</span
-            >
-          </div>
-          <h4
-            class="font-bold text-[var(--color-text-main)] leading-tight line-clamp-2 min-h-[3rem]"
-          >
-            {{ product.name }}
-          </h4>
-          <div class="flex items-baseline gap-2">
-            <span class="text-xl font-black text-[var(--color-text-main)]">{{
-              product.price
-            }}</span>
-            <span
-              v-if="product.oldPrice"
-              class="text-sm text-[var(--color-text-sub)] line-through"
-              >{{ product.oldPrice }}</span
-            >
-          </div>
-        </div>
-
-        <button
-          @click="addToCart(product)"
-          class="w-full mt-4 py-3 bg-[var(--color-primary)] text-white rounded-xl font-bold flex items-center justify-center gap-2 hover:opacity-90 shadow-lg shadow-indigo-500/20 transition-all"
-        >
-          <ShoppingCart class="text-lg" />
-          Ajouter au panier
-        </button>
-      </div>
+        :product="product"
+        :show-views="false"
+        :show-share="false"
+        @click="goToProduct(product.id)"
+      />
     </div>
     <!-- Empty state -->
     <div
@@ -125,7 +66,7 @@
         </p>
       </div>
       <router-link
-        to="/"
+        :to="{ name: 'Home' }"
         class="inline-block px-8 py-4 rounded-2xl font-bold text-white text-sm"
         :style="{ backgroundColor: 'var(--color-primary)' }"
       >
@@ -136,33 +77,41 @@
 </template>
 
 <script setup>
-import { ref, onMounted } from "vue";
+import { ref, onMounted, computed } from "vue";
+import { useRouter } from "vue-router";
 import { useInteractionStore } from "../stores/interactions.js";
-import { useCartStore } from "../stores/cart.js";
-import { ShoppingCart, Heart, Star } from "lucide-vue-next";
+import ProductCard from "../components/ProductCard.vue";
+import { Heart, Star } from "lucide-vue-next";
 import SkeletonWishlistCard from "../components/skeletons/SkeletonWishlistCard.vue";
 
 const interactionStore = useInteractionStore();
-const cartStore = useCartStore();
+const router = useRouter();
 const isLoading = ref(true);
-const favorites = ref([]);
+
+const goToProduct = (id) => {
+  router.push({ name: "DetailProduit", params: { id } });
+};
+
+const favorites = computed(() => {
+  return (interactionStore.favorites || []).map((p) => ({
+    id: p.id,
+    name: p.nom || p.name,
+    price: `${Number(p.prix || p.price || 0).toLocaleString("fr-FR")} FCFA`,
+    oldPrice: null,
+    onSale: false,
+    image: p.photos?.[0]
+      ? p.photos[0].startsWith("http")
+        ? p.photos[0]
+        : `http://localhost:8000/storage/${p.photos[0]}`
+      : `https://ui-avatars.com/api/?name=${encodeURIComponent(p.nom || "P")}&size=200&background=efefef`,
+    category: p.category,
+    is_promoted: p.is_promoted,
+  }));
+});
 
 onMounted(async () => {
   try {
     await interactionStore.fetchFavorites?.();
-    favorites.value = (interactionStore.favorites || []).map((p) => ({
-      id: p.id,
-      name: p.nom || p.name,
-      price: `${Number(p.prix || p.price || 0).toLocaleString("fr-FR")} FCFA`,
-      oldPrice: null,
-      onSale: false,
-      image: p.photos?.[0]
-        ? p.photos[0].startsWith("http")
-          ? p.photos[0]
-          : `http://localhost:8000/storage/${p.photos[0]}`
-        : `https://ui-avatars.com/api/?name=${encodeURIComponent(p.nom || "P")}&size=200&background=efefef`,
-      reviews: p.nombre_avis || 0,
-    }));
   } catch (err) {
     console.error("Erreur chargement favoris:", err);
   } finally {
@@ -175,7 +124,4 @@ const removeFavorite = async (productId) => {
   favorites.value = favorites.value.filter((p) => p.id !== productId);
 };
 
-const addToCart = async (product) => {
-  await cartStore.addToCart(product);
-};
 </script>

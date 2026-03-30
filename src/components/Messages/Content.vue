@@ -185,18 +185,29 @@
             <transition name="fade">
               <div
                 v-if="openMenuId === message.id"
-                class="absolute right-0 top-full mt-1 w-32 bg-white rounded-lg shadow-xl border border-gray-100 z-50 overflow-hidden text-sm animate-in fade-in zoom-in-95 duration-100"
+                class="absolute right-0 top-full mt-1 w-32 rounded-lg shadow-xl border z-50 overflow-hidden text-sm animate-in fade-in zoom-in-95 duration-100"
+                :style="{
+                  backgroundColor: 'var(--color-surface)',
+                  borderColor: 'var(--color-border)',
+                }"
               >
                 <button
                   @click="editMessage(message)"
                   v-if="message.type === 'text'"
-                  class="flex items-center gap-2 w-full px-4 py-2 text-left hover:bg-gray-50 text-gray-700"
+                  class="flex items-center gap-2 w-full px-4 py-2 text-left transition-colors"
+                  :style="{ color: 'var(--color-text-main)' }"
+                  onmouseover="this.style.backgroundColor = 'rgba(0,0,0,0.05)'"
+                  onmouseout="this.style.backgroundColor = 'transparent'"
                 >
                   <i class="fas fa-pen text-sm w-4"></i> {{ t("edit") }}
                 </button>
                 <button
                   @click="deleteMessage(message.id)"
-                  class="flex items-center gap-2 w-full px-4 py-2 text-left hover:bg-red-50 text-red-600"
+                  class="flex items-center gap-2 w-full px-4 py-2 text-left text-red-500 transition-colors"
+                  onmouseover="
+                    this.style.backgroundColor = 'rgba(239,68,68,0.1)'
+                  "
+                  onmouseout="this.style.backgroundColor = 'transparent'"
                 >
                   <i class="fas fa-trash text-sm w-4"></i> {{ t("delete") }}
                 </button>
@@ -281,12 +292,7 @@ const editMessage = (message) => {
   }
   const newContent = prompt("Modifier le message :", message.content);
   if (newContent && newContent.trim() !== message.content) {
-    apiClient
-      .put(`/chat/message/${message.id}`, { content: newContent.trim() })
-      .then(() => {
-        emit("edit-message", { id: message.id, content: newContent.trim() });
-      })
-      .catch(() => toast.error("Échec de la modification du message"));
+    emit("edit-message", { id: message.id, content: newContent.trim() });
   }
 };
 
@@ -300,10 +306,7 @@ const deleteMessage = (messageId) => {
   }
 
   if (confirm("Voulez-vous vraiment supprimer ce message ?")) {
-    apiClient
-      .delete(`/chat/message/${messageId}`)
-      .then(() => emit("delete-message", messageId))
-      .catch(() => toast.error("Échec de la suppression du message"));
+    emit("delete-message", messageId);
   }
 };
 

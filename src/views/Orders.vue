@@ -31,7 +31,11 @@
         class="bg-[var(--color-surface)] border border-[var(--color-border)] rounded-3xl overflow-hidden hover:shadow-md transition-shadow"
       >
         <div
-          class="px-6 py-3 bg-[var(--color-border)]/20 flex flex-wrap justify-between items-center gap-4 border-b border-[var(--color-border)]"
+          class="px-6 py-3 flex flex-wrap justify-between items-center gap-4 border-b"
+          :style="{
+            backgroundColor: 'var(--color-surface)',
+            borderColor: 'var(--color-border)',
+          }"
         >
           <div
             class="flex gap-6 text-xs font-medium text-[var(--color-text-sub)]"
@@ -70,7 +74,11 @@
         >
           <div class="flex items-center gap-6 w-full">
             <div
-              class="w-24 h-24 bg-white rounded-2xl border border-[var(--color-border)] p-2 flex items-center justify-center shrink-0"
+              class="w-24 h-24 rounded-2xl border p-2 flex items-center justify-center shrink-0 overflow-hidden"
+              :style="{
+                backgroundColor: 'var(--color-bg)',
+                borderColor: 'var(--color-border)',
+              }"
             >
               <img
                 :src="order.productImage"
@@ -145,7 +153,7 @@
         </p>
       </div>
       <router-link
-        to="/"
+        :to="{ name: 'Home' }"
         class="inline-block px-8 py-4 rounded-2xl font-bold text-white text-sm"
         :style="{ backgroundColor: 'var(--color-primary)' }"
       >
@@ -211,10 +219,10 @@ onMounted(async () => {
 
 const getStatusClass = (status) => {
   const s = (status || "").toLowerCase();
-  if (s.includes("livr")) return "bg-green-100 text-green-600";
+  if (s.includes("livr")) return "bg-green-500/20 text-green-500";
   if (s.includes("cours") || s.includes("prép"))
-    return "bg-blue-100 text-blue-600";
-  if (s.includes("annul")) return "bg-red-100 text-red-600";
-  return "bg-gray-100 text-gray-600";
+    return "bg-blue-500/20 text-blue-500";
+  if (s.includes("annul")) return "bg-red-500/20 text-red-500";
+  return "bg-[var(--color-border)] text-[var(--color-text-sub)]";
 };
 </script>

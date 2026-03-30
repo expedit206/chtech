@@ -2,205 +2,139 @@
   <div>
     <!-- Categories strip (always shown, even loading) -->
     <section>
-      <div
-        class="w-full overflow-hidden border-b"
-        :style="{
-          backgroundColor: 'var(--color-bg)',
-          borderColor: 'var(--color-border)',
-        }"
-      >
+      <div class="w-full overflow-hidden border-b relative " :style="{
+        backgroundColor: 'var(--color-bg)',
+        borderColor: 'var(--color-border)',
+      }">
+        <!-- Overlay on edges for smooth exit/entry look -->
+        <div
+          class="absolute left-0 top-0 bottom-0 w-16 bg-gradient-to-r from-[var(--color-bg)] to-transparent z-10 pointer-events-none">
+        </div>
+        <div
+          class="absolute right-0 top-0 bottom-0 w-16 bg-gradient-to-l from-[var(--color-bg)] to-transparent z-10 pointer-events-none">
+        </div>
+
         <!-- Skeleton categories -->
-        <div v-if="isLoading" class="flex gap-4 px-4 py-3 overflow-hidden">
-          <div
-            v-for="i in 8"
-            :key="i"
-            class="flex-shrink-0 h-8 w-24 rounded-full bg-gray-200 dark:bg-gray-700 animate-pulse"
-          ></div>
+        <div v-if="isLoading" class="flex gap-4 px-4 py-2 overflow-hidden">
+          <div v-for="i in 8" :key="i"
+            class="flex-shrink-0 h-8 w-24 rounded-full bg-[var(--color-surface)] animate-pulse"></div>
         </div>
 
-        <div v-else class="scroll-track">
-          <CategoryCard
-            v-for="(category, index) in [
-              ...categories,
-              ...categories,
-              ...categories,
-              ...categories,
-            ]"
-            :key="index"
-            :icon="category.icon"
-            :name="category.name"
-            :active="category.active"
-          />
-        </div>
-      </div>
-    </section>
-
-    <!-- Promo banner 1 -->
-    <section class="mx-auto max-w-7xl px-4 mb-4 mt-4">
-      <div
-        class="flex flex-col md:flex-row items-center justify-between p-4 rounded-2xl shadow-lg border"
-        :style="{
-          backgroundColor: 'var(--color-accent)',
-          borderColor: 'var(--color-border)',
-        }"
-      >
-        <div class="flex items-center gap-4">
-          <h2
-            class="text-lg md:text-xl font-black text-[var(--color-pure)] uppercase tracking-tighter"
-          >
-            Spéciale Promo !! | Stock Limité
-          </h2>
-          <button
-            class="hidden md:block px-4 py-1.5 rounded-lg text-[10px] font-bold bg-white/20 text-white border border-white/30 hover:bg-white/30 transition"
-          >
-            VOIR PLUS...
-          </button>
-        </div>
-        <div class="flex items-center gap-3 mt-4 md:mt-0">
-          <span class="text-xs font-bold text-white/90 uppercase"
-            >Fin dans :</span
-          >
-          <div
-            class="flex items-center gap-1 bg-white px-3 py-2 rounded-xl shadow-inner"
-          >
-            <span
-              class="text-sm font-black"
-              style="color: var(--color-accent)"
-              >{{ countdown }}</span
-            >
+        <div v-else class="flex overflow-hidden">
+          <div class="scroll-track flex items-center py-2">
+            <!-- First set of categories -->
+            <CategoryCard v-for="category in categories" :key="category.id" :icon="getCategoryIcon(category.name)"
+              :name="category.name" :active="category.active" />
           </div>
         </div>
       </div>
     </section>
 
-    <!-- Product Grid 1 -->
-    <div class="product-grid px-4 py-8 pt-2 max-w-7xl mx-auto">
-      <!-- Skeleton cards -->
-      <SkeletonProductCard v-if="isLoading" v-for="i in 9" :key="`s1-${i}`" />
-      <ProductCard
-        v-else
-        v-for="product in productsPart1"
-        :key="product.id"
-        :product="product"
-        @click="goToProduct(product.id)"
-      />
+    <!-- Search Results Header -->
+    <div v-if="productStore.searchQuery" class="px-12 pt-8 flex items-center justify-between">
+      <div class="flex items-center gap-3">
+        <div class="w-1 h-8 bg-[var(--color-primary)] rounded-full"></div>
+        <h2 class="text-2xl font-black text-[var(--color-text-main)]">
+          Résultats pour "{{ productStore.searchQuery }}"
+        </h2>
+      </div>
+      <button @click="productStore.searchQuery = ''"
+        class="text-sm font-bold text-[var(--color-primary)] hover:underline flex items-center gap-1">
+        <X :size="14" /> Effacer
+      </button>
     </div>
 
-    <!-- Promo banner 2 -->
-    <section class="mx-auto max-w-7xl px-4 mb-8 mt-4">
-      <div
-        class="flex flex-col md:flex-row items-center justify-between p-4 rounded-2xl shadow-lg border"
-        :style="{
-          backgroundColor: 'var(--color-accent)',
-          borderColor: 'var(--color-border)',
-        }"
-      >
-        <div class="flex items-center gap-4">
-          <h2
-            class="text-lg md:text-xl font-black text-[var(--color-pure)] uppercase tracking-tighter"
-          >
-            Spéciale Promo !! | Stock Limité
-          </h2>
-          <button
-            class="hidden md:block px-4 py-1.5 rounded-lg text-[10px] font-bold bg-white/20 text-white border border-white/30 hover:bg-white/30 transition"
-          >
-            VOIR PLUS...
-          </button>
-        </div>
-        <div class="flex items-center gap-3 mt-4 md:mt-0">
-          <span class="text-xs font-bold text-white/90 uppercase"
-            >Fin dans :</span
-          >
-          <div
-            class="flex items-center gap-1 bg-white px-3 py-2 rounded-xl shadow-inner"
-          >
-            <span
-              class="text-sm font-black"
-              style="color: var(--color-accent)"
-              >{{ countdown }}</span
-            >
-          </div>
-        </div>
-      </div>
-    </section>
+    <!-- Product Grid 1 -->
+    <div class="product-grid px-4 py-8 pt-2 ">
+      <!-- Skeleton cards -->
+      <SkeletonProductCard v-if="isLoading" v-for="i in 15" :key="`s1-${i}`" />
 
-    <!-- Product Grid 2 -->
-    <div class="product-grid px-4 py-8 max-w-7xl mx-auto">
-      <SkeletonProductCard v-if="isLoading" v-for="i in 6" :key="`s2-${i}`" />
-      <ProductCard
-        v-else
-        v-for="product in productsPart2"
-        :key="product.id"
-        :product="product"
-        @click="goToProduct(product.id)"
-      />
+      <!-- Empty State -->
+      <div v-if="!isLoading && productsPart1.length === 0"
+        class="col-span-full py-20 text-center flex flex-col items-center justify-center bg-[var(--color-surface)] rounded-3xl border-2 border-dashed border-[var(--color-border)]">
+        <div class="w-20 h-20 bg-[var(--color-border)] rounded-full flex items-center justify-center mb-4 opacity-50">
+          <Search :size="40" class="text-[var(--color-text-sub)]" />
+        </div>
+        <h3 class="text-xl font-bold text-[var(--color-text-main)] mb-2">
+          Aucun produit trouvé
+        </h3>
+        <p class="text-[var(--color-text-sub)] max-w-sm mx-auto">
+          Nous n'avons trouvé aucun résultat correspondant à votre recherche.
+          Essayez d'autres mots-clés.
+        </p>
+        <button @click="productStore.searchQuery = ''"
+          class="mt-6 px-6 py-2 bg-[var(--color-primary)] text-white rounded-xl font-bold hover:opacity-90 transition shadow-lg shadow-[var(--color-primary)]/20">
+          Voir tous les produits
+        </button>
+      </div>
+
+      <ProductCard v-else v-for="product in productsPart1" :key="product.id" :product="product"
+        @click="goToProduct(product.id)" />
     </div>
   </div>
 </template>
 
 <script setup>
-import { ref, onMounted, onUnmounted, computed } from "vue";
+import { ref, onMounted, computed, onUnmounted } from "vue";
 import { useRouter } from "vue-router";
 import { useProductStore } from "../stores/products.js";
+import apiClient from "../api/index.js";
 import CategoryCard from "../components/CategoryCard.vue";
 import ProductCard from "../components/ProductCard.vue";
 import SkeletonProductCard from "../components/skeletons/SkeletonProductCard.vue";
+import { Star, Search, X } from "lucide-vue-next";
 
 const router = useRouter();
 const productStore = useProductStore();
-const isLoading = ref(true);
 
-// Countdown (live timer)
-const countdown = ref("");
-let timerInterval = null;
 
-const updateCountdown = () => {
-  // Target: promo ends in 14j 12h 35m (static demo)
-  const target = new Date();
-  target.setDate(target.getDate() + 14);
-  target.setHours(target.getHours() + 12, 35, 23);
-  const diff = target - Date.now();
-  if (diff <= 0) {
-    countdown.value = "Terminé";
-    return;
-  }
-  const d = Math.floor(diff / 86400000);
-  const h = Math.floor((diff % 86400000) / 3600000);
-  const m = Math.floor((diff % 3600000) / 60000);
-  const s = Math.floor((diff % 60000) / 1000);
-  countdown.value = `${d}j ${h}h ${m}m ${s}s`;
+const isLoading = computed(
+  () => productStore.loading && productStore.products.length === 0,
+);
+
+const getCategoryIcon = (name) => {
+  const n = name?.toLowerCase() || "";
+  if (
+    n.includes("informatique") ||
+    n.includes("ordinateur") ||
+    n.includes("laptop")
+  )
+    return "fas fa-laptop";
+  if (n.includes("téléphone") || n.includes("mobile") || n.includes("phone"))
+    return "fas fa-mobile-alt";
+  if (n.includes("électro") || n.includes("electricite")) return "fas fa-plug";
+  if (n.includes("vêtement") || n.includes("habit") || n.includes("mode"))
+    return "fas fa-tshirt";
+  if (n.includes("chaussure")) return "fas fa-shoe-prints";
+  if (n.includes("cuisine") || n.includes("maison") || n.includes("home"))
+    return "fas fa-home";
+  if (n.includes("beauté") || n.includes("soin") || n.includes("santé"))
+    return "fas fa-flask";
+  if (n.includes("jeu") || n.includes("jouet") || n.includes("game"))
+    return "fas fa-gamepad";
+  if (n.includes("watch") || n.includes("montre") || n.includes("accessoire"))
+    return "fas fa-clock";
+  if (n.includes("tv") || n.includes("télévision") || n.includes("écran"))
+    return "fas fa-tv";
+  return "fas fa-box";
 };
 
 const categories = computed(() =>
   productStore.categories.map((cat) => ({
     id: cat.id,
     name: cat.nom,
-    icon: "fas fa-box",
     active: false,
   })),
 );
 
-const productsPart1 = computed(() =>
-  productStore.productsWithImages.slice(0, 9),
-);
-const productsPart2 = computed(() =>
-  productStore.productsWithImages.slice(9, 15),
-);
-
-onMounted(async () => {
-  updateCountdown();
-  timerInterval = setInterval(updateCountdown, 1000);
-  try {
-    await Promise.all([
-      productStore.fetchCategories(),
-      productStore.fetchProducts(),
-    ]);
-  } finally {
-    isLoading.value = false;
-  }
+const productsPart1 = computed(() => {
+  return productStore.productsWithImages;
 });
 
-onUnmounted(() => clearInterval(timerInterval));
+onMounted(() => {
+  productStore.fetchProducts();
+});
 
-const goToProduct = (id) => router.push(`/produit/${id}`);
+const goToProduct = (id) =>
+  router.push({ name: "DetailProduit", params: { id } });
 </script>

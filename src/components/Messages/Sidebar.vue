@@ -17,12 +17,24 @@
           borderColor: 'var(--color-border)',
         }"
       >
-        <h2
-          class="text-xl font-bold"
-          :style="{ color: 'var(--color-text-main)' }"
-        >
-          Messages
-        </h2>
+        <div class="flex items-center gap-3">
+          <router-link
+            :to="{ name: 'Home' }"
+            class="w-9 h-9 rounded-xl flex items-center justify-center hover:bg-(--color-primary)/10 transition-all group"
+            title="Retour à l'accueil"
+          >
+            <i
+              class="fas fa-chevron-left text-sm group-hover:-translate-x-0.5 transition-transform"
+              :style="{ color: 'var(--color-primary)' }"
+            ></i>
+          </router-link>
+          <h2
+            class="text-xl font-bold"
+            :style="{ color: 'var(--color-text-main)' }"
+          >
+            Messages
+          </h2>
+        </div>
         <button
           v-if="isMobile"
           @click="$emit('toggle-sidebar')"
@@ -67,18 +79,18 @@
         <div
           v-else
           v-for="conv in conversations"
-          :key="conv.user_id"
-          @click="$emit('select-conversation', conv.user_id)"
+          :key="conv.user_id + '_' + conv.product_id"
+          @click="$emit('select-conversation', conv.user_id, conv.product_id)"
           class="group p-3 rounded-xl cursor-pointer transition-all duration-200 flex items-center gap-3 relative overflow-hidden"
           :class="[
-            activeConversationId == conv.user_id
+            (activeConversationId == conv.user_id && activeProductId == conv.product_id)
               ? 'bg-(--color-primary)/10'
               : 'hover:bg-(--color-primary)/10',
           ]"
         >
           <!-- Active Indicator Strip -->
           <div
-            v-if="activeConversationId == conv.user_id"
+            v-if="activeConversationId == conv.user_id && activeProductId == conv.product_id"
             class="absolute left-0 top-1/2 -translate-y-1/2 h-8 w-1 bg-[var(--color-primary)] rounded-r-full"
           ></div>
 
@@ -119,11 +131,11 @@
                 class="font-semibold truncate pr-2"
                 :class="{
                   'text-[var(--color-primary)]':
-                    activeConversationId == conv.user_id,
+                    (activeConversationId == conv.user_id && activeProductId == conv.product_id),
                 }"
                 :style="{
                   color:
-                    activeConversationId != conv.user_id
+                    (activeConversationId != conv.user_id || activeProductId != conv.product_id)
                       ? 'var(--color-text-main)'
                       : '',
                 }"
@@ -136,6 +148,11 @@
               >
                 {{ formatTime(conv.updated_at) }}
               </span>
+            </div>
+
+            <!-- Nom de l'utilisateur affiché pour l'admin si on est dans un contexte produit -->
+            <div v-if="authStore.isAdmin && conv.product_name && conv.user_name" class="text-xs font-semibold mb-1 truncate text-[var(--color-primary)] opacity-80">
+              {{ conv.user_name }}
             </div>
 
             <div class="flex items-center justify-between">
@@ -199,6 +216,9 @@
 
 <script setup>
 import ConversationSkeleton from "./ConversationSkeleton.vue";
+import { useAuthStore } from "../../stores/auth";
+
+const authStore = useAuthStore();
 
 const props = defineProps({
   conversations: Array,
@@ -206,6 +226,7 @@ const props = defineProps({
   isMobile: Boolean,
   storageUrl: String,
   activeConversationId: [String, Number],
+  activeProductId: [String, Number],
   isLoading: Boolean,
 });
 

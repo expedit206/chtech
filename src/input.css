@@ -74,7 +74,7 @@
 .scroll-track {
   display: flex;
   width: max-content;
-  animation: scrollCategories 40s linear infinite; /* 40s pour que ce soit lent et pro */
+  animation: scrollCategories 0s linear infinite; /* 40s pour que ce soit lent et pro */
   will-change: transform; /* Optimisation performance */
 }
 
@@ -89,8 +89,8 @@
   flex-direction: column;
   align-items: center; /* Correction ici */
   justify-content: center;
-  gap: 0.5rem;
-  padding: 0.75rem 2.5rem;
+  gap: 0rem;
+  padding: 0.2rem .1rem;
   flex-shrink: 0;
   transition: all 0.3s ease;
   cursor: pointer;
@@ -134,18 +134,6 @@
   color: var(--color-text-sub);
 }
 
-/* Grille Responsive */
-.product-grid {
-  display: grid;
-  grid-template-columns: repeat(2, 1fr); /* 2 par ligne sur mobile */
-  gap: 1rem;
-}
-
-@media (min-width: 1024px) {
-  .product-grid {
-    grid-template-columns: repeat(5, 1fr); /* 5 par ligne sur desktop */
-  }
-}
 
 /* Card Style */
 .product-card {

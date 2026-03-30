@@ -1,15 +1,26 @@
 <template>
   <div
-    class="min-h-screen flex items-center justify-center bg-[#0f172a] px-4 py-12"
+    class="min-h-screen flex items-center justify-center px-4 py-12"
+    :style="{ backgroundColor: 'var(--color-bg)' }"
   >
     <div
-      class="max-w-md w-full space-y-8 bg-white/5 backdrop-blur-xl p-8 rounded-3xl border border-white/10 shadow-2xl"
+      class="max-w-md w-full space-y-8 p-8 rounded-3xl border shadow-2xl transition-all duration-300"
+      :style="{
+        backgroundColor: 'var(--color-surface)',
+        borderColor: 'var(--color-border)',
+      }"
     >
       <div>
-        <h2 class="mt-6 text-center text-3xl font-extrabold text-white">
+        <h2
+          class="mt-6 text-center text-3xl font-extrabold"
+          :style="{ color: 'var(--color-text-main)' }"
+        >
           Rejoignez CHTECH
         </h2>
-        <p class="mt-2 text-center text-sm text-gray-400">
+        <p
+          class="mt-2 text-center text-sm"
+          :style="{ color: 'var(--color-text-sub)' }"
+        >
           Créez votre compte en quelques secondes
         </p>
       </div>
@@ -18,7 +29,8 @@
           <div>
             <label
               for="nom"
-              class="block text-sm font-medium text-gray-300 mb-1"
+              class="block text-sm font-medium mb-1"
+              :style="{ color: 'var(--color-text-main)' }"
               >Nom complet</label
             >
             <input
@@ -27,14 +39,21 @@
               name="nom"
               type="text"
               required
-              class="appearance-none relative block w-full px-4 py-3 border border-white/10 placeholder-gray-500 text-white bg-white/5 rounded-xl focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent sm:text-sm transition-all duration-200"
+              class="appearance-none relative block w-full px-4 py-3 border rounded-xl focus:outline-none focus:ring-2 transition-all duration-200 sm:text-sm"
+              :style="{
+                backgroundColor: 'var(--color-bg)',
+                borderColor: 'var(--color-border)',
+                color: 'var(--color-text-main)',
+                '--tw-ring-color': 'var(--color-primary)',
+              }"
               placeholder="Ex: Jean Dupont"
             />
           </div>
           <div>
             <label
               for="telephone"
-              class="block text-sm font-medium text-gray-300 mb-1"
+              class="block text-sm font-medium mb-1"
+              :style="{ color: 'var(--color-text-main)' }"
               >Téléphone</label
             >
             <input
@@ -43,14 +62,21 @@
               name="telephone"
               type="tel"
               required
-              class="appearance-none relative block w-full px-4 py-3 border border-white/10 placeholder-gray-500 text-white bg-white/5 rounded-xl focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent sm:text-sm transition-all duration-200"
+              class="appearance-none relative block w-full px-4 py-3 border rounded-xl focus:outline-none focus:ring-2 transition-all duration-200 sm:text-sm"
+              :style="{
+                backgroundColor: 'var(--color-bg)',
+                borderColor: 'var(--color-border)',
+                color: 'var(--color-text-main)',
+                '--tw-ring-color': 'var(--color-primary)',
+              }"
               placeholder="Ex: 6XXXXXXXX"
             />
           </div>
           <div>
             <label
               for="password"
-              class="block text-sm font-medium text-gray-300 mb-1"
+              class="block text-sm font-medium mb-1"
+              :style="{ color: 'var(--color-text-main)' }"
               >Mot de passe</label
             >
             <input
@@ -59,14 +85,21 @@
               name="password"
               type="password"
               required
-              class="appearance-none relative block w-full px-4 py-3 border border-white/10 placeholder-gray-500 text-white bg-white/5 rounded-xl focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent sm:text-sm transition-all duration-200"
+              class="appearance-none relative block w-full px-4 py-3 border rounded-xl focus:outline-none focus:ring-2 transition-all duration-200 sm:text-sm"
+              :style="{
+                backgroundColor: 'var(--color-bg)',
+                borderColor: 'var(--color-border)',
+                color: 'var(--color-text-main)',
+                '--tw-ring-color': 'var(--color-primary)',
+              }"
               placeholder="••••••••"
             />
           </div>
           <div>
             <label
               for="parrain_code"
-              class="block text-sm font-medium text-gray-300 mb-1"
+              class="block text-sm font-medium mb-1"
+              :style="{ color: 'var(--color-text-main)' }"
               >Code de parrainage (optionnel)</label
             >
             <input
@@ -74,7 +107,13 @@
               v-model="form.parrain_code"
               name="parrain_code"
               type="text"
-              class="appearance-none relative block w-full px-4 py-3 border border-white/10 placeholder-gray-500 text-white bg-white/5 rounded-xl focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent sm:text-sm transition-all duration-200"
+              class="appearance-none relative block w-full px-4 py-3 border rounded-xl focus:outline-none focus:ring-2 transition-all duration-200 sm:text-sm"
+              :style="{
+                backgroundColor: 'var(--color-bg)',
+                borderColor: 'var(--color-border)',
+                color: 'var(--color-text-main)',
+                '--tw-ring-color': 'var(--color-primary)',
+              }"
               placeholder="Code parrain"
             />
           </div>
@@ -91,7 +130,12 @@
           <button
             type="submit"
             :disabled="loading"
-            class="group relative w-full flex justify-center py-3 px-4 border border-transparent text-sm font-semibold rounded-xl text-white bg-gradient-to-r from-blue-600 to-indigo-600 hover:from-blue-500 hover:to-indigo-500 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500 transition-all duration-200 shadow-lg shadow-blue-500/20 disabled:opacity-50 disabled:cursor-not-allowed"
+            class="group relative w-full flex justify-center py-3 px-4 border border-transparent text-sm font-semibold rounded-xl text-white transition-all duration-200 disabled:opacity-50 disabled:cursor-not-allowed"
+            :style="{
+              backgroundColor: 'var(--color-primary)',
+              boxShadow:
+                '0 10px 15px -3px var(--color-primary-light, rgba(99, 102, 241, 0.2))',
+            }"
           >
             <span
               v-if="loading"
@@ -123,11 +167,12 @@
         </div>
 
         <div class="text-center">
-          <p class="text-sm text-gray-400">
+          <p class="text-sm" :style="{ color: 'var(--color-text-sub)' }">
             Vous avez déjà un compte ?
             <router-link
-              to="/login"
-              class="font-medium text-blue-400 hover:text-blue-300 transition-colors"
+              :to="{ name: 'Login' }"
+              class="font-medium hover:underline transition-colors"
+              :style="{ color: 'var(--color-primary)' }"
             >
               Connectez-vous
             </router-link>
@@ -161,8 +206,8 @@ const handleRegister = async () => {
   error.value = null;
   try {
     await auth.register(form);
-    const redirectPath = router.currentRoute.value.query.redirect || "/";
-    router.push(redirectPath);
+    const redirectPath = router.currentRoute.value.query.redirect;
+    router.push(redirectPath ? { path: redirectPath } : { name: "Home" });
   } catch (err) {
     if (err.response?.data?.errors) {
       error.value = Object.values(err.response.data.errors).flat()[0];

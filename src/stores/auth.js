@@ -10,6 +10,10 @@ export const useAuthStore = defineStore('auth', () => {
     return !!token.value;
   });
 
+  const isAdmin = computed(() => user.value?.role === 'admin');
+  const isVendeur = computed(() => user.value?.role === 'vendeur');
+  const isNormalUser = computed(() => user.value?.role === 'user');
+
   const setUser = (userData) => {
     user.value = userData;
     if (userData) {
@@ -71,6 +75,9 @@ export const useAuthStore = defineStore('auth', () => {
     user, 
     token, 
     isAuthenticated,
+    isAdmin,
+    isVendeur,
+    isNormalUser,
     setUser,
     setToken,
     login,

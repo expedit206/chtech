@@ -1,6 +1,5 @@
-
 <template>
-  <div class="fixed bottom-6 right-6 flex flex-col items-end gap-3 z-[60]">
+  <div class="fixed md:bottom-6 bottom-14 right-6 flex flex-col items-end gap-3 z-[60]">
     <Transition name="fade-slide">
       <div
         v-if="isMenuOpen"
@@ -13,7 +12,7 @@
           >
           <button
             @click="isMenuOpen = false"
-            class="text-gray-400 hover:text-red-500"
+            class="text-[var(--color-text-sub)] hover:text-red-500 transition-colors"
           >
             <X :size="16" />
           </button>
@@ -26,7 +25,9 @@
             :size="18"
             class="cursor-pointer transition-colors"
             :class="
-              i <= rating ? 'fill-yellow-400 text-yellow-400' : 'text-gray-300'
+              i <= rating
+                ? 'fill-[var(--color-rating)] text-[var(--color-rating)]'
+                : 'text-[var(--color-border)]'
             "
             @click="rating = i"
           />
@@ -35,12 +36,12 @@
         <textarea
           v-model="message"
           placeholder="Un petit mot..."
-          class="w-full h-24 p-2 text-sm rounded-lg border bg-transparent focus:ring-1 focus:ring-[var(--color-primary)] outline-none resize-none border-[var(--color-border)] text-[var(--color-text-main)]"
+          class="w-full h-24 p-2 text-sm rounded-lg border bg-[var(--color-bg)]/50 focus:ring-1 focus:ring-[var(--color-primary)] outline-none resize-none border-[var(--color-border)] text-[var(--color-text-main)]"
         ></textarea>
 
         <button
           @click="submitComment"
-          class="mt-2 w-full py-2 bg-[var(--color-primary)] text-white rounded-lg text-xs font-bold flex items-center justify-center gap-2 hover:opacity-90 transition-all active:scale-95"
+          class="mt-2 w-full py-2 bg-[var(--color-primary)] text-white rounded-lg text-xs font-bold flex items-center justify-center gap-2 hover:opacity-90 transition-all active:scale-95 shadow-lg shadow-[var(--color-primary)]/20"
         >
           <span>Envoyer</span>
           <Send :size="14" />
@@ -49,17 +50,16 @@
     </Transition>
 
     <RouterLink
-      to="profile/support"
+      to="/profile/support"
       class="group relative w-10 h-10 rounded-2xl flex items-center justify-center shadow-lg transition-all hover:-translate-y-1 bg-[var(--color-surface)] border border-[var(--color-border)] text-[var(--color-text-main)]"
     >
       <HelpCircle :size="20" :stroke-width="2.5" />
       <span
-        class="absolute right-14 px-3 py-1.5 rounded-lg text-xs font-bold opacity-0 group-hover:opacity-100 transition-opacity whitespace-nowrap bg-[var(--color-surface)] border border-[var(--color-border)]"
+        class="absolute right-14 px-3 py-1.5 rounded-lg text-xs font-bold opacity-0 group-hover:opacity-100 transition-opacity whitespace-nowrap bg-[var(--color-surface)] border border-[var(--color-border)] text-[var(--color-text-main)] shadow-xl"
       >
         Besoin d'aide ?
       </span>
-    </RouterLink    />
-
+    </RouterLink>
 
     <button
       @click="isMenuOpen = !isMenuOpen"
@@ -73,10 +73,10 @@
     >
       <span v-if="!isMenuOpen" class="absolute -top-1 -right-1 flex h-3 w-3">
         <span
-          class="animate-ping absolute inline-flex h-full w-full rounded-full bg-red-400 opacity-75"
+          class="animate-ping absolute inline-flex h-full w-full rounded-full bg-[var(--color-accent)] opacity-75"
         ></span>
         <span
-          class="relative inline-flex rounded-full h-3 w-3 bg-red-500"
+          class="relative inline-flex rounded-full h-3 w-3 bg-[var(--color-accent)]"
         ></span>
       </span>
 
@@ -85,7 +85,7 @@
 
       <span
         v-if="!isMenuOpen"
-        class="absolute right-14 px-3 py-1.5 rounded-lg text-xs font-bold opacity-0 group-hover:opacity-100 transition-opacity whitespace-nowrap bg-[var(--color-surface)] border border-[var(--color-border)]"
+        class="absolute right-14 px-3 py-1.5 rounded-lg text-xs font-bold opacity-0 group-hover:opacity-100 transition-opacity whitespace-nowrap bg-[var(--color-surface)] border border-[var(--color-border)] text-[var(--color-text-main)] shadow-xl"
       >
         Laisser un message
       </span>
@@ -93,7 +93,7 @@
 
     <button
       @click="scrollToTop"
-      class="w-10 h-10 rounded-2xl flex items-center justify-center shadow-xl transition-all hover:-translate-y-1 active:scale-90 bg-[var(--color-primary)] text-white"
+      class="w-10 h-10 rounded-2xl flex items-center justify-center shadow-lg transition-all hover:-translate-y-1 active:scale-90 bg-[var(--color-primary)] text-white shadow-[var(--color-primary)]/20"
     >
       <ArrowUp :stroke-width="3" :size="20" />
     </button>

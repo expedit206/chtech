@@ -24,11 +24,7 @@ const routes = [
     name: "messages",
     component: () => import("../views/Messages.vue"),
   },
-  {
-    path: "/cart",
-    name: "Cart",
-    component: () => import("../views/Cart.vue"),
-  },
+
   {
     path: "/login",
     name: "Login",
@@ -68,27 +64,51 @@ const routes = [
         name: "Support",
         component: () => import("../views/Support.vue"),
       },
+      {
+        path: "my-orders",
+        name: "my-orders",
+        component: () => import("../views/profile/MyOrders.vue"),
+      },
+      {
+        path: "vendeur-orders",
+        name: "vendeur-orders",
+        component: () => import("../views/profile/SupplierOrders.vue"),
+      },
+      {
+        path: "my-products",
+        name: "my-products",
+        component: () => import("../views/profile/MyProducts.vue"),
+      },
+      {
+        path: "devenir-vendeur",
+        name: "become-vendeur",
+        component: () => import("../views/profile/BecomeSupplier.vue"),
+      },
+      {
+        path: "/admin/demandes-vendeurs",
+        name: "admin-seller-requests",
+        component: () => import("../views/admin/AdminSupplierRequests.vue"),
+      },
     ],
   },
   {
     path: "/ressources",
     children: [
       {
-        path: "politique-de-confidentialite", // Correspond à /profile/orders
-        name: "Politique de Confidentialité",
+        path: "politique-de-confidentialite",
+        name: "politique_de_confidentialite",
         component: () => import("../views/PrivacyPolicy.vue"),
       },
       {
         path: "conditions-generales-d-utilisation",
-        name: "Conditions Générales d'Utilisation",
+        name: "conditions_generales_d_utilisation",
         component: () => import("../views/TermsOfService.vue"),
       },
       {
         path: "mentions-legales",
-        name: "Mentions Légales",
+        name: "mentions_legales",
         component: () => import("../views/LegalNotice.vue"),
       },
-      
     ],
   },
 ];
@@ -101,19 +121,21 @@ const router = createRouter({
 router.beforeEach((to, from, next) => {
   const publicPages = ["/", "/login", "/register", "/blogs"];
   const authRequired =
-    !publicPages.includes(to.path) && !to.path.startsWith("/produit/");
+    !publicPages.includes(to.path) &&
+    !to.path.startsWith("/produit/") &&
+    !to.path.startsWith("/ressources/");
   const loggedIn = localStorage.getItem("auth_token");
 
   if (authRequired && !loggedIn) {
     return next({
-      path: "/login",
+      name: "Login",
       query: { redirect: to.fullPath },
     });
   }
 
   // Prevent logged in users from visiting login/register
-  if (loggedIn && (to.path === "/login" || to.path === "/register")) {
-    return next("/");
+  if (loggedIn && (to.name === "Login" || to.name === "Register")) {
+    return next({ name: "Home" });  
   }
 
   next();

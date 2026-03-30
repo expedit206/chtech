@@ -32,7 +32,11 @@
 
         <div v-if="lastOrder" class="flex items-center gap-4 mb-8">
           <div
-            class="w-16 h-16 bg-white rounded-2xl border border-[var(--color-border)] flex items-center justify-center"
+            class="w-16 h-16 rounded-2xl border flex items-center justify-center overflow-hidden"
+            :style="{
+              backgroundColor: 'var(--color-bg)',
+              borderColor: 'var(--color-border)',
+            }"
           >
             <img :src="lastOrder.image" class="max-h-full object-contain" />
           </div>
@@ -50,7 +54,11 @@
         </div>
         <div v-else class="flex items-center gap-4 mb-8">
           <div
-            class="w-16 h-16 bg-white rounded-2xl border border-[var(--color-border)] flex items-center justify-center"
+            class="w-16 h-16 rounded-2xl border flex items-center justify-center"
+            :style="{
+              backgroundColor: 'var(--color-bg)',
+              borderColor: 'var(--color-border)',
+            }"
           >
             <i
               class="fa-solid fa-box text-[var(--color-text-sub)] text-2xl opacity-30"
@@ -158,7 +166,7 @@
       <div class="flex justify-between items-center mb-4">
         <h3 class="font-bold text-[var(--color-text-main)]">Favoris récents</h3>
         <router-link
-          to="/wishlist"
+          :to="{ name: 'Wishlist' }"
           class="text-[var(--color-primary)] text-sm font-semibold hover:underline"
           >Voir tout</router-link
         >
@@ -168,10 +176,16 @@
           v-for="fav in recentFavorites"
           :key="fav.id"
           class="bg-[var(--color-surface)] border border-[var(--color-border)] p-4 rounded-2xl flex items-center gap-4 hover:border-[var(--color-primary)] transition-all cursor-pointer group"
-          @click="$router.push(`/produit/${fav.id}`)"
+          @click="
+            $router.push({ name: 'DetailProduit', params: { id: fav.id } })
+          "
         >
           <div
-            class="w-12 h-12 bg-white rounded-lg border border-[var(--color-border)] flex items-center justify-center shrink-0"
+            class="w-12 h-12 rounded-lg border flex items-center justify-center shrink-0 overflow-hidden"
+            :style="{
+              backgroundColor: 'var(--color-bg)',
+              borderColor: 'var(--color-border)',
+            }"
           >
             <img
               :src="fav.image"
@@ -198,7 +212,9 @@
           :style="{ color: 'var(--color-text-sub)' }"
         >
           Aucun favori récent.
-          <router-link to="/" class="underline text-[var(--color-primary)]"
+          <router-link
+            :to="{ name: 'Home' }"
+            class="underline text-[var(--color-primary)]"
             >Explorer les produits</router-link
           >
         </div>

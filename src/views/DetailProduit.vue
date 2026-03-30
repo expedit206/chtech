@@ -4,81 +4,50 @@
   <!-- ===================== LIGHTBOX ===================== -->
   <Teleport to="body">
     <Transition name="lightbox-fade">
-      <div
-        v-if="lightbox.open"
-        class="fixed inset-0 z-[999] flex items-center justify-center"
-        style="background: rgba(0, 0, 0, 0.92); backdrop-filter: blur(8px)"
-        @click.self="closeLightbox"
-        @keydown.esc="closeLightbox"
-        @keydown.left="prevLightbox"
-        @keydown.right="nextLightbox"
-        tabindex="0"
-        ref="lightboxEl"
-      >
+      <div v-if="lightbox.open" class="fixed inset-0 z-[999] flex items-center justify-center"
+        style="background: rgba(0, 0, 0, 0.92); backdrop-filter: blur(8px)" @click.self="closeLightbox"
+        @keydown.esc="closeLightbox" @keydown.left="prevLightbox" @keydown.right="nextLightbox" tabindex="0"
+        ref="lightboxEl">
         <!-- Close button -->
-        <button
-          @click="closeLightbox"
-          class="absolute top-4 right-4 z-10 w-10 h-10 rounded-full flex items-center justify-center text-white transition-all hover:scale-110 hover:bg-white/20"
-        >
+        <button @click="closeLightbox"
+          class="absolute top-4 right-4 z-10 w-10 h-10 rounded-full flex items-center justify-center text-white transition-all hover:scale-110 hover:bg-white/20">
           <i class="fas fa-times text-lg"></i>
         </button>
 
         <!-- Counter -->
-        <div
-          class="absolute top-4 left-1/2 -translate-x-1/2 text-white/70 text-sm font-medium tracking-widest"
-        >
+        <div class="absolute top-4 left-1/2 -translate-x-1/2 text-white/70 text-sm font-medium tracking-widest">
           {{ lightbox.index + 1 }} / {{ product.photos.length }}
         </div>
 
         <!-- Prev -->
-        <button
-          v-if="product.photos.length > 1"
-          @click="prevLightbox"
-          class="absolute left-3 md:left-6 z-10 w-11 h-11 rounded-full flex items-center justify-center text-white border border-white/20 transition-all hover:bg-white/20 hover:scale-110"
-        >
+        <button v-if="product.photos.length > 1" @click="prevLightbox"
+          class="absolute left-3 md:left-6 z-10 w-11 h-11 rounded-full flex items-center justify-center text-white border border-white/20 transition-all hover:bg-white/20 hover:scale-110">
           <i class="fas fa-chevron-left"></i>
         </button>
 
         <!-- Main image -->
         <Transition name="img-slide" mode="out-in">
-          <img
-            :key="lightbox.index"
-            :src="product.photos[lightbox.index]"
-            :alt="`Photo ${lightbox.index + 1}`"
-            class="max-w-[90vw] max-h-[85vh] object-contain rounded-xl shadow-2xl select-none"
-            draggable="false"
-          />
+          <img :key="lightbox.index" :src="product.photos[lightbox.index]" :alt="`Photo ${lightbox.index + 1}`"
+            class="max-w-[90vw] max-h-[85vh] object-contain rounded-xl shadow-2xl select-none" draggable="false" />
         </Transition>
 
         <!-- Next -->
-        <button
-          v-if="product.photos.length > 1"
-          @click="nextLightbox"
-          class="absolute right-3 md:right-6 z-10 w-11 h-11 rounded-full flex items-center justify-center text-white border border-white/20 transition-all hover:bg-white/20 hover:scale-110"
-        >
+        <button v-if="product.photos.length > 1" @click="nextLightbox"
+          class="absolute right-3 md:right-6 z-10 w-11 h-11 rounded-full flex items-center justify-center text-white border border-white/20 transition-all hover:bg-white/20 hover:scale-110">
           <i class="fas fa-chevron-right"></i>
         </button>
 
         <!-- Thumbnail strip (lightbox bottom) -->
-        <div
-          v-if="product.photos.length > 1"
-          class="absolute bottom-4 left-1/2 -translate-x-1/2 flex gap-2 px-4 py-2 rounded-2xl"
-          style="
+        <div v-if="product.photos.length > 1"
+          class="absolute bottom-4 left-1/2 -translate-x-1/2 flex gap-2 px-4 py-2 rounded-2xl" style="
             background: rgba(255, 255, 255, 0.07);
             backdrop-filter: blur(12px);
-          "
-        >
-          <button
-            v-for="(photo, i) in product.photos"
-            :key="i"
-            @click="lightbox.index = i"
-            class="flex-shrink-0 w-12 h-12 rounded-lg overflow-hidden border-2 transition-all duration-200"
-            :class="
-              lightbox.index === i
-                ? 'border-white scale-110 shadow-lg'
-                : 'border-white/20 opacity-50 hover:opacity-80'
-            "
-          >
+          ">
+          <button v-for="(photo, i) in product.photos" :key="i" @click="lightbox.index = i"
+            class="flex-shrink-0 w-12 h-12 rounded-lg overflow-hidden border-2 transition-all duration-200" :class="lightbox.index === i
+              ? 'border-white scale-110 shadow-lg'
+              : 'border-white/20 opacity-50 hover:opacity-80'
+              ">
             <img :src="photo" class="w-full h-full object-cover" />
           </button>
         </div>
@@ -89,41 +58,25 @@
   <!-- ===================== MAIN PAGE ===================== -->
   <main class="max-w-7xl mx-auto px-4 py-6 md:py-10">
     <!-- Back -->
-    <RouterLink
-      to="/"
-      class="inline-flex items-center gap-2 mb-6 text-sm font-semibold group"
-      :style="{ color: 'var(--color-primary)' }"
-    >
-      <ArrowLeft
-        :size="16"
-        :stroke-width="3"
-        class="transition-transform group-hover:-translate-x-1"
-      />
+    <RouterLink :to="{ name: 'Home' }" class="inline-flex items-center gap-2 mb-6 text-sm font-semibold group"
+      :style="{ color: 'var(--color-primary)' }">
+      <ArrowLeft :size="16" :stroke-width="3" class="transition-transform group-hover:-translate-x-1" />
       Retour aux produits
     </RouterLink>
 
     <!-- Loading skeleton -->
-    <div
-      v-if="loading"
-      class="grid grid-cols-1 lg:grid-cols-2 gap-8 animate-pulse"
-    >
+    <div v-if="loading" class="grid grid-cols-1 lg:grid-cols-2 gap-8 animate-pulse">
       <div class="flex gap-3">
         <div class="hidden lg:flex flex-col gap-2">
-          <div
-            v-for="i in 4"
-            :key="i"
-            class="w-16 h-16 rounded-xl bg-gray-200 dark:bg-gray-700"
-          ></div>
+          <div v-for="i in 4" :key="i" class="w-16 h-16 rounded-xl bg-[var(--color-surface)] animate-pulse"></div>
         </div>
-        <div
-          class="flex-1 aspect-square rounded-2xl bg-gray-200 dark:bg-gray-700"
-        ></div>
+        <div class="flex-1 aspect-square rounded-2xl bg-[var(--color-surface)] animate-pulse"></div>
       </div>
       <div class="space-y-4">
-        <div class="h-6 w-24 rounded-full bg-gray-200 dark:bg-gray-700"></div>
-        <div class="h-10 w-3/4 rounded-xl bg-gray-200 dark:bg-gray-700"></div>
-        <div class="h-8 w-1/3 rounded-xl bg-gray-200 dark:bg-gray-700"></div>
-        <div class="h-24 rounded-xl bg-gray-200 dark:bg-gray-700"></div>
+        <div class="h-6 w-24 rounded-full bg-[var(--color-surface)]"></div>
+        <div class="h-10 w-3/4 rounded-xl bg-[var(--color-surface)]"></div>
+        <div class="h-8 w-1/3 rounded-xl bg-[var(--color-surface)]"></div>
+        <div class="h-24 rounded-xl bg-[var(--color-surface)]"></div>
       </div>
     </div>
 
@@ -132,22 +85,13 @@
       <!-- ===== LEFT: Image Gallery ===== -->
       <div class="flex flex-col gap-4">
         <!-- MOBILE: horizontal scrollable thumbnails on top -->
-        <div
-          v-if="product.photos.length > 1"
-          class="flex lg:hidden gap-2 overflow-x-auto pb-1 scroll-smooth"
-          style="scrollbar-width: none"
-        >
-          <button
-            v-for="(photo, i) in product.photos"
-            :key="i"
-            @click="selectedPhotoIndex = i"
-            class="flex-shrink-0 w-16 h-16 rounded-xl overflow-hidden border-2 transition-all duration-200"
-            :class="
-              selectedPhotoIndex === i
-                ? 'border-[var(--color-primary)] shadow-lg scale-105'
-                : 'border-transparent opacity-60 hover:opacity-90'
-            "
-          >
+        <div v-if="product.photos.length > 1" class="flex lg:hidden gap-2 overflow-x-auto pb-1 scroll-smooth"
+          style="scrollbar-width: none">
+          <button v-for="(photo, i) in product.photos" :key="i" @click="selectedPhotoIndex = i"
+            class="flex-shrink-0 w-16 h-16 rounded-xl overflow-hidden border-2 transition-all duration-200" :class="selectedPhotoIndex === i
+              ? 'border-[var(--color-primary)] shadow-lg scale-105'
+              : 'border-transparent opacity-60 hover:opacity-90'
+              ">
             <img :src="photo" class="w-full h-full object-cover" />
           </button>
         </div>
@@ -155,95 +99,63 @@
         <!-- Main image + vertical thumbs (desktop) -->
         <div class="flex gap-3">
           <!-- DESKTOP: vertical thumbnail strip on left -->
-          <div
-            v-if="product.photos.length > 1"
-            class="hidden lg:flex flex-col gap-2 overflow-y-auto max-h-[520px] pr-1"
-            style="scrollbar-width: thin"
-          >
-            <button
-              v-for="(photo, i) in product.photos"
-              :key="i"
-              @click="selectedPhotoIndex = i"
+          <div v-if="product.photos.length > 1" class="hidden lg:flex flex-col gap-2 overflow-y-auto max-h-[520px] pr-1"
+            style="scrollbar-width: thin">
+            <button v-for="(photo, i) in product.photos" :key="i" @click="selectedPhotoIndex = i"
               class="flex-shrink-0 w-[70px] h-[70px] rounded-xl overflow-hidden border-2 transition-all duration-200"
-              :class="
-                selectedPhotoIndex === i
-                  ? 'border-[var(--color-primary)] shadow-md scale-105'
-                  : 'border-transparent opacity-55 hover:opacity-90 hover:scale-102'
-              "
-            >
-              <img
-                :src="photo"
-                :alt="`Vue ${i + 1}`"
-                class="w-full h-full object-cover"
-              />
+              :class="selectedPhotoIndex === i
+                ? 'border-[var(--color-primary)] shadow-md scale-105'
+                : 'border-transparent opacity-55 hover:opacity-90 hover:scale-102'
+                ">
+              <img :src="photo" :alt="`Vue ${i + 1}`" class="w-full h-full object-cover" />
             </button>
           </div>
 
           <!-- Active photo -->
-          <div
-            class="flex-1 relative rounded-2xl overflow-hidden cursor-zoom-in group"
-            :style="{
-              backgroundColor: 'var(--color-surface)',
-              border: `1px solid var(--color-border)`,
-              aspectRatio: '1 / 1',
-            }"
-            @click="openLightbox(selectedPhotoIndex)"
-          >
+          <div class="flex-1 relative rounded-2xl overflow-hidden cursor-zoom-in group" :style="{
+            backgroundColor: 'var(--color-surface)',
+            border: `1px solid var(--color-border)`,
+            aspectRatio: '1 / 1',
+          }" @click="openLightbox(selectedPhotoIndex)">
             <Transition name="img-swap" mode="out-in">
-              <img
-                :key="selectedPhotoIndex"
-                :src="product.photos[selectedPhotoIndex]"
-                :alt="product.name"
-                class="w-full h-full object-cover transition-transform duration-700 group-hover:scale-105"
-              />
+              <img :key="selectedPhotoIndex" :src="product.photos[selectedPhotoIndex]" :alt="product.name"
+                class="w-full h-full object-cover transition-transform duration-700 group-hover:scale-105" />
             </Transition>
 
             <!-- Zoom hint overlay -->
             <div
-              class="absolute inset-0 flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity duration-300 pointer-events-none"
-            >
-              <div
-                class="flex items-center gap-2 px-4 py-2 rounded-full text-white text-sm font-semibold"
-                style="
+              class="absolute inset-0 flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity duration-300 pointer-events-none">
+              <div class="flex items-center gap-2 px-4 py-2 rounded-full text-white text-sm font-semibold" style="
                   background: rgba(0, 0, 0, 0.45);
                   backdrop-filter: blur(6px);
-                "
-              >
+                ">
                 <i class="fas fa-search-plus"></i>
                 Voir en grand
               </div>
             </div>
 
             <!-- Navigation arrows on main image (mobile, when > 1 photo) -->
-            <button
-              v-if="product.photos.length > 1"
-              @click.stop="prevPhoto"
+            <button v-if="product.photos.length > 1" @click.stop="prevPhoto"
               class="lg:hidden absolute left-2 top-1/2 -translate-y-1/2 w-8 h-8 rounded-full flex items-center justify-center text-white"
               style="
                 background: rgba(0, 0, 0, 0.45);
                 backdrop-filter: blur(4px);
-              "
-            >
+              ">
               <i class="fas fa-chevron-left text-xs"></i>
             </button>
-            <button
-              v-if="product.photos.length > 1"
-              @click.stop="nextPhoto"
+            <button v-if="product.photos.length > 1" @click.stop="nextPhoto"
               class="lg:hidden absolute right-2 top-1/2 -translate-y-1/2 w-8 h-8 rounded-full flex items-center justify-center text-white"
               style="
                 background: rgba(0, 0, 0, 0.45);
                 backdrop-filter: blur(4px);
-              "
-            >
+              ">
               <i class="fas fa-chevron-right text-xs"></i>
             </button>
 
             <!-- Photo count badge -->
-            <div
-              v-if="product.photos.length > 1"
+            <div v-if="product.photos.length > 1"
               class="absolute bottom-3 right-3 text-[11px] text-white font-bold px-2.5 py-1 rounded-full"
-              style="background: rgba(0, 0, 0, 0.5); backdrop-filter: blur(4px)"
-            >
+              style="background: rgba(0, 0, 0, 0.5); backdrop-filter: blur(4px)">
               <i class="fas fa-images mr-1"></i>{{ selectedPhotoIndex + 1 }} /
               {{ product.photos.length }}
             </div>
@@ -255,107 +167,83 @@
       <div class="flex flex-col gap-5">
         <!-- Category + Stock -->
         <div class="flex items-center gap-2 flex-wrap">
-          <span
-            class="inline-block text-[11px] font-black uppercase tracking-widest px-3 py-1 rounded-full"
-            :style="{
-              backgroundColor: 'var(--color-primary)',
-              color: 'var(--color-pure)',
-            }"
-          >
+          <span class="inline-block text-[11px] font-black uppercase tracking-widest px-3 py-1 rounded-full" :style="{
+            backgroundColor: 'var(--color-primary)',
+            color: 'var(--color-pure)',
+          }">
             {{ product.category || "Produit" }}
           </span>
-          <span
-            v-if="product.quantity > 0"
-            class="inline-flex items-center gap-1.5 text-[11px] font-bold px-3 py-1 rounded-full border border-green-500/30 text-green-600 bg-green-50 dark:bg-green-900/20"
-          >
-            <span
-              class="w-1.5 h-1.5 rounded-full bg-green-500 animate-pulse"
-            ></span>
+          <span v-if="product.quantity > 0"
+            class="inline-flex items-center gap-1.5 text-[11px] font-bold px-3 py-1 rounded-full border border-green-500/30 text-green-600 bg-green-50 dark:bg-green-900/20">
+            <span class="w-1.5 h-1.5 rounded-full bg-green-500 animate-pulse"></span>
             En stock
           </span>
-          <span
-            v-else
-            class="inline-flex items-center gap-1.5 text-[11px] font-bold px-3 py-1 rounded-full border border-red-500/30 text-red-500 bg-red-50 dark:bg-red-900/20"
-          >
+          <span v-else
+            class="inline-flex items-center gap-1.5 text-[11px] font-bold px-3 py-1 rounded-full border border-red-500/30 text-red-500 bg-red-50 dark:bg-red-900/20">
             Rupture de stock
           </span>
         </div>
 
         <!-- Title + Price -->
         <div>
-          <h1
-            class="text-2xl md:text-3xl font-black mb-2 leading-tight"
-            :style="{ color: 'var(--color-text-main)' }"
-          >
+          <h1 class="text-2xl md:text-3xl font-black mb-2 leading-tight" :style="{ color: 'var(--color-text-main)' }">
             {{ product.name }}
           </h1>
-          <p
-            class="text-2xl font-black"
-            :style="{ color: 'var(--color-primary)' }"
-          >
-            {{ product.price }}
-          </p>
+          <div class="flex items-baseline gap-3">
+            <p class="text-2xl font-black" :style="{ color: 'var(--color-primary)' }">
+              {{ product.price }}
+            </p>
+            <p v-if="product.old_price" class="text-lg font-bold line-through opacity-50"
+              :style="{ color: 'var(--color-text-sub)' }">
+              {{ product.old_price }}
+            </p>
+          </div>
         </div>
 
-        <!-- Rating -->
-        <div class="flex items-center gap-4">
+        <!-- Rating & Interactions -->
+        <div class="flex items-center gap-6 flex-wrap">
           <div class="flex items-center gap-1">
-            <Star
-              :size="16"
-              :stroke-width="3"
-              class="text-yellow-400 fill-yellow-400"
-            />
-            <span
-              class="font-bold"
-              :style="{ color: 'var(--color-text-main)' }"
-              >{{ product.rating }}</span
-            >
-            <span :style="{ color: 'var(--color-text-sub)' }"
-              >({{ product.reviews }} avis)</span
-            >
+            <Star :size="16" :stroke-width="3" style="color: var(--color-rating); fill: var(--color-rating)" />
+            <span class="font-bold" :style="{ color: 'var(--color-text-main)' }">{{ product.rating }}</span>
+            <span :style="{ color: 'var(--color-text-sub)' }">({{ product.reviews }} avis)</span>
+          </div>
+
+          <div class="flex items-center gap-4 text-[11px] font-black uppercase opacity-60"
+            :style="{ color: 'var(--color-text-sub)' }">
+            <div class="flex items-center gap-1.5">
+              <Eye :size="14" :stroke-width="3" />
+              <span>{{ formatNumber(displayCounts.clics) }} vues</span>
+            </div>
+            <div class="flex items-center gap-1.5">
+              <Heart :size="14" :stroke-width="3" />
+              <span>{{ formatNumber(displayCounts.favorites) }} likes</span>
+            </div>
+            <div class="flex items-center gap-1.5">
+              <Forward :size="14" :stroke-width="3" />
+              <span>{{ formatNumber(displayCounts.shares) }} partages</span>
+            </div>
           </div>
         </div>
 
         <!-- Description -->
         <div>
-          <h3
-            class="font-bold mb-2"
-            :style="{ color: 'var(--color-text-main)' }"
-          >
+          <h3 class="font-bold mb-2" :style="{ color: 'var(--color-text-main)' }">
             Description
           </h3>
-          <p
-            :style="{ color: 'var(--color-text-sub)' }"
-            class="text-sm leading-relaxed"
-          >
+          <p :style="{ color: 'var(--color-text-sub)' }" class="text-sm leading-relaxed">
             {{ product.description }}
           </p>
         </div>
 
         <!-- Specs -->
-        <div
-          class="rounded-xl border p-4 grid grid-cols-2 gap-2"
-          :style="{
-            borderColor: 'var(--color-border)',
-            backgroundColor: 'var(--color-bg)',
-          }"
-        >
-          <div
-            v-for="spec in product.specs"
-            :key="spec.label"
-            class="flex items-center gap-2 text-sm"
-          >
-            <i
-              :class="spec.icon"
-              class="w-4 text-center opacity-60"
-              :style="{ color: 'var(--color-primary)' }"
-            ></i>
+        <div class="rounded-xl border p-4 grid grid-cols-2 gap-2" :style="{
+          borderColor: 'var(--color-border)',
+          backgroundColor: 'var(--color-bg)',
+        }">
+          <div v-for="spec in product.specs" :key="spec.label" class="flex items-center gap-2 text-sm">
+            <i :class="spec.icon" class="w-4 text-center opacity-60" :style="{ color: 'var(--color-primary)' }"></i>
             <span :style="{ color: 'var(--color-text-sub)' }">
-              <span
-                class="font-semibold"
-                :style="{ color: 'var(--color-text-main)' }"
-                >{{ spec.label }}:</span
-              >
+              <span class="font-semibold" :style="{ color: 'var(--color-text-main)' }">{{ spec.label }}:</span>
               {{ spec.value }}
             </span>
           </div>
@@ -363,105 +251,61 @@
 
         <!-- Actions -->
         <div class="flex gap-3 pt-1">
-          <button
-            @click="handleAddToCart"
-            class="flex-1 py-3.5 rounded-xl font-bold transition-all active:scale-95 flex items-center justify-center gap-2 text-sm shadow-md hover:shadow-lg hover:-translate-y-0.5"
-            :style="{
-              backgroundColor: 'var(--color-primary)',
-              color: 'var(--color-pure)',
-            }"
-          >
-            <i class="fas fa-shopping-cart"></i>
-            Ajouter au panier
-          </button>
-
-          <button
-            @click="handleToggleFavorite"
-            class="px-4 py-3.5 rounded-xl font-bold border-2 transition-all active:scale-95 hover:scale-105"
-            :class="isFavorited ? 'bg-red-50 dark:bg-red-900/20' : ''"
-            :style="{
+          <button @click="handleToggleFavorite"
+            class="flex-1 py-3 rounded-xl font-bold border-2 transition-all active:scale-95 flex items-center justify-center gap-2 text-sm shadow-md hover:shadow-lg hover:-translate-y-0.5"
+            :class="isFavorited ? 'bg-red-500/10' : ''" :style="{
               borderColor: isFavorited ? '#ef4444' : 'var(--color-border)',
               color: isFavorited ? '#ef4444' : 'var(--color-text-sub)',
-            }"
-            :title="isFavorited ? 'Retirer des favoris' : 'Ajouter aux favoris'"
-          >
-            <Heart
-              :size="16"
-              :stroke-width="3"
-              :class="{ 'text-red-500 fill-red-500': isFavorited }"
-            />
+            }" :title="isFavorited ? 'Retirer des favoris' : 'Ajouter aux favoris'">
+            <Heart :size="18" :stroke-width="3" :class="{ 'fill-current': isFavorited }" />
+            {{ isFavorited ? 'Dans vos favoris' : 'Ajouter aux favoris' }}
           </button>
 
-          <button
-            @click="handleShare"
-            class="px-4 py-3.5 rounded-xl font-bold border-2 transition-all active:scale-95 hover:scale-105"
-            :style="{
+          <button @click="handleShare"
+            class="px-5 py-3.5 rounded-xl font-bold border-2 transition-all active:scale-95 hover:scale-105" :style="{
               borderColor: 'var(--color-border)',
               color: 'var(--color-text-sub)',
-            }"
-            title="Partager"
-          >
-            <!-- <i class="fas fa-share-alt"></i> -->
-            <Forward :size="16" :stroke-width="3" />
+            }" title="Partager">
+            <Forward :size="20" :stroke-width="3" />
           </button>
         </div>
 
         <!-- Seller Info -->
-        <div
-          class="p-4 rounded-2xl border"
-          :style="{
-            backgroundColor: 'var(--color-bg)',
-            borderColor: 'var(--color-border)',
-          }"
-        >
+        <div class="p-4 rounded-2xl border" :style="{
+          backgroundColor: 'var(--color-bg)',
+          borderColor: 'var(--color-border)',
+        }">
           <div class="flex items-center gap-3 mb-3">
-            <img
-              :src="
-                product.user?.photo?.startsWith('http')
-                  ? product.user.photo
-                  : product.user?.photo
-                    ? `http://localhost:8000/storage/${product.user.photo}`
-                    : `https://ui-avatars.com/api/?name=${encodeURIComponent(product.user?.nom || 'Vendeur')}&background=6366f1&color=fff&size=64`
-              "
-              class="w-12 h-12 rounded-full object-cover ring-2"
-              :style="{ ringColor: 'var(--color-primary)' }"
-            />
+            <img :src="product.user?.photo?.startsWith('http')
+              ? product.user.photo
+              : product.user?.photo
+                ? `http://localhost:8000/storage/${product.user.photo}`
+                : `https://ui-avatars.com/api/?name=${encodeURIComponent(product.user?.nom || 'Vendeur')}&background=6366f1&color=fff&size=64`
+              " class="w-12 h-12 rounded-full object-cover ring-2" :style="{ ringColor: 'var(--color-primary)' }" />
             <div>
               <p class="font-bold" :style="{ color: 'var(--color-text-main)' }">
                 {{ product.user?.nom || "Vendeur" }}
               </p>
-              <p
-                class="text-xs flex items-center gap-1"
-                :style="{ color: 'var(--color-text-sub)' }"
-              >
+              <p class="text-xs flex items-center gap-1" :style="{ color: 'var(--color-text-sub)' }">
                 <i class="fas fa-map-marker-alt text-[10px]"></i>
                 {{ product.ville || "Cameroun" }}
-                <span class="ml-1 text-yellow-500"
-                  >⭐ {{ product.rating.toFixed(1) }}</span
-                >
+                <span class="ml-1 text-yellow-500">⭐ {{ product.rating.toFixed(1) }}</span>
               </p>
             </div>
           </div>
-          <button
-            v-if="product.user?.id"
-            @click="handleContactSeller"
+          <button v-if="product.user?.id" @click="handleContactSeller"
             class="w-full py-2.5 rounded-xl text-sm font-bold flex items-center justify-center gap-2 border-2 transition-all hover:scale-[1.02] active:scale-95"
             :style="{
               borderColor: 'var(--color-primary)',
               color: 'var(--color-primary)',
-            }"
-          >
-            <i class="fas fa-comment-dots"></i>
-            Contacter le vendeur
+            }">
+            <i class="fas fa-shopping-bag"></i>
+            Acheter ce produit
           </button>
-          <div
-            v-else
-            class="w-full py-2.5 rounded-xl text-sm font-semibold text-center opacity-40 border"
-            :style="{
-              borderColor: 'var(--color-border)',
-              color: 'var(--color-text-sub)',
-            }"
-          >
+          <div v-else class="w-full py-2.5 rounded-xl text-sm font-semibold text-center opacity-40 border" :style="{
+            borderColor: 'var(--color-border)',
+            color: 'var(--color-text-sub)',
+          }">
             Données vendeur indisponibles
           </div>
         </div>
@@ -476,15 +320,16 @@ import { useRoute, useRouter, RouterLink } from "vue-router";
 import { useProductStore } from "../stores/products.js";
 import { useInteractionStore } from "../stores/interactions.js";
 import { useAuthStore } from "../stores/auth.js";
-import { useCartStore } from "../stores/cart.js";
+import { useMessageStore } from "../stores/messages.js";
 import { ArrowLeft } from "lucide-vue-next";
-import { Heart, Star, Forward } from "lucide-vue-next";
+import { Heart, Star, Forward, Eye } from "lucide-vue-next";
+import { CONFIG } from "../config/index.js";
 const route = useRoute();
 const router = useRouter();
 const productStore = useProductStore();
 const interactionStore = useInteractionStore();
 const authStore = useAuthStore();
-const cartStore = useCartStore();
+const messageStore = useMessageStore();
 
 const loading = ref(true);
 const error = ref(null);
@@ -561,6 +406,21 @@ const isFavorited = computed(() =>
   interactionStore.isFavorited(product.value.id),
 );
 
+const displayCounts = computed(() => {
+  const storeCounts = interactionStore.getProductCounts(product.value.id);
+  return {
+    clics: storeCounts.clics_count || 0,
+    favorites: storeCounts.favorites_count || 0,
+    shares: storeCounts.partages_count || 0,
+  };
+});
+
+const formatNumber = (num) => {
+  if (!num) return "0";
+  if (num >= 1000) return `${(num / 1000).toFixed(1)}k`;
+  return num.toString();
+};
+
 const getImageUrl = (photo) => {
   if (typeof photo === "string") {
     if (photo.startsWith("http")) return photo;
@@ -587,6 +447,7 @@ onMounted(async () => {
       name: produit.nom,
       price_raw: produit.prix,
       price: `${Number(produit.prix).toLocaleString("fr-FR")} FCFA`,
+      old_price: produit.ancien_prix ? `${Number(produit.ancien_prix).toLocaleString("fr-FR")} FCFA` : null,
       photos: allPhotos,
       rating: parseFloat(produit.note_moyenne || 4.5),
       reviews: produit.nombre_avis || 0,
@@ -621,6 +482,7 @@ onMounted(async () => {
     };
 
     interactionStore.recordView(productId);
+    interactionStore.fetchProductCounts(productId);
   } catch (err) {
     error.value = err.message;
     console.error("Erreur lors du chargement du produit:", err);
@@ -629,24 +491,10 @@ onMounted(async () => {
   }
 });
 
-const handleAddToCart = async () => {
-  try {
-    await cartStore.addToCart({
-      id: product.value.id,
-      name: product.value.name,
-      price: product.value.price_raw,
-      image: product.value.photos[0],
-      category: product.value.category,
-    });
-  } catch (err) {
-    console.error("Erreur ajout panier:", err);
-  }
-};
-
 const handleToggleFavorite = async () => {
   try {
     if (!authStore.isAuthenticated) {
-      router.push({ path: "/login", query: { redirect: route.fullPath } });
+      router.push({ name: "Login", query: { redirect: route.fullPath } });
       return;
     }
     await interactionStore.toggleFavorite(product.value.id);
@@ -675,14 +523,30 @@ const handleShare = async () => {
 
 const handleContactSeller = () => {
   if (!authStore.isAuthenticated) {
-    router.push({ path: "/login", query: { redirect: route.fullPath } });
+    router.push({ name: "Login", query: { redirect: route.fullPath } });
     return;
   }
-  if (product.value.user?.id) {
+
+  // BUSINESS LOGIC: All product chats go to the Administrator
+  const adminId = (CONFIG.ADMIN_UUID && CONFIG.ADMIN_UUID !== "CHANGE_ME_TO_REAL_ADMIN_UUID")
+    ? CONFIG.ADMIN_UUID
+    : product.value.user?.id;
+
+  if (adminId) {
     interactionStore.recordContact?.(product.value.id);
+    messageStore.setProductTag({
+      id: product.value.id,
+      nom: product.value.name,
+      photo_url: product.value.photos[0],
+    });
+
+    // Auto-fill an intent message to speed up the transaction
+    messageStore.newMessage = `Bonjour, je souhaite acheter le produit "${product.value.name}" à ${product.value.price}.`;
+
     router.push({
       name: "messages",
-      params: { receiverId: product.value.user.id },
+      params: { receiverId: adminId },
+      query: { productId: product.value.id }
     });
   }
 };
@@ -694,6 +558,7 @@ const handleContactSeller = () => {
 .lightbox-fade-leave-active {
   transition: opacity 0.25s ease;
 }
+
 .lightbox-fade-enter-from,
 .lightbox-fade-leave-to {
   opacity: 0;
@@ -704,10 +569,12 @@ const handleContactSeller = () => {
 .img-slide-leave-active {
   transition: all 0.22s ease;
 }
+
 .img-slide-enter-from {
   opacity: 0;
   transform: scale(0.96);
 }
+
 .img-slide-leave-to {
   opacity: 0;
   transform: scale(1.04);
@@ -718,6 +585,7 @@ const handleContactSeller = () => {
 .img-swap-leave-active {
   transition: opacity 0.2s ease;
 }
+
 .img-swap-enter-from,
 .img-swap-leave-to {
   opacity: 0;
@@ -728,9 +596,11 @@ div::-webkit-scrollbar {
   height: 3px;
   width: 3px;
 }
+
 div::-webkit-scrollbar-track {
   background: transparent;
 }
+
 div::-webkit-scrollbar-thumb {
   background-color: rgba(156, 163, 175, 0.4);
   border-radius: 99px;

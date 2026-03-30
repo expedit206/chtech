@@ -15,11 +15,19 @@ export const useInteractionStore = defineStore('interactions', () => {
 
   // Computed: obtenir les comptes d'un produit
   const getProductCounts = (productId) => {
-    return productCounts.value[productId] || {
-      views: 0,
-      favorites: 0,
-      shares: 0,
-      contacts: 0
+    // 1. Chercher dans les comptes d'interactions chargés explicitement
+    if (productCounts.value[productId]) {
+      return productCounts.value[productId];
+    }
+
+    // 2. Tenter de récupérer les données depuis le product store s'il existe
+    // (fallback sur les données injectées lors du fetch global des produits)
+    // Note: On suppose que les produits sont chargés dans productsWithImages
+    return {
+      clics_count: 0,
+      favorites_count: 0,
+      partages_count: 0,
+      contacts_count: 0,
     };
   };
 
@@ -70,34 +78,62 @@ export const useInteractionStore = defineStore('interactions', () => {
    */
   async function toggleFavorite(productId) {
     if (!authStore.isAuthenticated) {
-      console.warn('Vous devez vous connecter pour ajouter en favori');
+      console.warn("Vous devez vous connecter pour ajouter en favori");
       return false;
     }
 
+    // Sauvegarde de l'état précédent pour rollback en cas d'erreur
+    const wasFavorited = favorited.value.has(productId);
+    const previousCounts = { ...(productCounts.value[productId] || {
+      clics_count: 0,
+      favorites_count: 0,
+      partages_count: 0,
+      contacts_count: 0
+    }) };
+
+    // Mise à jour optimiste (IMMÉDIATE)
+    if (wasFavorited) {
+      favorited.value.delete(productId);
+      // Supprimer aussi de la liste des objets si elle existe
+      favorites.value = favorites.value.filter((p) => p.id !== productId);
+
+      if (productCounts.value[productId]) {
+        productCounts.value[productId].favorites_count = Math.max(
+          0,
+          (productCounts.value[productId].favorites_count || 0) - 1,
+        );
+      }
+    } else {
+      favorited.value.add(productId);
+      if (!productCounts.value[productId]) {
+        productCounts.value[productId] = { ...previousCounts };
+      }
+      productCounts.value[productId].favorites_count =
+        (productCounts.value[productId].favorites_count || 0) + 1;
+    }
+
     try {
-      loading.value = true;
       const response = await apiClient.post(`/produits/${productId}/favorite`);
-
+      
       if (response.data.success) {
-        // Basculer l'état local
-        if (favorited.value.has(productId)) {
-          favorited.value.delete(productId);
-        } else {
-          favorited.value.add(productId);
-        }
-
-        // Mettre à jour les comptes si disponible
+        // Optionnel : synchroniser avec les données exactes de la réponse
         if (response.data.data && response.data.data.counts) {
           productCounts.value[productId] = response.data.data.counts;
         }
-
         return response.data;
+      } else {
+        throw new Error("Action non confirmée");
       }
     } catch (err) {
-      console.error('Erreur lors du basculement du favori:', err);
+      // ROLLBACK en cas d'échec
+      console.error("Erreur lors du basculement du favori:", err);
+      if (wasFavorited) {
+        favorited.value.add(productId);
+      } else {
+        favorited.value.delete(productId);
+      }
+      productCounts.value[productId] = previousCounts;
       throw err;
-    } finally {
-      loading.value = false;
     }
   }
 
@@ -178,11 +214,20 @@ export const useInteractionStore = defineStore('interactions', () => {
     }
   }
 
+  const lastFetched = ref(null);
+  const CACHE_TIMEOUT = 10 * 60 * 1000; // 10 minutes
+
   /**
    * Charger les favoris de l'utilisateur (liste complète d'objets)
    */
-  async function fetchFavorites() {
+  async function fetchFavorites(force = false) {
     if (!authStore.isAuthenticated) return;
+    
+    // Si déjà chargé récemment, on ignore sauf si forcé
+    if (!force && lastFetched.value && (Date.now() - lastFetched.value < CACHE_TIMEOUT)) {
+      return;
+    }
+
     loading.value = true;
     try {
       const response = await apiClient.get('/favorites');
@@ -194,6 +239,7 @@ export const useInteractionStore = defineStore('interactions', () => {
         favorites.value = response.data.data;
         favorited.value = new Set(favorites.value.map(p => p.id));
       }
+      lastFetched.value = Date.now();
     } catch (err) {
       console.error('Erreur lors du chargement des favoris:', err);
     } finally {

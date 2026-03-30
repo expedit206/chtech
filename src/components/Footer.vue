@@ -1,6 +1,7 @@
 <script setup lang="ts">
 import FooterActions from "./FooterActions.vue";
 import { Facebook, Twitter, Instagram, Linkedin } from "lucide-vue-next";
+import { RouterLink } from "vue-router";
 </script>
 
 <template>
@@ -193,13 +194,13 @@ import { Facebook, Twitter, Instagram, Linkedin } from "lucide-vue-next";
       >
         <p>© {{ new Date().getFullYear() }} CHTECH. TOUS DROITS RÉSERVÉS.</p>
         <div class="flex gap-6">
-          <RouterLink to="/ressources/mentions-legales"
+          <RouterLink :to="{ name: 'mentions_legales' }"
             >Mentions Légales</RouterLink
           >
-          <RouterLink to="/ressources/conditions-generales-d-utilisation"
+          <RouterLink :to="{ name: 'conditions_generales_d_utilisation' }"
             >Conditions Générales d'Utilisation</RouterLink
           >
-          <RouterLink to="/ressources/politique-de-confidentialite"
+          <RouterLink :to="{ name: 'politique_de_confidentialite' }"
             >Confidentialité</RouterLink
           >
         </div>

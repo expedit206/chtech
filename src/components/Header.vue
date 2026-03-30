@@ -1,213 +1,349 @@
 <template>
-  <header
-    class="fixed top-0 z-50 w-full shadow-sm border-b"
-    :style="{
-      backgroundColor: 'var(--color-surface)',
-      borderColor: 'var(--color-border)',
-    }"
-  >
-    <div class="flex items-center justify-between px-4 h-14 gap-4">
-      <h1
-        class="text-xl font-black tracking-tighter flex-shrink-0"
-        :style="{
-          color: 'var(--color-primary)',
-          fontFamily: 'Open Sans, sans-serif',
-        }"
-      >
-        <RouterLink to="/"> chtech </RouterLink>
-      </h1>
+  <header class="fixed top-0 z-50 w-full shadow-sm border-b transition-all duration-300 header-main" :class="{
+    'header-offset': auth.isAuthenticated && !isSidebarCollapsed,
+    'header-offset-collapsed': auth.isAuthenticated && isSidebarCollapsed,
+  }" :style="{
+    backgroundColor: 'var(--color-surface)',
+    borderColor: 'var(--color-border)',
+  }">
+    <div class="flex flex-col">
+      <div class="flex items-center justify-between px-4 h-14 gap-4">
+        <div class="flex items-center gap-3">
+          <!-- Mobile Sidebar Toggle -->
+          <button v-if="auth.isAuthenticated" @click="emit('toggle-mobile-sidebar')"
+            class="md:hidden p-2 -ml-2 rounded-lg hover:bg-black/5" :style="{ color: 'var(--color-text-main)' }">
+            <Menu :size="20" />
+          </button>
 
-      <div class="hidden md:flex flex-1 max-w-xl relative group">
-        <Search
-          :style="{ color: 'var(--color-text-sub)' }"
-          class="absolute left-3 top-1/2 -translate-y-1/2 transition-colors text-xs"
-        />
-        <input
-          type="text"
-          placeholder="Rechercher..."
-          class="w-full pl-10 pr-4 py-2 rounded-full text-sm border-none outline-none focus:ring-2 transition-all"
-          :style="{
-            backgroundColor: 'var(--color-bg)',
-            color: 'var(--color-text-main)',
-            '--tw-ring-color': 'var(--color-primary)',
-          }"
-        />
-      </div>
-
-      <div class="flex items-center gap-3 md:gap-4">
-        <button class="md:hidden" :style="{ color: 'var(--color-text-main)' }">
-          <Search class="text-lg" />
-        </button>
-
-        <!-- Theme Toggle -->
-        <button
-          @click="toggleTheme"
-          class="w-8 h-8 rounded-full flex items-center justify-center transition-colors hover:bg-black/5"
-          :style="{ color: 'var(--color-text-main)' }"
-        >
-          <component
-            :is="themeIcon"
-            :size="20"
-            :stroke-width="3"
-            class="text-lg"
-          />
-        </button>
-
-        <div
-          @click="cart.isSidebarOpen = true"
-          class="relative cursor-pointer group"
-        >
-          <ShoppingCart
-            :stroke-width="3"
-            :style="{ color: 'var(--color-text-main)' }"
-            class="text-lg transition-transform group-hover:scale-110"
-          />
-          <span
-            v-if="cart.count > 0"
-            class="absolute -top-1.5 -right-1.5 flex items-center justify-center rounded-full text-[9px] font-bold animate-bounce-subtle"
-            :style="{
-              backgroundColor: 'var(--color-accent)',
-              color: 'var(--color-pure)',
-              width: '16px',
-              height: '16px',
-              border: '2px solid var(--color-surface)',
-            }"
-          >
-            {{ cart.count }}
-          </span>
-          <span class="tooltip-text">Panier</span>
+          <h1 class="text-xl font-black tracking-tighter flex-shrink-0" :style="{
+            color: 'var(--color-primary)',
+            fontFamily: 'Open Sans, sans-serif',
+          }">
+            <RouterLink :to="{ name: 'Home' }" @click="productStore.searchQuery = ''">
+              chtech
+            </RouterLink>
+          </h1>
         </div>
 
-        <button
-          class="w-8 h-8 rounded-full flex items-center justify-center shadow-md transition-transform active:scale-90"
-          :style="{
-            backgroundColor: 'var(--color-primary)',
-            color: 'var(--color-pure)',
-          }"
-        >
-          <Plus :size="16" :stroke-width="3" class="text-sm" />
-        </button>
-
-        <div v-if="auth.isAuthenticated" class="group relative">
+        <div class="hidden md:flex flex-1 max-w-xl relative group">
           <div
-            class="p-0.5 rounded-full border-2 cursor-pointer transition-transform hover:scale-105"
-            :style="{ borderColor: 'var(--color-primary)' }"
-          >
-            <img
-              :src="
-                auth.user?.avatar ||
-                `https://ui-avatars.com/api/?name=${auth.user?.nom || 'U'}&background=6366f1&color=fff`
-              "
-              class="w-7 h-7 rounded-full object-cover"
-            />
+            class="w-full flex items-center gap-3 pl-10 pr-4 py-2 rounded-full cursor-pointer transition-all border border-transparent hover:border-[var(--color-primary)]/30"
+            :style="{ backgroundColor: 'var(--color-bg)' }" @click="openSearchOverlay">
+            <Search :style="{ color: 'var(--color-text-sub)' }"
+              class="absolute left-4 top-1/2 -translate-y-1/2 transition-colors text-xs" />
+            <span class="text-sm opacity-50" :style="{ color: 'var(--color-text-main)' }">
+              {{
+                productStore.searchQuery || "Rechercher un produit, service..."
+              }}
+            </span>
+          </div>
+        </div>
+
+        <div class="flex items-center gap-3 md:gap-4">
+          <button class="md:hidden" @click="isMobileSearchOpen = !isMobileSearchOpen" :style="{
+            color: isMobileSearchOpen
+              ? 'var(--color-primary)'
+              : 'var(--color-text-main)',
+          }">
+            <component :is="isMobileSearchOpen ? X : Search" class="text-lg" />
+          </button>
+
+          <!-- Theme Toggle -->
+          <button @click="toggleTheme"
+            class="w-8 h-8 rounded-full flex items-center justify-center transition-colors hover:bg-black/5"
+            :style="{ color: 'var(--color-text-main)' }">
+            <component :is="themeIcon" :size="20" :stroke-width="3" class="text-lg" />
+          </button>
+
+          <div @click="router.push({ name: 'Wishlist' })" class="relative cursor-pointer group">
+            <Heart :stroke-width="3" :style="{ color: 'var(--color-text-main)' }"
+              class="text-lg transition-transform group-hover:scale-110" />
+            <span v-if="interactionStore.favorited.size > 0"
+              class="absolute -top-1.5 -right-1.5 flex items-center justify-center rounded-full text-[9px] font-bold animate-bounce-subtle"
+              :style="{
+                backgroundColor: 'var(--color-accent)',
+                color: 'var(--color-pure)',
+                width: '16px',
+                height: '16px',
+                border: '2px solid var(--color-surface)',
+              }">
+              {{ interactionStore.favorited.size }}
+            </span>
+            <span class="tooltip-text">Favoris</span>
           </div>
 
-          <div
-            class="absolute right-0 mt-2 w-48 rounded-2xl shadow-2xl border backdrop-blur-xl opacity-0 invisible group-hover:opacity-100 group-hover:visible transition-all duration-300 py-2 z-[60]"
+          <router-link :to="{ name: 'my-products', query: { add: 'true' } }"
+            class="w-8 h-8 rounded-full flex items-center justify-center shadow-md transition-transform active:scale-90"
             :style="{
-              backgroundColor: 'var(--color-surface)',
-              borderColor: 'var(--color-border)',
-            }"
-          >
-            <div
-              class="px-4 py-2 border-b mb-1"
-              :style="{ borderColor: 'var(--color-border)' }"
-            >
-              <p
-                class="text-xs font-bold truncate"
-                :style="{ color: 'var(--color-primary)' }"
-              >
-                {{ auth.user?.nom }}
-              </p>
-              <p
-                class="text-[10px] opacity-60 truncate"
-                :style="{ color: 'var(--color-text-sub)' }"
-              >
-                {{ auth.user?.telephone || auth.user?.email }}
-              </p>
+              backgroundColor: 'var(--color-primary)',
+              color: 'var(--color-pure)',
+            }">
+            <Plus :size="16" :stroke-width="3" class="text-sm" />
+          </router-link>
+
+          <div v-if="auth.isAuthenticated" class="group relative">
+            <div class="p-0.5 rounded-full border-2 cursor-pointer transition-transform hover:scale-105"
+              :style="{ borderColor: 'var(--color-primary)' }">
+              <img :src="auth.user?.avatar ||
+                `https://ui-avatars.com/api/?name=${auth.user?.nom || 'U'}&background=6366f1&color=fff`
+                " class="w-7 h-7 rounded-full object-cover" />
             </div>
-            <router-link
-              to="/profile"
-              class="flex items-center gap-3 px-4 py-2.5 text-sm transition-colors hover:bg-black/5"
-              :style="{ color: 'var(--color-text-main)' }"
-            >
-              <UserCircle class="w-4 h-4 opacity-70" />
-              <span>Mon Profil</span>
-            </router-link>
-            <button
-              @click="auth.logout"
-              class="w-full flex items-center gap-3 px-4 py-2.5 text-sm text-red-500 transition-colors hover:bg-red-500/10"
-            >
-              <LogOut class="w-4 h-4" />
-              <span>Déconnexion</span>
+
+            <div
+              class="absolute right-0 mt-2 w-48 rounded-2xl shadow-2xl border backdrop-blur-xl opacity-0 invisible group-hover:opacity-100 group-hover:visible transition-all duration-300 py-2 z-[60]"
+              :style="{
+                backgroundColor: 'var(--color-surface)',
+                borderColor: 'var(--color-border)',
+              }">
+              <div class="px-4 py-2 border-b mb-1" :style="{ borderColor: 'var(--color-border)' }">
+                <p class="text-xs font-bold truncate" :style="{ color: 'var(--color-primary)' }">
+                  {{ auth.user?.nom }}
+                </p>
+                <p class="text-[10px] opacity-60 truncate" :style="{ color: 'var(--color-text-sub)' }">
+                  {{ auth.user?.telephone || auth.user?.email }}
+                </p>
+              </div>
+              <!-- General links -->
+              <router-link :to="{ name: 'Dashboard' }"
+                class="flex items-center gap-3 px-4 py-2.5 text-sm transition-colors hover:bg-black/5"
+                :style="{ color: 'var(--color-text-main)' }">
+                <UserCircle class="w-4 h-4 opacity-70" />
+                <span>Mon Profil</span>
+              </router-link>
+
+              <router-link :to="{ name: 'my-orders' }"
+                class="flex items-center gap-3 px-4 py-2.5 text-sm transition-colors hover:bg-black/5"
+                :style="{ color: 'var(--color-text-main)' }">
+                <ShoppingBag class="w-4 h-4 opacity-70" />
+                <span>Mes Commandes</span>
+              </router-link>
+
+              <!-- Normal user can apply to become fournisseur -->
+              <router-link v-if="auth.isNormalUser" :to="{ name: 'become-vendeur' }"
+                class="flex items-center gap-3 px-4 py-2.5 text-sm transition-colors hover:bg-black/5 border-t mt-2"
+                :style="{
+                  color: 'var(--color-text-main)',
+                  borderColor: 'var(--color-border)',
+                }">
+                <Store class="w-4 h-4 opacity-70" />
+                <span>Vendre sur Chtech</span>
+              </router-link>
+
+              <button @click="auth.logout"
+                class="w-full flex items-center gap-3 px-4 py-2.5 text-sm text-red-500 transition-colors hover:bg-red-500/10 border-t mt-1"
+                :style="{ borderColor: 'var(--color-border)' }">
+                <LogOut class="w-4 h-4" />
+                <span>Déconnexion</span>
+              </button>
+            </div>
+          </div>
+          <router-link v-else :to="{ name: 'Login' }"
+            class="px-4 py-1.5 rounded-full text-xs font-bold transition-all hover:opacity-90 active:scale-95" :style="{
+              backgroundColor: 'var(--color-primary)',
+              color: 'var(--color-pure)',
+            }">
+            Connexion
+          </router-link>
+        </div>
+      </div>
+
+      <!-- Mobile search bar toggleable -->
+      <transition enter-active-class="transition-all duration-300 ease-out"
+        enter-from-class="opacity-0 -translate-y-2 max-h-0" enter-to-class="opacity-100 translate-y-0 max-h-20"
+        leave-active-class="transition-all duration-200 ease-in" leave-from-class="opacity-100 translate-y-0 max-h-20"
+        leave-to-class="opacity-0 -translate-y-2 max-h-0">
+        <div v-if="isMobileSearchOpen" class="md:hidden px-4 pb-3 border-b overflow-hidden" :style="{
+          backgroundColor: 'var(--color-surface)',
+          borderColor: 'var(--color-border)',
+        }">
+          <div class="flex items-center gap-3 px-4 py-2 rounded-full cursor-pointer"
+            :style="{ backgroundColor: 'var(--color-bg)' }" @click="openSearchOverlay">
+            <Search :size="16" :style="{ color: 'var(--color-text-sub)' }" />
+            <span class="text-xs opacity-50" :style="{ color: 'var(--color-text-main)' }">
+              Rechercher sur CHTECH...
+            </span>
+          </div>
+        </div>
+      </transition>
+    </div>
+
+    <!-- Search Overlay -->
+    <div v-if="showSearchOverlay" class="fixed inset-0 z-[100] flex flex-col animate-in fade-in duration-200" :class="{
+      'header-offset': auth.isAuthenticated && !isSidebarCollapsed,
+      'header-offset-collapsed': auth.isAuthenticated && isSidebarCollapsed,
+    }" :style="{ backgroundColor: 'var(--color-surface)' }">
+      <!-- Overlay Header -->
+      <div class="h-16 flex items-center gap-4 px-4 border-b" :style="{ borderColor: 'var(--color-border)' }">
+        <button @click="closeSearchOverlay" class="p-2 rounded-full hover:bg-[var(--color-bg)] transition-colors"
+          :style="{ color: 'var(--color-text-main)' }">
+          <ArrowLeft :size="24" />
+        </button>
+
+        <div class="flex-1 relative">
+          <input ref="searchInput" v-model="productStore.searchQuery" type="text" placeholder="Que cherchez-vous ?"
+            @keyup.enter="handleFinalSearch" class="w-full bg-transparent border-none outline-none text-lg"
+            :style="{ color: 'var(--color-text-main)' }" />
+          <button v-if="productStore.searchQuery" @click="productStore.searchQuery = ''"
+            class="absolute right-0 top-1/2 -translate-y-1/2 p-1 opacity-50 hover:opacity-100"
+            :style="{ color: 'var(--color-text-main)' }">
+            <X :size="18" />
+          </button>
+        </div>
+
+        <button @click="handleFinalSearch" :disabled="!productStore.searchQuery.trim()"
+          class="p-2 rounded-full bg-[var(--color-primary)] text-white disabled:opacity-50 disabled:grayscale">
+          <Send :size="20" />
+        </button>
+      </div>
+
+      <!-- Overlay Content -->
+      <div class="flex-1 overflow-y-auto">
+        <!-- Live Results -->
+        <div v-if="liveResults.length > 0" class="p-4">
+          <div class="flex items-center justify-between mb-4">
+            <h3 class="text-xs font-bold uppercase tracking-widest opacity-50"
+              :style="{ color: 'var(--color-text-main)' }">
+              Suggestions de produits
+            </h3>
+            <span
+              class="text-[10px] bg-[var(--color-primary)]/10 px-2 py-0.5 rounded-full text-[var(--color-primary)] font-bold">
+              {{ liveResults.length }} résultats
+            </span>
+          </div>
+
+          <div class="space-y-1">
+            <div v-for="item in liveResults" :key="item.id" @click="clickResult(item)"
+              class="flex items-center gap-4 p-3 rounded-2xl cursor-pointer hover:bg-[var(--color-bg)] transition-all group">
+              <div class="w-12 h-12 rounded-xl overflow-hidden border flex-shrink-0"
+                :style="{ borderColor: 'var(--color-border)' }">
+                <img v-if="item.result_type === 'product'" :src="item.image || '/placeholder.png'"
+                  class="w-full h-full object-cover group-hover:scale-110 transition-transform duration-500" />
+                <div v-else class="w-full h-full flex items-center justify-center bg-[var(--color-primary)]/10">
+                  <Briefcase :size="20" :style="{ color: 'var(--color-primary)' }" />
+                </div>
+              </div>
+              <div class="flex-1 min-w-0">
+                <div class="flex items-center gap-2">
+                  <h4 class="text-sm font-bold truncate" :style="{ color: 'var(--color-text-main)' }">
+                    {{ item.nom || item.titre || item.name }}
+                  </h4>
+                  <span class="text-[9px] uppercase font-black opacity-30">
+                    {{ item.result_type === "product" ? "Produit" : "Service" }}
+                  </span>
+                </div>
+                <div class="flex items-center gap-2 mt-0.5">
+                  <span class="text-xs font-black" :style="{ color: 'var(--color-primary)' }">
+                    {{ Number(item.prix).toLocaleString() }} FCFA
+                  </span>
+                  <span class="text-[10px] opacity-40 px-1.5 py-0.5 rounded bg-black/5"
+                    :style="{ color: 'var(--color-text-sub)' }">
+                    {{
+                      item.category?.nom ||
+                      (item.result_type === "product" ? "Produit" : "Service")
+                    }}
+                  </span>
+                </div>
+              </div>
+              <ArrowRight :size="16"
+                class="opacity-0 group-hover:opacity-100 -translate-x-2 group-hover:translate-x-0 transition-all"
+                :style="{ color: 'var(--color-primary)' }" />
+            </div>
+          </div>
+        </div>
+
+        <!-- History & Popular Suggestions -->
+        <div v-if="!productStore.searchQuery && searchHistory.length > 0" class="p-4">
+          <div class="flex items-center justify-between mb-4">
+            <h3 class="text-xs font-bold uppercase tracking-widest opacity-50"
+              :style="{ color: 'var(--color-text-main)' }">
+              Recherches récentes
+            </h3>
+            <button @click="clearHistory" class="text-[10px] font-bold text-red-500 hover:underline">
+              Tout effacer
+            </button>
+          </div>
+
+          <div class="flex flex-wrap gap-2">
+            <button v-for="query in searchHistory" :key="query" @click="
+              productStore.searchQuery = query;
+            handleFinalSearch();
+            " class="flex items-center gap-2 px-4 py-2 rounded-full border transition-all hover:border-[var(--color-primary)] hover:bg-[var(--color-primary)]/5"
+              :style="{
+                borderColor: 'var(--color-border)',
+                backgroundColor: 'var(--color-surface)',
+                color: 'var(--color-text-main)',
+              }">
+              <History :size="14" class="opacity-40" />
+              <span class="text-sm">{{ query }}</span>
             </button>
           </div>
         </div>
-        <router-link
-          v-else
-          to="/login"
-          class="px-4 py-1.5 rounded-full text-xs font-bold transition-all hover:opacity-90 active:scale-95"
-          :style="{
-            backgroundColor: 'var(--color-primary)',
-            color: 'var(--color-pure)',
-          }"
-        >
-          Connexion
-        </router-link>
+
+        <!-- Empty Results -->
+        <div v-if="
+          productStore.searchQuery && !isSearching && liveResults.length === 0
+        " class="p-12 text-center flex flex-col items-center">
+          <Search :size="48" class="opacity-10 mb-4" :style="{ color: 'var(--color-text-main)' }" />
+          <p class="text-[var(--color-text-sub)]">
+            Aucune suggestion immédiate pour "{{ productStore.searchQuery }}"
+          </p>
+          <button @click="handleFinalSearch" class="mt-4 text-sm font-bold text-[var(--color-primary)] hover:underline">
+            Lancer la recherche globale
+          </button>
+        </div>
+
+        <!-- Loading state -->
+        <div v-if="isSearching" class="p-12 flex justify-center">
+          <div
+            class="w-8 h-8 border-4 border-[var(--color-primary)]/30 border-t-[var(--color-primary)] rounded-full animate-spin">
+          </div>
+        </div>
       </div>
     </div>
 
-    <div
-      class="flex justify-center border-t h-12"
-      :style="{ borderColor: 'var(--color-border)' }"
-    >
+    <div v-if="!route.path.startsWith('/messages')"
+      class="flex justify-center border-t h-14 transition-all duration-300 fixed bottom-0 left-0 w-full z-50 md:static md:w-auto md:h-14 md:border-t shadow-2xl md:shadow-none mb-0 pb-[safe-area-inset-bottom]"
+      :style="{
+        borderColor: 'var(--color-border)',
+        backgroundColor: 'var(--color-surface)'
+      }">
       <nav class="flex h-full w-full max-w-2xl">
-        <RouterLink
-          to="/"
-          class="group relative flex-1 flex items-center justify-center border-b-4 transition-colors"
-          :style="isActive('/') ? activeStyle : inactiveStyle"
-        >
-          <House :stroke-width="3" class="text-lg" />
-          <span class="tooltip-text">Accueil</span>
+        <RouterLink :to="{ name: 'Home' }" @click="productStore.searchQuery = ''"
+          class="group relative flex-1 flex flex-col items-center justify-center border-b-4 transition-colors"
+          :style="isActiveName('Home') ? activeStyle : inactiveStyle">
+          <House :stroke-width="3" size="18" />
+          <span class="text-[9px] font-black uppercase mt-1">Accueil</span>
         </RouterLink>
 
-        <RouterLink
-          to="/blogs"
-          class="group relative flex-1 flex items-center justify-center border-b-4 transition-colors"
-          :style="isActive('/blogs') ? activeStyle : inactiveStyle"
-        >
-          <Newspaper :stroke-width="3" class="text-lg" />
-          <span class="tooltip-text">Blogs</span>
+        <RouterLink :to="{ name: 'Blogs' }"
+          class="group relative flex-1 flex flex-col items-center justify-center border-b-4 transition-colors"
+          :style="isActiveName('Blogs') ? activeStyle : inactiveStyle">
+          <Newspaper :stroke-width="3" size="18" />
+          <span class="text-[9px] font-black uppercase mt-1">Blogs</span>
         </RouterLink>
 
-        <a
-          href="#"
-          class="group relative flex-1 flex items-center justify-center hover:bg-black/5 transition-colors"
-          :style="{ color: 'var(--color-text-sub)' }"
-        >
+        <a href="#"
+          class="group relative flex-1 flex flex-col items-center justify-center hover:bg-black/5 transition-colors"
+          :style="{ color: 'var(--color-text-sub)' }">
           <div class="relative">
-            <Bell class="text-lg" :stroke-width="3" />
+            <Bell size="18" :stroke-width="3" />
             <span class="nav-badge"></span>
           </div>
-          <span class="tooltip-text">Notifications</span>
+          <span class="text-[9px] font-black uppercase mt-1">Alertes</span>
         </a>
 
-        <RouterLink
-          to="/messages"
-          class="group relative flex-1 flex items-center justify-center border-b-4 transition-colors"
-          :style="isActive('/messages') ? activeStyle : inactiveStyle"
-        >
-          <MessageCircle class="text-lg" :stroke-width="3" />
-          <span class="tooltip-text">Messages</span>
+        <RouterLink :to="{ name: 'messages' }"
+          class="group relative flex-1 flex flex-col items-center justify-center border-b-4 transition-colors"
+          :style="isActiveName('messages') ? activeStyle : inactiveStyle">
+          <MessageCircle size="18" :stroke-width="3" />
+          <span class="text-[9px] font-black uppercase mt-1">Messages</span>
         </RouterLink>
 
-        <RouterLink
-          to="/profile"
-          class="group relative flex-1 flex items-center justify-center hover:bg-black/5 transition-colors"
-          :style="{ color: 'var(--color-text-sub)' }"
-        >
-          <ChartLine class="text-lg" :stroke-width="3" />
-          <span class="tooltip-text">Analyses</span>
+        <RouterLink :to="{ name: 'Dashboard' }"
+          class="group relative flex-1 flex flex-col items-center justify-center border-b-4 transition-colors"
+          :style="isActiveName('Dashboard') ? activeStyle : inactiveStyle">
+          <ChartLine size="18" :stroke-width="3" />
+          <span class="text-[9px] font-black uppercase mt-1">Analyses</span>
         </RouterLink>
       </nav>
     </div>
@@ -215,10 +351,11 @@
 </template>
 
 <script setup>
-import { computed } from "vue";
-import { useRoute, RouterLink } from "vue-router";
+import { ref, computed, watch, onMounted, onUnmounted } from "vue";
+import { useRoute, useRouter, RouterLink } from "vue-router";
 import { useTheme } from "../composables/useTheme.js";
-import { useCartStore } from "../stores/cart.js";
+import { useInteractionStore } from "../stores/interactions.js";
+import { useProductStore } from "../stores/products.js";
 import { useAuthStore } from "../stores/auth.js";
 import {
   Search,
@@ -233,18 +370,45 @@ import {
   Plus,
   UserCircle,
   LogOut,
+  ShoppingBag,
+  Star,
+  PackageCheck,
+  Menu,
+  ArrowLeft,
+  Heart,
+  X,
+  Send,
+  History,
+  ArrowRight,
+  Briefcase,
 } from "lucide-vue-next";
+import apiClient from "../api/index.js";
 
-const cart = useCartStore();
+const isMobileSearchOpen = ref(false);
+const showSearchOverlay = ref(false);
+const isSearching = ref(false);
+const liveResults = ref([]);
+const searchHistory = ref([]);
+const searchInput = ref(null);
+
+const interactionStore = useInteractionStore();
 const auth = useAuthStore();
+const productStore = useProductStore();
 const route = useRoute();
+const router = useRouter();
 const { theme, toggleTheme } = useTheme();
+
+defineProps({
+  isSidebarCollapsed: Boolean,
+});
+
+const emit = defineEmits(["toggle-mobile-sidebar"]);
 
 const themeIcon = computed(() => {
   return theme.value === "dark" ? Sun : Moon;
 });
 
-const isActive = (path) => route.path === path;
+const isActiveName = (name) => route.name === name;
 
 const activeStyle = {
   borderColor: "var(--color-primary)",
@@ -254,19 +418,137 @@ const inactiveStyle = {
   borderColor: "transparent",
   color: "var(--color-text-sub)",
 };
+
+// Search logic
+const openSearchOverlay = () => {
+  showSearchOverlay.value = true;
+  isMobileSearchOpen.value = false;
+  loadHistory();
+  setTimeout(() => {
+    searchInput.value?.focus();
+  }, 100);
+};
+
+const closeSearchOverlay = () => {
+  showSearchOverlay.value = false;
+};
+
+const clickResult = (item) => {
+  saveHistory(item.nom || item.name);
+  closeSearchOverlay();
+  router.push({ name: "DetailProduit", params: { id: item.id } });
+};
+
+const handleFinalSearch = () => {
+  if (!productStore.searchQuery.trim()) return;
+  saveHistory(productStore.searchQuery);
+  closeSearchOverlay();
+  if (route.name !== "Home") {
+    router.push({ name: "Home" });
+  }
+  productStore.fetchProducts({}, true);
+};
+
+const saveHistory = (query) => {
+  if (!query) return;
+  let history = JSON.parse(
+    localStorage.getItem("chtech_search_history") || "[]",
+  );
+  history = history.filter((h) => h !== query);
+  history.unshift(query);
+  history = history.slice(0, 8);
+  localStorage.setItem("chtech_search_history", JSON.stringify(history));
+  searchHistory.value = history;
+};
+
+const loadHistory = () => {
+  searchHistory.value = JSON.parse(
+    localStorage.getItem("chtech_search_history") || "[]",
+  );
+};
+
+const clearHistory = () => {
+  localStorage.removeItem("chtech_search_history");
+  searchHistory.value = [];
+};
+
+let searchTimeout = null;
+const performLiveSearch = async (query) => {
+  if (!query || query.length < 2) {
+    liveResults.value = [];
+    return;
+  }
+
+  isSearching.value = true;
+  try {
+    const response = await apiClient.get("/marketplace/search", {
+      params: { q: query, limit: 10 },
+    });
+    if (response.data.success && response.data.data) {
+      const products = response.data.data.products || [];
+      const services = response.data.data.services || [];
+      liveResults.value = [...products, ...services].slice(0, 10);
+    }
+  } catch (error) {
+    console.error("Erreur search live", error);
+  } finally {
+    isSearching.value = false;
+  }
+};
+
+watch(
+  () => productStore.searchQuery,
+  (newQuery) => {
+    if (searchTimeout) clearTimeout(searchTimeout);
+
+    if (showSearchOverlay.value) {
+      searchTimeout = setTimeout(() => {
+        performLiveSearch(newQuery);
+      }, 300);
+    }
+  },
+);
+const handleKeyDown = (e) => {
+  if (e.key === "Escape" && showSearchOverlay.value) {
+    closeSearchOverlay();
+  }
+};
+
+onMounted(() => {
+  window.addEventListener("keydown", handleKeyDown);
+});
+
+onUnmounted(() => {
+  window.removeEventListener("keydown", handleKeyDown);
+});
 </script>
 
 <style scoped>
 @keyframes bounce-subtle {
+
   0%,
   100% {
     transform: translateY(0);
   }
+
   50% {
     transform: translateY(-2px);
   }
 }
+
 .animate-bounce-subtle {
   animation: bounce-subtle 2s infinite;
+}
+
+@media (min-width: 768px) {
+  .header-offset {
+    left: 256px !important;
+    width: calc(100% - 256px) !important;
+  }
+
+  .header-offset-collapsed {
+    left: 80px !important;
+    width: calc(100% - 80px) !important;
+  }
 }
 </style>

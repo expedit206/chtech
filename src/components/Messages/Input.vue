@@ -108,14 +108,18 @@
       >
         <button
           @click="triggerFileInput"
-          class="w-9 h-9 rounded-full text-gray-400 hover:text-[var(--color-primary)] hover:bg-green-50 flex items-center justify-center transition-all"
+          class="w-9 h-9 rounded-full text-[var(--color-text-sub)] hover:text-[var(--color-primary)] transition-all flex items-center justify-center"
+          onmouseover="this.style.backgroundColor = 'rgba(0,0,0,0.05)'"
+          onmouseout="this.style.backgroundColor = 'transparent'"
           title="Envoyer une image"
         >
           <i class="far fa-image text-lg"></i>
         </button>
         <button
           @click="triggerVideoInput"
-          class="w-9 h-9 rounded-full text-gray-400 hover:text-blue-500 hover:bg-blue-50 flex items-center justify-center transition-all"
+          class="w-9 h-9 rounded-full text-[var(--color-text-sub)] hover:text-[var(--color-primary)] transition-all flex items-center justify-center"
+          onmouseover="this.style.backgroundColor = 'rgba(0,0,0,0.05)'"
+          onmouseout="this.style.backgroundColor = 'transparent'"
           title="Envoyer une vidéo"
         >
           <i class="fas fa-video text-lg"></i>
@@ -139,7 +143,7 @@
 
       <!-- Main Input Area -->
       <div
-        class="flex-1 rounded-[1.5rem] flex items-center min-h-[48px] px-2 transition-colors focus-within:ring-1 focus-within:ring-gray-300 focus-within:shadow-sm"
+        class="flex-1 rounded-[1.5rem] flex items-center min-h-[48px] px-2 transition-all border border-transparent focus-within:border-[var(--color-border)]"
         :style="{ backgroundColor: 'var(--color-bg)' }"
       >
         <!-- Text Area -->
@@ -150,8 +154,7 @@
           @keydown.enter.prevent="$emit('send-message')"
           rows="1"
           placeholder="Message..."
-          class="w-full bg-transparent border-none focus:ring-0 px-4 py-3 placeholder-gray-400 resize-none max-h-32 overflow-y-auto"
-          :style="{ color: 'var(--color-text-main)' }"
+          class="w-full bg-transparent border-none focus:ring-0 px-4 py-3 placeholder-gray-400 resize-none max-h-32 overflow-y-auto text-[var(--color-text-main)]"
           ref="textAreaRef"
           style="min-height: 48px; box-shadow: none !important"
         ></textarea>
@@ -159,9 +162,10 @@
         <!-- Recording Interface -->
         <div v-else class="flex-1 flex items-center gap-3 px-2">
           <div class="w-2 h-2 rounded-full bg-red-500 animate-pulse"></div>
-          <span class="text-sm font-mono text-gray-500 min-w-[45px]">{{
-            formatTime(recordingTime)
-          }}</span>
+          <span
+            class="text-sm font-mono text-[var(--color-text-sub)] min-w-[45px]"
+            >{{ formatTime(recordingTime) }}</span
+          >
 
           <!-- Sound Wave Visualizer -->
           <div
@@ -181,14 +185,14 @@
           <template v-if="isRecording">
             <button
               @click="cancelRecording"
-              class="w-8 h-8 rounded-full text-red-400 hover:text-red-500 hover:bg-red-50 flex items-center justify-center transition-all"
+              class="w-8 h-8 rounded-full text-red-500 hover:bg-red-500/10 flex items-center justify-center transition-all"
               title="Annuler"
             >
               <i class="fas fa-trash-alt text-sm"></i>
             </button>
             <button
               @click="stopAndSendRecording"
-              class="w-8 h-8 rounded-full bg-[var(--color-primary)] text-white hover:bg-green-800 flex items-center justify-center shadow-md transform hover:scale-105 transition-all"
+              class="w-8 h-8 rounded-full bg-[var(--color-primary)] text-white hover:opacity-90 flex items-center justify-center shadow-lg shadow-[var(--color-primary)]/20 transform hover:scale-105 transition-all"
               title="Envoyer"
             >
               <i class="fas fa-arrow-up"></i>
@@ -200,7 +204,9 @@
             <button
               v-if="!newMessage.trim()"
               @click="startVoiceRecording"
-              class="w-8 h-8 rounded-full text-gray-400 hover:text-red-500 hover:bg-red-50 flex items-center justify-center transition-all"
+              class="w-8 h-8 rounded-full text-[var(--color-text-sub)] hover:text-red-500 transition-all flex items-center justify-center"
+              onmouseover="this.style.backgroundColor = 'rgba(239,68,68,0.05)'"
+              onmouseout="this.style.backgroundColor = 'transparent'"
               title="Message vocal"
             >
               <i class="fas fa-microphone text-lg"></i>
@@ -210,7 +216,7 @@
             <button
               v-else
               @click="$emit('send-message')"
-              class="w-8 h-8 rounded-full bg-[var(--color-primary)] text-white hover:bg-green-800 flex items-center justify-center shadow-md transform hover:scale-105 transition-all"
+              class="w-8 h-8 rounded-full bg-[var(--color-primary)] text-white hover:opacity-90 flex items-center justify-center shadow-lg shadow-[var(--color-primary)]/20 transform hover:scale-105 transition-all"
               title="Envoyer"
             >
               <i class="fas fa-arrow-up"></i>

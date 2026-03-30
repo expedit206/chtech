@@ -1,162 +1,214 @@
 <template>
   <div>
-    <div
-      v-if="isMobileOpen"
-      @click="isMobileOpen = false"
-      class="fixed inset-0 bg-black/50 z-40 md:hidden transition-opacity"
-    ></div>
+    <div v-if="isMobileOpen" @click="emit('close-mobile')"
+      class="fixed inset-0 bg-black/50 z-[65] md:hidden transition-opacity"></div>
 
-    <aside
-      :class="[
-        'fixed top-0 left-0 h-screen z-[70] transition-all duration-300 ease-in-out border-r',
-        'bg-[var(--color-surface)] border-[var(--color-border)]',
-        // Desktop : On gère la largeur fixe
-        isCollapsed ? 'md:w-20' : 'md:w-64',
-        // Mobile : Translation complète
-        isMobileOpen
-          ? 'translate-x-0 w-64'
-          : '-translate-x-full md:translate-x-0',
-      ]"
-    >
-      <div
-        class="p-4 flex items-center justify-between border-b border-[var(--color-border)] min-h-[70px]"
-      >
-        <div
-          v-show="!isCollapsed || isMobileOpen"
-          class="flex items-center gap-3 overflow-hidden"
-        >
-          <div
-            class="w-8 h-8 bg-[var(--color-primary)] rounded-lg flex items-center justify-center shrink-0"
-          >
-            <!-- <i class="fa-solid fa-bolt text-white"></i> -->
+    <aside :class="[
+      'fixed top-0 left-0 h-screen z-[70] transition-all duration-300 ease-in-out border-r flex flex-col',
+      'bg-[var(--color-surface)] border-[var(--color-border)]',
+      // Desktop : On gère la largeur fixe
+      collapsed ? 'md:w-20' : 'md:w-64',
+      // Mobile : Translation complète
+      isMobileOpen
+        ? 'translate-x-0 w-64'
+        : '-translate-x-full md:translate-x-0',
+    ]">
+      <div class="p-4 flex items-center justify-between border-b border-[var(--color-border)] min-h-[70px]">
+        <div v-show="!collapsed || isMobileOpen" class="flex items-center gap-3 overflow-hidden">
+          <div class="w-8 h-8 bg-[var(--color-primary)] rounded-lg flex items-center justify-center shrink-0">
             <CloudLightning :size="16" :stroke-width="3" class="text-white" />
           </div>
-          <span class="font-bold text-[var(--color-text-main)] truncate"
-            >CH-TECH</span
-          >
+          <span class="font-bold text-[var(--color-text-main)] truncate">CH-TECH</span>
         </div>
 
-        <button
-          @click="isCollapsed = !isCollapsed"
-          class="hidden md:block p-2 rounded-lg hover:bg-[var(--color-primary)]/10 text-[var(--color-text-sub)]"
-        >
-          <!-- <i
-            :class="[
-              'fa-solid transition-transform',
-              isCollapsed ? 'fa-indent' : 'fa-outdent',
-            ]"
-          ></i> -->
-          <component
-            :is="isCollapsed ? Indent : Outdent"
-            class="transition-transform duration-200"
-            :size="20"
-          />
+        <button @click="emit('toggle')"
+          class="hidden md:block p-2 rounded-lg hover:bg-[var(--color-primary)]/10 text-[var(--color-text-sub)]">
+          <component :is="collapsed ? Indent : Outdent" class="transition-transform duration-200" :size="20" />
         </button>
 
-        <button
-          @click="isMobileOpen = false"
-          class="md:hidden p-2 text-[var(--color-text-sub)]"
-        >
+        <button @click="emit('close-mobile')" class="md:hidden p-2 text-[var(--color-text-sub)]">
           <X class="text-xl" :size="24" />
         </button>
       </div>
 
-      <nav class="flex-1 p-3 space-y-2 overflow-y-auto">
-        <RouterLink
-          v-for="item in menuItems"
-          :key="item.name"
-          :to="item.route"
-          class="flex items-center gap-4 p-3 rounded-xl transition-all group relative text-[var(--color-text-sub)] hover:text-[var(--color-primary)] hover:bg-[var(--color-primary)]/10"
-        >
-          <div class="w-6 flex justify-center items-center shrink-0">
-            <!-- <i :class="['fa-solid', item.icon, 'text-lg']"></i>
-           -->
-
-            <component
-              :is="item.icon"
-              :size="20"
-              class="transition-transform group-hover:scale-110"
-            />
+      <nav class="flex-1 p-3 space-y-4 overflow-y-auto">
+        <div v-for="section in menuSections" :key="section.title" class="space-y-1">
+          <div v-show="!collapsed || isMobileOpen"
+            class="px-3 py-1.5 text-[10px] font-black uppercase tracking-widest opacity-40 mt-3 first:mt-0"
+            :style="{ color: 'var(--color-text-sub)' }">
+            {{ section.title }}
           </div>
+          <RouterLink v-for="item in section.items" :key="item.name" :to="item.route" @click="emit('close-mobile')"
+            class="flex items-center gap-4 p-3 rounded-xl transition-all group relative text-[var(--color-text-sub)] hover:text-[var(--color-primary)] hover:bg-[var(--color-primary)]/10"
+            active-class="bg-[var(--color-primary)]/10 text-[var(--color-primary)] font-bold shadow-sm">
+            <div class="w-6 flex justify-center items-center shrink-0">
+              <component :is="item.icon" :size="20" class="transition-transform group-hover:scale-110" />
+            </div>
 
-          <span
-            v-show="!isCollapsed || isMobileOpen"
-            class="font-medium whitespace-nowrap transition-opacity"
-          >
-            {{ item.name }}
-          </span>
+            <span v-show="!collapsed || isMobileOpen" class="font-medium whitespace-nowrap transition-opacity">
+              {{ item.name }}
+            </span>
 
-          <span
-            v-if="isCollapsed"
-            class="hidden md:block absolute left-16 scale-0 group-hover:scale-100 transition-all origin-left bg-[var(--color-text-main)] text-[var(--color-pure)] px-2 py-1 rounded text-xs z-50"
-          >
-            {{ item.name }}
-          </span>
-        </RouterLink>
+            <span v-if="collapsed"
+              class="hidden md:block absolute left-16 scale-0 group-hover:scale-100 transition-all origin-left bg-[var(--color-text-main)] text-[var(--color-pure)] px-2 py-1 rounded text-xs z-50">
+              {{ item.name }}
+            </span>
+          </RouterLink>
+        </div>
       </nav>
 
       <div class="p-3 border-t border-[var(--color-border)]">
-        <button
-          class="flex items-center gap-4 p-3 w-full rounded-xl text-[var(--color-accent)] hover:bg-[var(--color-accent)]/10"
-        >
+        <button @click="auth.logout"
+          class="flex items-center gap-4 p-3 w-full rounded-xl text-[var(--color-accent)] hover:bg-[var(--color-accent)]/10 transition-colors">
           <div class="w-6 flex justify-center items-center shrink-0">
-            <!-- <i class="fa-solid fa-right-from-bracket text-lg"></i> -->
             <LogOut :size="20" class="text-[var(--color-accent)]" />
           </div>
-          <span
-            v-show="!isCollapsed || isMobileOpen"
-            class="font-medium text-left"
-            >Déconnexion</span
-          >
+          <span v-show="!collapsed || isMobileOpen" class="font-medium text-left">Déconnexion</span>
         </button>
       </div>
     </aside>
 
-    <!-- <button
-      @click="isMobileOpen = true"
-      class="md:hidden fixed top-30 left-4 w-12 h-12 bg-[var(--color-surface)] border border-[var(--color-border)] text-[var(--color-primary)] rounded-xl shadow-md z-30 flex items-center justify-center transition-transform active:scale-95"
-    >
-      <AlignLeft class="text-xl" :size="24" />
-    </button> -->
+    <button @click="emit('open-mobile')" v-if="!isMobileOpen"
+      class="md:hidden fixed top-1/2 -translate-y-1/2 left-0 w-7 h-20 bg-[var(--color-primary)] text-white rounded-r-xl shadow-lg z-30 flex items-center justify-center gap-1 px-1 transition-all w-9 active:scale-95 group animate-pulse-dashboard">
+      <span class="text-[10px] font-semibold tracking-wide" style="writing-mode: vertical-rl; text-orientation: mixed">
+        Tableau de bord
+      </span>
 
-    <button
-      @click="isMobileOpen = true"
-      v-if="!isMobileOpen"
-      class="md:hidden fixed top-1/2 -translate-y-1/2 left-0 w-6 h-16 bg-[var(--color-primary)] text-white rounded-r-xl shadow-lg z-30 flex items-center justify-center transition-all hover:w-8 active:scale-95 group"
-    >
-      <ChevronRight
-        class="transition-transform group-hover:translate-x-0.5"
-        :size="20"
-        :stroke-width="3"
-      />
+      <ChevronRight class="transition-transform" :size="18" :stroke-width="3" />
     </button>
   </div>
 </template>
 
 <script setup>
-import { ref } from "vue";
+import { ref, computed } from "vue";
 import {
   Indent,
   Outdent,
   X,
-  AlignLeft,
   CloudLightning,
   LayoutDashboard,
-  Package,
   Heart,
   Settings,
   Headphones,
   LogOut,
   ChevronRight,
+  ShoppingBag,
+  Store,
+  Star,
+  Box,
+  PackageCheck,
+  MessageCircle,
 } from "lucide-vue-next";
-const isCollapsed = ref(false); // État Desktop
-const isMobileOpen = ref(false); // État Mobile
+import { useAuthStore } from "../../stores/auth.js";
+const auth = useAuthStore();
 
-const menuItems = [
-  { name: "Tableau de bord", icon: LayoutDashboard, route: "/profile" },
-  { name: "Mes Commandes", icon: Package, route: "/profile/orders" },
-  { name: "Mes Favoris", icon: Heart, route: "/profile/wishlist" },
-  { name: "Paramètres", icon: Settings, route: "/profile/settings" },
-  { name: "Aide & Support", icon: Headphones, route: "/profile/support" },
-];
+const props = defineProps({
+  collapsed: Boolean,
+  isMobileOpen: Boolean,
+});
+
+const emit = defineEmits(["toggle", "close-mobile", "open-mobile"]);
+
+const menuSections = computed(() => {
+  const sections = [
+    {
+      title: "Navigation",
+      items: [
+        {
+          name: "Tableau de bord",
+          icon: LayoutDashboard,
+          route: { name: "Dashboard" },
+        },
+        { name: "Messages", icon: MessageCircle, route: { name: "messages" } },
+        {
+          name: "Mes Demandes",
+          icon: ShoppingBag,
+          route: { name: "my-orders" },
+        },
+        { name: "Mes Favoris", icon: Star, route: { name: "Wishlist" } },
+      ],
+    },
+  ];
+
+  if (auth.isAdmin) {
+    sections.push({
+      title: "Administration",
+      items: [
+        {
+          name: "Demandes Vendeurs",
+          icon: Store,
+          route: { name: "admin-seller-requests" },
+        },
+      ],
+    });
+  }
+
+  if (auth.isVendeur) {
+    sections.push({
+      title: "Vendeur",
+      items: [
+        { name: "Mes Produits", icon: Box, route: { name: "my-products" } },
+        {
+          name: "Commandes Clients",
+          icon: PackageCheck,
+          route: { name: "vendeur-orders" },
+        },
+      ],
+    });
+  }
+
+  sections.push({
+    title: "Compte",
+    items: [
+      { name: "Paramètres", icon: Settings, route: { name: "Settings" } },
+      { name: "Aide & Support", icon: Headphones, route: { name: "Support" } },
+    ],
+  });
+
+  return sections;
+});
 </script>
+
+<style scoped>
+@keyframes pulse-horizontal {
+
+  0%,
+  40%,
+  100% {
+    transform: translateY(-50%) translateX(0) scale(1);
+    filter: drop-shadow(0 4px 6px rgba(0, 0, 0, 0.1));
+  }
+
+  10%,
+  30% {
+    transform: translateY(-50%) translateX(6px) scale(1.1);
+    filter: drop-shadow(0 10px 15px var(--color-primary));
+  }
+
+  20% {
+    transform: translateY(-50%) translateX(2px) scale(1.05);
+  }
+}
+
+.animate-pulse-dashboard {
+  animation: pulse-horizontal 2.5s ease-in-out infinite;
+}
+
+nav::-webkit-scrollbar {
+  width: 4px;
+}
+
+nav::-webkit-scrollbar-track {
+  background: transparent;
+}
+
+nav::-webkit-scrollbar-thumb {
+  background: var(--color-border);
+  border-radius: 10px;
+}
+
+nav:hover::-webkit-scrollbar-thumb {
+  background: var(--color-primary);
+  opacity: 0.3;
+}
+</style>
