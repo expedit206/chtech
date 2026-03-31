@@ -51,7 +51,7 @@
   font-size: 11px;
   white-space: nowrap;
   transition: 0.2s;
-  z-index: 100;
+  z-index: 1000;
 }
 
 .group:hover .tooltip-text {

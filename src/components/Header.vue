@@ -131,10 +131,15 @@
             <Plus :size="16" :stroke-width="3" class="text-sm" />
           </router-link>
 
-          <div v-if="auth.isAuthenticated" class="group relative">
+          <div v-if="auth.isAuthenticated" class="relative" ref="userMenuRef">
             <div
-              class="p-0.5 rounded-full border-2 cursor-pointer transition-transform hover:scale-105"
-              :style="{ borderColor: 'var(--color-primary)' }"
+              @click="toggleUserMenu"
+              class="p-0.5 rounded-full border-2 cursor-pointer transition-transform active:scale-95"
+              :style="{
+                borderColor: isUserMenuOpen
+                  ? 'var(--color-primary)'
+                  : 'transparent',
+              }"
             >
               <img
                 :src="
@@ -145,72 +150,70 @@
               />
             </div>
 
-            <div
-              class="absolute right-0 mt-2 w-48 rounded-2xl shadow-2xl border backdrop-blur-xl opacity-0 invisible group-hover:opacity-100 group-hover:visible transition-all duration-300 py-2 z-[60]"
-              :style="{
-                backgroundColor: 'var(--color-surface)',
-                borderColor: 'var(--color-border)',
-              }"
+            <transition
+              enter-active-class="transition duration-200 ease-out"
+              enter-from-class="transform scale-95 opacity-0"
+              enter-to-class="transform scale-100 opacity-100"
+              leave-active-class="transition duration-150 ease-in"
+              leave-from-class="transform scale-100 opacity-100"
+              leave-to-class="transform scale-95 opacity-0"
             >
               <div
-                class="px-4 py-2 border-b mb-1"
-                :style="{ borderColor: 'var(--color-border)' }"
-              >
-                <p
-                  class="text-xs font-bold truncate"
-                  :style="{ color: 'var(--color-primary)' }"
-                >
-                  {{ auth.user?.nom }}
-                </p>
-                <p
-                  class="text-[10px] opacity-60 truncate"
-                  :style="{ color: 'var(--color-text-sub)' }"
-                >
-                  {{ auth.user?.telephone || auth.user?.email }}
-                </p>
-              </div>
-              <!-- General links -->
-              <router-link
-                :to="{ name: 'Dashboard' }"
-                class="flex items-center gap-3 px-4 py-2.5 text-sm transition-colors hover:bg-black/5"
-                :style="{ color: 'var(--color-text-main)' }"
-              >
-                <UserCircle class="w-4 h-4 opacity-70" />
-                <span>Mon Profil</span>
-              </router-link>
-
-              <router-link
-                :to="{ name: 'my-orders' }"
-                class="flex items-center gap-3 px-4 py-2.5 text-sm transition-colors hover:bg-black/5"
-                :style="{ color: 'var(--color-text-main)' }"
-              >
-                <ShoppingBag class="w-4 h-4 opacity-70" />
-                <span>Mes Commandes</span>
-              </router-link>
-
-              <!-- Normal user can apply to become fournisseur -->
-              <router-link
-                v-if="auth.isNormalUser"
-                :to="{ name: 'become-vendeur' }"
-                class="flex items-center gap-3 px-4 py-2.5 text-sm transition-colors hover:bg-black/5 border-t mt-2"
+                v-show="isUserMenuOpen"
+                class="absolute right-0 mt-3 w-56 rounded-2xl shadow-2xl border backdrop-blur-xl py-2 z-[100]"
                 :style="{
-                  color: 'var(--color-text-main)',
+                  backgroundColor: 'var(--color-surface)',
                   borderColor: 'var(--color-border)',
                 }"
               >
-                <Store class="w-4 h-4 opacity-70" />
-                <span>Vendre sur Sasaye</span>
-              </router-link>
+                <div
+                  class="px-4 py-3 border-b mb-1"
+                  :style="{ borderColor: 'var(--color-border)' }"
+                >
+                  <p
+                    class="text-sm font-bold truncate"
+                    :style="{ color: 'var(--color-text-main)' }"
+                  >
+                    {{ auth.user?.nom }}
+                  </p>
+                  <p
+                    class="text-[11px] opacity-60 truncate"
+                    :style="{ color: 'var(--color-text-sub)' }"
+                  >
+                    {{ auth.user?.telephone || auth.user?.email }}
+                  </p>
+                </div>
 
-              <button
-                @click="auth.logout"
-                class="w-full flex items-center gap-3 px-4 py-2.5 text-sm text-red-500 transition-colors hover:bg-red-500/10 border-t mt-1"
-                :style="{ borderColor: 'var(--color-border)' }"
-              >
-                <LogOut class="w-4 h-4" />
-                <span>Déconnexion</span>
-              </button>
-            </div>
+                <router-link
+                  @click="isUserMenuOpen = false"
+                  :to="{ name: 'Dashboard' }"
+                  class="flex items-center gap-3 px-4 py-3 text-sm hover:bg-black/5 transition-colors"
+                  :style="{ color: 'var(--color-text-main)' }"
+                >
+                  <UserCircle class="w-5 h-5 opacity-70" />
+                  <span>Mon Profil</span>
+                </router-link>
+
+                <router-link
+                  @click="isUserMenuOpen = false"
+                  :to="{ name: 'my-orders' }"
+                  class="flex items-center gap-3 px-4 py-3 text-sm hover:bg-black/5 transition-colors"
+                  :style="{ color: 'var(--color-text-main)' }"
+                >
+                  <ShoppingBag class="w-5 h-5 opacity-70" />
+                  <span>Mes Commandes</span>
+                </router-link>
+
+                <button
+                  @click="auth.logout"
+                  class="w-full flex items-center gap-3 px-4 py-3 text-sm text-red-500 hover:bg-red-500/10 border-t mt-1"
+                  :style="{ borderColor: 'var(--color-border)' }"
+                >
+                  <LogOut class="w-5 h-5" />
+                  <span>Déconnexion</span>
+                </button>
+              </div>
+            </transition>
           </div>
           <router-link
             v-else
@@ -701,6 +704,31 @@ onMounted(() => {
 });
 
 onUnmounted(() => {
+  window.removeEventListener("keydown", handleKeyDown);
+});
+
+// Dans ton <script setup>
+const isUserMenuOpen = ref(false);
+const userMenuRef = ref(null);
+
+const toggleUserMenu = () => {
+  isUserMenuOpen.value = !isUserMenuOpen.value;
+};
+
+// Fermer le menu si on clique ailleurs
+const handleClickOutside = (event) => {
+  if (userMenuRef.value && !userMenuRef.value.contains(event.target)) {
+    isUserMenuOpen.value = false;
+  }
+};
+
+onMounted(() => {
+  window.addEventListener("click", handleClickOutside);
+  window.addEventListener("keydown", handleKeyDown);
+});
+
+onUnmounted(() => {
+  window.removeEventListener("click", handleClickOutside);
   window.removeEventListener("keydown", handleKeyDown);
 });
 </script>
