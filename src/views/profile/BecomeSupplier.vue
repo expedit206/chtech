@@ -1,174 +1,171 @@
 <template>
-  <div class="max-w-4xl mx-auto px-4 py-12 pt-24 text-[var(--color-text-main)]">
-    <div
-      class="bg-[var(--color-surface)] rounded-3xl shadow-xl overflow-hidden border border-[var(--color-border)]"
-    >
-      <div class="p-8 md:p-12">
-        <div class="flex items-center gap-4 mb-8">
-          <div
-            class="w-12 h-12 rounded-2xl bg-[var(--color-primary)] flex items-center justify-center text-white"
-          >
-            <Store :size="28" />
-          </div>
-          <div>
-            <h1 class="text-3xl font-black tracking-tight">
-              Devenir Fournisseur
-            </h1>
-            <p class="text-[var(--color-text-sub)]">
-              Rejoignez notre réseau de vendeurs certifiés
-            </p>
-          </div>
-        </div>
+  <div
+    class="bg-[var(--color-bg)] text-[var(--color-text-main)] px-6 md:px-20 py-2 space-y-12 max-w-7xl mx-auto"
+  >
+    <section class="grid grid-cols-2 md:grid-cols-4 gap-6">
+      <div
+        v-for="(stat, index) in stats"
+        :key="index"
+        class="p-6 bg-[var(--color-surface)] rounded-xl shadow-sm border border-[var(--color-border)] flex flex-col items-center text-center gap-2"
+      >
+        <component
+          :is="stat.icon"
+          class="w-8 h-8 text-[var(--color-primary)] mb-2"
+        />
+        <h4 class="text-3xl font-extrabold text-[var(--color-primary)]">
+          {{ stat.value }}
+        </h4>
+        <p
+          class="text-[var(--color-text-sub)] text-sm font-medium tracking-wide"
+        >
+          {{ stat.label }}
+        </p>
+      </div>
+    </section>
 
-        <!-- Success State -->
-        <div v-if="requestStatus === 'pending'" class="text-center py-12">
-          <div
-            class="w-20 h-20 bg-amber-500/10 rounded-full flex items-center justify-center mx-auto mb-6"
+    <div class="grid grid-cols-1 lg:grid-cols-3 gap-10 items-start">
+      <section
+        ref="formSection"
+        class="lg:col-span-2 p-8 bg-[var(--color-surface)] rounded-xl shadow-md border border-[var(--color-border)]"
+      >
+        <h2 class="text-2xl font-bold mb-8 flex items-center gap-3">
+          <span
+            class="p-2 bg-[var(--color-primary)] text-white rounded-lg text-sm"
+            >01</span
           >
-            <Clock class="text-amber-600" :size="40" />
-          </div>
-          <h2 class="text-2xl font-bold mb-4">Demande en cours d'examen</h2>
-          <p class="text-[var(--color-text-sub)] max-w-md mx-auto mb-8">
-            Notre équipe analyse votre demande. Vous recevrez une notification
-            dès qu'une décision sera prise.
-          </p>
-          <router-link
-            :to="{ name: 'Home' }"
-            class="text-[var(--color-primary)] font-bold hover:underline"
-            >Retour à l'accueil</router-link
+          Formulaire Devenir Vendeur
+        </h2>
+
+        <form
+          @submit.prevent="submitForm"
+          class="grid grid-cols-1 md:grid-cols-2 gap-5"
+        >
+          <input
+            type="text"
+            v-model="form.nom"
+            placeholder="Nom complet"
+            required
+            class="w-full p-4 rounded-lg border border-[var(--color-border)] bg-transparent focus:ring-2 focus:ring-[var(--color-primary)] outline-none transition-all"
+          />
+
+          <input
+            type="text"
+            v-model="form.structure"
+            placeholder="Nom de la structure"
+            required
+            class="w-full p-4 rounded-lg border border-[var(--color-border)] bg-transparent focus:ring-2 focus:ring-[var(--color-primary)] outline-none transition-all"
+          />
+
+          <select
+            v-model="form.categorie"
+            required
+            class="w-full p-4 rounded-lg border border-[var(--color-border)] bg-transparent focus:ring-2 focus:ring-[var(--color-primary)] outline-none transition-all"
           >
-        </div>
+            <option disabled value="">Catégorie des articles</option>
+            <option>Électronique</option>
+            <option>Mode</option>
+            <option>Maison & Décoration</option>
+            <option>Sport</option>
+            <option>Autres</option>
+          </select>
 
-        <div v-else-if="requestStatus === 'approved'" class="text-center py-12">
-          <div
-            class="w-20 h-20 bg-green-500/10 rounded-full flex items-center justify-center mx-auto mb-6"
-          >
-            <CheckCircle class="text-green-600" :size="40" />
-          </div>
-          <h2 class="text-2xl font-bold mb-4">Vous êtes fournisseur !</h2>
-          <p class="text-[var(--color-text-sub)] mb-8">
-            Félicitations ! Vous pouvez maintenant commencer à publier vos
-            produits.
-          </p>
-          <router-link
-            :to="{ name: 'my-products' }"
-            class="bg-[var(--color-primary)] text-white px-8 py-3 rounded-xl font-bold hover:opacity-90 transition shadow-lg shadow-[var(--color-primary)]/20"
-          >
-            Accéder à mon espace vendeur
-          </router-link>
-        </div>
+          <input
+            type="text"
+            v-model="form.localisation"
+            placeholder="Localisation (ville, pays)"
+            required
+            class="w-full p-4 rounded-lg border border-[var(--color-border)] bg-transparent focus:ring-2 focus:ring-[var(--color-primary)] outline-none transition-all"
+          />
 
-        <!-- Form State -->
-        <form v-else @submit.prevent="handleSubmit" class="space-y-6">
-          <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
-            <div class="space-y-2">
-              <label class="text-sm font-bold text-[var(--color-text-sub)]"
-                >Nom de votre Boutique / Entreprise</label
-              >
-              <input
-                v-model="form.company_name"
-                required
-                type="text"
-                placeholder="Ex: My Tech Store"
-                class="w-full px-4 py-3 rounded-xl border border-[var(--color-border)] bg-[var(--color-bg)]/50 text-[var(--color-text-main)] outline-none focus:ring-2 focus:ring-[var(--color-primary)] transition-all font-medium"
-              />
-            </div>
-
-            <div class="space-y-2">
-              <label class="text-sm font-bold text-[var(--color-text-sub)]"
-                >Ville de résidence</label
-              >
-              <input
-                :value="auth.user?.ville"
-                disabled
-                type="text"
-                class="w-full px-4 py-3 rounded-xl border border-[var(--color-border)] bg-[var(--color-bg)] text-[var(--color-text-sub)] opacity-50 cursor-not-allowed font-medium"
-              />
-            </div>
-          </div>
-
-          <div class="space-y-2">
-            <label class="text-sm font-bold text-[var(--color-text-sub)]"
-              >Quels types de produits vendez-vous ?</label
-            >
-            <textarea
-              v-model="form.description"
-              required
-              rows="4"
-              placeholder="Décrivez brièvement votre activité et les articles que vous comptez proposer..."
-              class="w-full px-4 py-3 rounded-xl border border-[var(--color-border)] bg-[var(--color-bg)]/50 text-[var(--color-text-main)] outline-none focus:ring-2 focus:ring-[var(--color-primary)] transition-all font-medium"
-            ></textarea>
-          </div>
-
-          <div
-            class="p-6 bg-[var(--color-primary)]/5 rounded-2xl flex gap-4 border border-[var(--color-primary)]/10"
-          >
-            <Info class="text-[var(--color-primary)] shrink-0" :size="24" />
-            <p class="text-sm text-[var(--color-text-sub)] leading-relaxed">
-              En devenant fournisseur, vous acceptez nos conditions de vente. Un
-              système de paiement sécurisé (Escrow) est mis en place pour
-              protéger vos transactions et rassurer vos clients.
-            </p>
-          </div>
+          <input
+            type="text"
+            v-model="form.contact"
+            placeholder="Contact (email / téléphone)"
+            required
+            class="md:col-span-2 w-full p-4 rounded-lg border border-[var(--color-border)] bg-transparent focus:ring-2 focus:ring-[var(--color-primary)] outline-none transition-all"
+          />
 
           <button
             type="submit"
-            :disabled="isSubmitting"
-            class="w-full bg-[var(--color-primary)] text-white py-4 rounded-xl font-bold text-lg hover:opacity-90 transition shadow-lg shadow-[var(--color-primary)]/20 disabled:opacity-50 flex items-center justify-center gap-2"
+            class="md:col-span-2 py-4 rounded-lg bg-[var(--color-primary)] text-[var(--color-pure)] font-bold text-lg hover:bg-[var(--color-accent)] transform hover:-translate-y-1 transition-all shadow-lg"
           >
-            <Loader2 v-if="isSubmitting" class="animate-spin" />
-            {{ isSubmitting ? "Envoi en cours..." : "Envoyer ma demande" }}
+            Soumettre ma candidature
           </button>
         </form>
-      </div>
+      </section>
+
+      <aside class="space-y-8">
+        <div
+          class="p-6 bg-[var(--color-surface)] rounded-xl border-l-4 border-[var(--color-primary)] shadow-sm"
+        >
+          <h3 class="text-xl font-bold mb-4 flex items-center gap-2">
+            <Folder class="w-5 h-5 text-[var(--color-primary)]" /> Documents
+          </h3>
+          <ul class="space-y-4 text-[var(--color-text-sub)] text-sm">
+            <li class="flex gap-2">✅ <span>Pièce d’identité valide</span></li>
+            <li class="flex gap-2">
+              ✅ <span>Extrait du registre de commerce</span>
+            </li>
+            <li class="flex gap-2">✅ <span>Logo de votre structure</span></li>
+          </ul>
+        </div>
+
+        <div
+          class="p-6 bg-[var(--color-surface)] rounded-xl shadow-sm text-center"
+        >
+          <Mail class="w-8 h-8 text-[var(--color-primary)] mx-auto mb-3" />
+          <h3 class="font-bold mb-1">Besoin d'aide ?</h3>
+          <p class="text-sm text-[var(--color-text-sub)] mb-4">
+            Notre équipe vous répond sous 24h.
+          </p>
+          <a
+            href="https://wa.me/237683461329?text=Bonjour%20l'equipe%20SAssaye.com%2C%20je%20suis%20int%C3%A9ress%C3%A9%20par%20l'ouverture%20d'une%20boutique%20vendeur%20sur%20votre%20plateforme.%20Pourriez-vous%20m'indiquer%20les%20%C3%A9tapes%20%C3%A0%20suivre%20%3F"
+            class="text-[var(--color-primary)] font-bold hover:underline block truncate"
+            >WhatsApp: +237 683461329</a
+          >
+        </div>
+      </aside>
     </div>
+
+    
   </div>
 </template>
 
 <script setup>
-import { ref, onMounted } from "vue";
-import { useAuthStore } from "../../stores/auth.js";
-import apiClient from "../../api/index.js";
-import { useToast } from "vue-toastification";
-import { Store, Clock, CheckCircle, Info, Loader2 } from "lucide-vue-next";
+import { reactive, ref } from "vue";
+import {
+  Folder,
+  Users,
+  ShoppingCart,
+  Clock,
+  Book,
+  Mail,
+  ArrowUp,
+} from "lucide-vue-next";
 
-const auth = useAuthStore();
-const toast = useToast();
-
-const form = ref({
-  company_name: "",
-  description: "",
+const form = reactive({
+  nom: "",
+  structure: "",
+  categorie: "",
+  localisation: "",
+  contact: "",
 });
 
-const isSubmitting = ref(false);
-const requestStatus = ref(null);
+const stats = [
+  { label: "Vendeurs", value: "1200+", icon: Users },
+  { label: "Ventes / mois", value: "4500+", icon: ShoppingCart },
+  { label: "Clients", value: "5000+", icon: Users },
+  { label: "Support", value: "24/7", icon: Clock },
+];
 
-const fetchStatus = async () => {
-  try {
-    const response = await apiClient.get("/supplier-onboarding/status");
-    if (response.data.data) {
-      requestStatus.value = response.data.data.status;
-    }
-  } catch (error) {
-    console.error("Erreur status:", error);
-  }
+const formSection = ref(null);
+
+const submitForm = () => {
+  console.log("Formulaire envoyé:", form);
+  alert("Votre demande a été soumise !");
 };
 
-const handleSubmit = async () => {
-  isSubmitting.value = true;
-  try {
-    const response = await apiClient.post(
-      "/supplier-onboarding/apply",
-      form.value,
-    );
-    toast.success(response.data.message);
-    requestStatus.value = "pending";
-  } catch (error) {
-    toast.error(error.response?.data?.message || "Une erreur est survenue");
-  } finally {
-    isSubmitting.value = false;
-  }
+const scrollToTop = () => {
+  window.scrollTo({ top: 0, behavior: "smooth" });
 };
-
-onMounted(fetchStatus);
 </script>

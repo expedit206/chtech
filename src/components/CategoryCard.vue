@@ -11,7 +11,7 @@
       }">
       <i :class="[icon, 'text-base md:text-lg']"></i>
     </div>
-    <span class="text-[8px] md:text-[9px] font-black uppercase tracking-widest mt-1.5" :style="{
+    <span class="text-[8px] md:text-[9px] font-black  tracking-widest mt-1.5" :style="{
       color: active ? 'var(--color-primary)' : 'var(--color-text-sub)',
     }">
       {{ name }}

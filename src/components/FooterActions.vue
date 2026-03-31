@@ -1,8 +1,11 @@
 <template>
-  <div class="fixed md:bottom-6 bottom-14 right-6 flex flex-col items-end gap-3 z-[60]">
+  <div
+    class="fixed md:bottom-6 bottom-14 right-6 flex flex-col items-end gap-3 z-[60]"
+  >
     <Transition name="fade-slide">
       <div
         v-if="isMenuOpen"
+        ref="menuRef"
         class="mb-2 p-4 rounded-2xl shadow-2xl border w-72 bg-[var(--color-surface)] border-[var(--color-border)]"
       >
         <div class="flex justify-between items-center mb-3">
@@ -10,9 +13,18 @@
             class="text-xs font-bold uppercase tracking-wider text-[var(--color-primary)]"
             >Votre avis</span
           >
+
           <button
-            @click="isMenuOpen = false"
-            class="text-[var(--color-text-sub)] hover:text-red-500 transition-colors"
+            @click.stop="isMenuOpen = !isMenuOpen"
+            class="group relative w-10 h-10 rounded-2xl flex items-center justify-center shadow-lg transition-all hover:-translate-y-1 active:scale-90"
+            :class="isMenuOpen ? 'rotate-90' : ''"
+            :style="{
+              backgroundColor: 'var(--color-surface)',
+              border: '1px solid var(--color-border)',
+              color: isMenuOpen
+                ? 'var(--color-primary)'
+                : 'var(--color-text-main)',
+            }"
           >
             <X :size="16" />
           </button>
@@ -50,7 +62,7 @@
     </Transition>
 
     <RouterLink
-      to="/profile/support"
+      :to="{ name: 'Support' }"
       class="group relative w-10 h-10 rounded-2xl flex items-center justify-center shadow-lg transition-all hover:-translate-y-1 bg-[var(--color-surface)] border border-[var(--color-border)] text-[var(--color-text-main)]"
     >
       <HelpCircle :size="20" :stroke-width="2.5" />
@@ -91,12 +103,29 @@
       </span>
     </button>
 
-    <button
+    <!-- <button
       @click="scrollToTop"
       class="w-10 h-10 rounded-2xl flex items-center justify-center shadow-lg transition-all hover:-translate-y-1 active:scale-90 bg-[var(--color-primary)] text-white shadow-[var(--color-primary)]/20"
     >
       <ArrowUp :stroke-width="3" :size="20" />
-    </button>
+    </button> -->
+
+    <Transition name="fade-slide">
+      <button
+        v-if="showScrollTop"
+        @click="scrollToTop"
+        class="group relative w-10 h-10 rounded-2xl flex items-center justify-center shadow-lg transition-all hover:-translate-y-1 active:scale-90 bg-[var(--color-primary)] text-white shadow-[var(--color-primary)]/20"
+      >
+        <ArrowUp :stroke-width="3" :size="20" />
+
+        <!-- LABEL -->
+        <span
+          class="absolute right-14 px-3 py-1.5 rounded-lg text-xs font-bold opacity-0 group-hover:opacity-100 transition-opacity whitespace-nowrap bg-[var(--color-surface)] border border-[var(--color-border)] text-[var(--color-text-main)] shadow-xl"
+        >
+          Aller en haut
+        </span>
+      </button>
+    </Transition>
   </div>
 </template>
 
@@ -114,7 +143,9 @@
 }
 </style>
 <script setup>
-import { ref } from "vue";
+// import { ref } from "vue";
+import { ref, onMounted, onBeforeUnmount } from "vue";
+// Exemple correct pour Vue Router
 import { RouterLink } from "vue-router";
 import {
   CircleQuestionMark,
@@ -133,6 +164,7 @@ const scrollToTop = () => {
 };
 
 const isMenuOpen = ref(false);
+const menuRef = ref(null);
 const message = ref("");
 const rating = ref(0);
 
@@ -143,4 +175,40 @@ const submitComment = () => {
   message.value = "";
   rating.value = 0;
 };
+
+const buttonRef = ref(null);
+
+const handleClickOutside = (event) => {
+  if (
+    menuRef.value &&
+    !menuRef.value.contains(event.target) &&
+    buttonRef.value &&
+    !buttonRef.value.contains(event.target)
+  ) {
+    isMenuOpen.value = false;
+  }
+};
+
+onMounted(() => {
+  document.addEventListener("click", handleClickOutside);
+});
+
+onBeforeUnmount(() => {
+  document.removeEventListener("click", handleClickOutside);
+});
+
+const showScrollTop = ref(false);
+const handleScroll = () => {
+  showScrollTop.value = window.scrollY > 200; // tu peux changer 200
+};
+
+onMounted(() => {
+  document.addEventListener("click", handleClickOutside);
+  window.addEventListener("scroll", handleScroll);
+});
+
+onBeforeUnmount(() => {
+  document.removeEventListener("click", handleClickOutside);
+  window.removeEventListener("scroll", handleScroll);
+});
 </script>
