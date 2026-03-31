@@ -1,6 +1,6 @@
 <script setup lang="ts">
 import FooterActions from "./FooterActions.vue";
-import { Facebook, Twitter, Instagram, Linkedin } from "lucide-vue-next";
+import { Facebook, Twitter, Instagram, Linkedin, Send } from "lucide-vue-next";
 import { RouterLink } from "vue-router";
 </script>
 
@@ -25,24 +25,29 @@ import { RouterLink } from "vue-router";
             semaine.
           </p>
         </div>
-        <div class="flex w-full md:w-auto gap-2">
+        <div class="flex w-full md:w-auto gap-2 relative">
+          <!-- Input avec icône -->
           <input
-            type="email"
-            placeholder="votre@email.com"
-            class="px-4 py-2 rounded-lg flex-1 md:w-64 outline-none border"
+            type="tel"
+            placeholder="votre numéro de téléphone"
+            class="px-4 py-2 pr-12 rounded-lg flex-1 md:w-64 outline-none border transition-colors duration-200 focus:ring-2 focus:ring-blue-500"
             :style="{
               backgroundColor: 'var(--color-bg)',
               borderColor: 'var(--color-border)',
             }"
           />
+
+          <!-- Icône de soumission à l'intérieur -->
           <button
-            class="px-6 py-2 rounded-lg font-bold transition-transform active:scale-95"
+            class="absolute right-2 top-1/2 -translate-y-1/2 p-2 rounded-full hover:bg-blue-600 transition-colors"
             :style="{
               backgroundColor: 'var(--color-primary)',
               color: 'var(--color-pure)',
             }"
+            title="Cliquez pour vous inscrire"
           >
-            S'inscrire
+            <!-- Exemple avec icône Lucide -->
+            <Send class="w-5 h-5" />
           </button>
         </div>
       </div>
@@ -99,7 +104,11 @@ import { RouterLink } from "vue-router";
             >
           </li>
           <li>
-            <a href="#" class="hover:text-[var(--color-primary)]">Aide & SAV</a>
+            <RouterLink
+              :to="{ name: 'Support' }"
+              class="hover:text-[var(--color-primary)]"
+              >Aide & SAV</RouterLink
+            >
           </li>
         </ul>
       </div>
@@ -108,8 +117,10 @@ import { RouterLink } from "vue-router";
         <h4 class="font-bold mb-6">Vendre</h4>
         <ul class="space-y-4 text-sm opacity-70">
           <li>
-            <a href="#" class="hover:text-[var(--color-primary)]"
-              >Devenir vendeur</a
+            <RouterLink
+              :to="{ name: 'become-vendeur' }"
+              class="hover:text-[var(--color-primary)]"
+              >Devenir vendeur</RouterLink
             >
           </li>
           <li>

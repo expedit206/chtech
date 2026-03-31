@@ -62,7 +62,7 @@
     </Transition>
 
     <RouterLink
-      to="/profile/support"
+      :to="{ name: 'Support' }"
       class="group relative w-10 h-10 rounded-2xl flex items-center justify-center shadow-lg transition-all hover:-translate-y-1 bg-[var(--color-surface)] border border-[var(--color-border)] text-[var(--color-text-main)]"
     >
       <HelpCircle :size="20" :stroke-width="2.5" />
@@ -145,6 +145,7 @@
 <script setup>
 // import { ref } from "vue";
 import { ref, onMounted, onBeforeUnmount } from "vue";
+// Exemple correct pour Vue Router
 import { RouterLink } from "vue-router";
 import {
   CircleQuestionMark,
