@@ -15,7 +15,7 @@
           class="mt-6 text-center text-3xl font-extrabold"
           :style="{ color: 'var(--color-text-main)' }"
         >
-          Bienvenue sur CHTECH
+          Bienvenue sur Sassaye
         </h2>
         <p
           class="mt-2 text-center text-sm"
@@ -49,20 +49,22 @@
               placeholder="votre@email.com ou 6xxxxxxxx"
             />
           </div>
-          <div>
+          <div class="relative">
             <label
               for="password"
               class="block text-sm font-medium mb-1"
               :style="{ color: 'var(--color-text-main)' }"
-              >Mot de passe</label
             >
+              Mot de passe
+            </label>
+
             <input
               id="password"
               v-model="form.mot_de_passe"
               name="password"
-              type="password"
+              :type="showPassword ? 'text' : 'password'"
               required
-              class="appearance-none relative block w-full px-4 py-3 border rounded-xl focus:outline-none focus:ring-2 transition-all duration-200 sm:text-sm"
+              class="appearance-none relative block w-full px-4 py-3 pr-10 border rounded-xl focus:outline-none focus:ring-2 transition-all duration-200 sm:text-sm"
               :style="{
                 backgroundColor: 'var(--color-bg)',
                 borderColor: 'var(--color-border)',
@@ -71,6 +73,16 @@
               }"
               placeholder="••••••••"
             />
+
+            <!-- ICONE -->
+            <button
+              type="button"
+              @click="showPassword = !showPassword"
+              class="absolute right-3 top-[38px] text-[var(--color-text-sub)] hover:text-[var(--color-primary)] transition"
+            >
+              <Eye v-if="!showPassword" :size="18" />
+              <EyeOff v-else :size="18" />
+            </button>
           </div>
         </div>
 
@@ -142,7 +154,7 @@
 import { ref, reactive } from "vue";
 import { useAuthStore } from "../stores/auth";
 import { useRouter } from "vue-router";
-
+import { Eye, EyeOff } from "lucide-vue-next";
 const auth = useAuthStore();
 const router = useRouter();
 
@@ -167,4 +179,5 @@ const handleLogin = async () => {
     loading.value = false;
   }
 };
+const showPassword = ref(false);
 </script>
