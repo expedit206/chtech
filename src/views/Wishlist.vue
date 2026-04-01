@@ -83,6 +83,18 @@ import { useInteractionStore } from "../stores/interactions.js";
 import ProductCard from "../components/ProductCard.vue";
 import { Heart, Star } from "lucide-vue-next";
 import SkeletonWishlistCard from "../components/skeletons/SkeletonWishlistCard.vue";
+// meta description et title pour le SEO
+import { useHead } from "@vueuse/head";
+useHead({
+  title: "Mes Favoris - Sasaye",
+  meta: [
+    {
+      name: "description",
+      content:
+        "Découvrez vos produits favoris sur Sasaye. Retrouvez facilement les articles que vous avez aimés et explorez de nouvelles trouvailles.",
+    },
+  ],
+});
 
 const interactionStore = useInteractionStore();
 const router = useRouter();
@@ -123,5 +135,4 @@ const removeFavorite = async (productId) => {
   await interactionStore.toggleFavorite(productId);
   favorites.value = favorites.value.filter((p) => p.id !== productId);
 };
-
 </script>

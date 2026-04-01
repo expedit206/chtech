@@ -94,7 +94,10 @@
         </form>
         <div class="">
           <p class="mt-4 text-sm text-[var(--color-text-sub)] italic">
-            <i>Vos informations seront examinées par notre équipe avant d'être approuvées.</i>
+            <i
+              >Vos informations seront examinées par notre équipe avant d'être
+              approuvées.</i
+            >
           </p>
         </div>
       </section>
@@ -131,8 +134,6 @@
         </div>
       </aside>
     </div>
-
-    
   </div>
 </template>
 
@@ -147,6 +148,17 @@ import {
   Mail,
   ArrowUp,
 } from "lucide-vue-next";
+import { useHead } from "@vueuse/head";
+useHead({
+  title: "Devenir Vendeur - Sasaye",
+  meta: [
+    {
+      name: "description",
+      content:
+        "Devenez vendeur sur Sasaye et commencez à vendre vos produits en ligne.",
+    },
+  ],
+});
 
 const form = reactive({
   nom: "",

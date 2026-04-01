@@ -118,6 +118,17 @@
 </template>
 
 <script setup>
+// Ajou t du seo pour les sttings
+import { useHead } from '@vueuse/head'
+useHead({
+  title: 'Paramètres du compte - Sasaye',
+  meta: [
+    {
+      name: 'description',
+      content: 'Gérez vos informations personnelles, votre sécurité et vos adresses sur Sasaye. Modifiez votre profil, changez votre mot de passe et plus encore.',
+    },
+  ],
+})
 const handleLogout = () => {
   if(confirm("Voulez-vous vraiment vous déconnecter ?")) {
     console.log("Déconnexion en cours...");

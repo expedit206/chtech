@@ -187,7 +187,7 @@
 import { ref, reactive } from "vue";
 import { useAuthStore } from "../stores/auth";
 import { useRouter } from "vue-router";
-
+import { useHead } from "@vueuse/head";
 const auth = useAuthStore();
 const router = useRouter();
 
@@ -197,7 +197,17 @@ const form = reactive({
   mot_de_passe: "",
   parrain_code: "",
 });
-
+// SEO pour la page Register
+useHead({
+  title: "Inscription - Sasaye",
+  meta: [
+    {
+      name: "description",
+      content:
+        "Créez votre compte sur Sasaye pour accéder à vos commandes, promotions et découvrir tous nos produits.",
+    },
+  ],
+});
 const loading = ref(false);
 const error = ref(null);
 

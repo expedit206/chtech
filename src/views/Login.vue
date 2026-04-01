@@ -154,10 +154,21 @@
 import { ref, reactive } from "vue";
 import { useAuthStore } from "../stores/auth";
 import { useRouter } from "vue-router";
+import { useHead } from "@vueuse/head";
 import { Eye, EyeOff } from "lucide-vue-next";
 const auth = useAuthStore();
 const router = useRouter();
-
+// const head = useHead();
+useHead({
+  title: "Connexion - Sasaye",
+  meta: [
+    {
+      name: "description",
+      content:
+        "Connectez-vous à votre compte Sasaye pour accéder à vos commandes, favoris et plus encore.",
+    },
+  ],
+});
 const form = reactive({
   login: "",
   mot_de_passe: "",

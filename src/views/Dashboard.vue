@@ -12,7 +12,7 @@
         >, ravi de vous revoir !
       </h1>
       <p class="text-[var(--color-text-sub)]">
-        Voici un aperçu de votre activité sur CH-Tech.
+        Voici un aperçu de votre activité sur Sasaye  .
       </p>
     </header>
 
