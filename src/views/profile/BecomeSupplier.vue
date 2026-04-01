@@ -142,6 +142,9 @@ import {
   Mail,
   ArrowUp,
 } from "lucide-vue-next";
+import { useAlert } from "../../composables/useAlert.js";
+
+const alert = useAlert();
 
 const form = reactive({
   nom: "",
@@ -162,7 +165,16 @@ const formSection = ref(null);
 
 const submitForm = () => {
   console.log("Formulaire envoyé:", form);
-  alert("Votre demande a été soumise !");
+  alert.success({
+    title: "Candidature Envoyée",
+    message: "Votre demande a été soumise avec succès ! Notre équipe vous contactera sous 24h."
+  });
+  // Reset form
+  form.nom = "";
+  form.structure = "";
+  form.categorie = "";
+  form.localisation = "";
+  form.contact = "";
 };
 
 const scrollToTop = () => {

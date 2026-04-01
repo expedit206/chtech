@@ -2,114 +2,133 @@
   <div class="p-6 space-y-8 animate-fade-in pb-20">
     <header class="flex justify-between items-start">
       <div>
-        <h1 class="text-2xl font-bold text-[var(--color-text-main)]">Paramètres du compte</h1>
-        <p class="text-[var(--color-text-sub)]">Gérez vos informations personnelles et votre sécurité.</p>
+        <h1 class="text-2xl font-black text-[var(--color-text-main)] font-serif tracking-tighter">Paramètres du compte
+        </h1>
+        <p class="text-[var(--color-text-sub)] text-sm">Gérez vos informations personnelles et la sécurité de votre
+          compte.</p>
       </div>
-      <button @click="handleLogout" class="flex items-center gap-2 px-4 py-2 bg-red-500/10 text-red-500 rounded-xl font-bold text-sm hover:bg-red-500 hover:text-white transition-all">
+      <button @click="confirmLogout"
+        class="flex items-center gap-2 px-4 py-2 bg-red-500/10 text-red-500 rounded-xl font-bold text-sm hover:bg-red-500 hover:text-white transition-all shadow-sm">
         <i class="fa-solid fa-power-off"></i>
         Déconnexion
       </button>
     </header>
 
     <div class="grid grid-cols-1 xl:grid-cols-2 gap-8">
-      <section class="bg-[var(--color-surface)] border border-[var(--color-border)] rounded-3xl p-6 space-y-6">
-        <div class="flex items-center gap-3 border-b border-[var(--color-border)] pb-4">
-          <i class="fa-solid fa-user text-[var(--color-primary)]"></i>
-          <h3 class="font-bold text-[var(--color-text-main)]">Informations du Profil</h3>
+      <!-- Section Informations du Profil -->
+      <section
+        class="bg-[var(--color-surface)] border border-[var(--color-border)] rounded-3xl p-8 space-y-8 shadow-sm">
+        <div class="flex items-center gap-3 border-b border-[var(--color-border)] pb-6">
+          <div
+            class="w-8 h-8 rounded-lg bg-[var(--color-primary)]/10 flex items-center justify-center text-[var(--color-primary)]">
+            <i class="fa-solid fa-user"></i>
+          </div>
+          <h3 class="font-black text-[var(--color-text-main)] uppercase tracking-widest text-xs">Informations
+            Personnelles</h3>
         </div>
 
-        <div class="flex flex-col sm:flex-row items-center gap-6 pb-4">
+        <!-- Avatar Update -->
+        <div class="flex flex-col sm:flex-row items-center gap-8 pb-4">
           <div class="relative group">
-            <div class="w-24 h-24 rounded-full border-4 border-[var(--color-primary)] overflow-hidden bg-[var(--color-bg)]">
-              <img src="https://ui-avatars.com/api/?name=Christian+H&background=6366f1&color=fff" alt="Profil" class="w-full h-full object-cover" />
+            <div
+              class="w-32 h-32 rounded-full border-4 border-[var(--color-primary)] overflow-hidden bg-[var(--color-bg)] shadow-2xl transition-transform cursor-pointer"
+              @click="triggerFileInput">
+              <img :src="profilePhotoUrl" alt="Profil"
+                class="w-full h-full object-cover group-hover:scale-110 transition-transform duration-500" />
+              <div
+                class="absolute inset-0 bg-black/40 flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity">
+                <i class="fa-solid fa-camera text-white text-2xl"></i>
+              </div>
             </div>
-            <button class="absolute bottom-0 right-0 w-8 h-8 bg-[var(--color-primary)] text-white rounded-full flex items-center justify-center border-2 border-[var(--color-surface)] hover:scale-110 transition-transform">
-              <i class="fa-solid fa-camera text-xs"></i>
+            <input type="file" ref="fileInput" @change="handleFileChange" accept="image/*" class="hidden" />
+          </div>
+          <div class="text-center sm:text-left space-y-2">
+            <h4 class="font-black text-lg text-[var(--color-text-main)]">Photo de profil</h4>
+            <p class="text-xs text-[var(--color-text-sub)]">Optimisez votre présence avec une photo réelle. JPG ou PNG
+              acceptés.</p>
+            <div class="flex gap-3 justify-center sm:justify-start">
+              <button @click="triggerFileInput"
+                class="text-xs font-black uppercase tracking-widest text-[var(--color-primary)] border-b-2 border-[var(--color-primary)] hover:opacity-70 transition-opacity pb-1">Changer
+                la photo</button>
+            </div>
+          </div>
+        </div>
+
+        <!-- Personal Info Form -->
+        <div class="space-y-6">
+          <div class="grid grid-cols-1 gap-6">
+            <div>
+              <label
+                class="block text-[10px] font-black text-[var(--color-text-sub)] uppercase tracking-[0.2em] mb-2 ml-1">Nom
+                Complet</label>
+              <input type="text" v-model="profileForm.nom"
+                class="w-full bg-[var(--color-bg)] border border-[var(--color-border)] rounded-2xl p-4 text-sm text-[var(--color-text-main)] focus:ring-2 focus:ring-[var(--color-primary)] outline-none transition-all shadow-inner" />
+            </div>
+            <div>
+              <label
+                class="block text-[10px] font-black text-[var(--color-text-sub)] uppercase tracking-[0.2em] mb-2 ml-1">Adresse
+                Email</label>
+              <input type="email" v-model="profileForm.email"
+                class="w-full bg-[var(--color-bg)] border border-[var(--color-border)] rounded-2xl p-4 text-sm text-[var(--color-text-main)] focus:ring-2 focus:ring-[var(--color-primary)] outline-none transition-all shadow-inner" />
+            </div>
+          </div>
+          <button @click="updateProfile" :disabled="loadingProfile"
+            class="w-full py-4 bg-[var(--color-primary)] text-white rounded-2xl font-black text-sm tracking-widest hover:opacity-90 transition-all flex items-center justify-center gap-2 shadow-xl shadow-primary/20 disabled:opacity-50">
+            <i v-if="loadingProfile" class="fas fa-circle-notch fa-spin"></i>
+            SAUVEGARDER LES MODIFICATIONS
+          </button>
+        </div>
+      </section>
+
+      <!-- Section Sécurité -->
+      <section
+        class="bg-[var(--color-surface)] border border-[var(--color-border)] rounded-3xl p-8 space-y-8 shadow-sm">
+        <div class="flex items-center gap-3 border-b border-[var(--color-border)] pb-6">
+          <div
+            class="w-8 h-8 rounded-lg bg-[var(--color-accent)]/10 flex items-center justify-center text-[var(--color-accent)]">
+            <i class="fa-solid fa-shield-halved"></i>
+          </div>
+          <h3 class="font-black text-[var(--color-text-main)] uppercase tracking-widest text-xs">Sécurité & Accès</h3>
+        </div>
+
+        <div class="space-y-6">
+          <p class="text-sm font-bold text-[var(--color-text-main)]">Changer votre mot de passe</p>
+          <div class="space-y-4">
+            <div class="relative">
+              <input type="password" v-model="passwordForm.current" placeholder="Mot de passe actuel"
+                class="w-full bg-[var(--color-bg)] border border-[var(--color-border)] rounded-2xl p-4 text-sm outline-none text-[var(--color-text-main)] focus:ring-2 focus:ring-[var(--color-accent)] transition-all shadow-inner" />
+            </div>
+            <div class="relative">
+              <input type="password" v-model="passwordForm.new" placeholder="Nouveau mot de passe"
+                class="w-full bg-[var(--color-bg)] border border-[var(--color-border)] rounded-2xl p-4 text-sm outline-none text-[var(--color-text-main)] focus:ring-2 focus:ring-[var(--color-accent)] transition-all shadow-inner" />
+            </div>
+            <div class="relative">
+              <input type="password" v-model="passwordForm.confirm" placeholder="Confirmer le nouveau mot de passe"
+                class="w-full bg-[var(--color-bg)] border border-[var(--color-border)] rounded-2xl p-4 text-sm outline-none text-[var(--color-text-main)] focus:ring-2 focus:ring-[var(--color-accent)] transition-all shadow-inner" />
+            </div>
+            <button @click="updatePassword" :disabled="loadingPassword"
+              class="w-full py-4 bg-[var(--color-accent)] text-white rounded-2xl font-black text-sm tracking-widest hover:opacity-90 transition-all flex items-center justify-center gap-2 shadow-xl shadow-pink-500/20 disabled:opacity-50">
+              <i v-if="loadingPassword" class="fas fa-circle-notch fa-spin"></i>
+              METTRE À JOUR LE MOT DE PASSE
             </button>
           </div>
-          <div class="text-center sm:text-left">
-            <h4 class="font-bold text-[var(--color-text-main)]">Photo de profil</h4>
-            <p class="text-xs text-[var(--color-text-sub)] mb-3">JPG, GIF ou PNG. Max 2MB.</p>
-            <div class="flex gap-2">
-              <button class="text-xs font-bold text-[var(--color-primary)] bg-[var(--color-primary)]/10 px-3 py-2 rounded-lg">Changer</button>
-              <button class="text-xs font-bold text-red-400 px-3 py-2">Supprimer</button>
-            </div>
-          </div>
-        </div>
-
-        <div class="space-y-4">
-          <div v-for="field in ['Nom', 'Email', 'Téléphone']" :key="field">
-            <label class="block text-xs font-bold text-[var(--color-text-sub)] uppercase mb-1 ml-1">{{ field }}</label>
-            <div class="relative group">
-              <input type="text" :placeholder="field" class="w-full bg-[var(--color-bg)] border border-[var(--color-border)] rounded-xl p-3 text-sm text-[var(--color-text-main)] focus:ring-2 focus:ring-[var(--color-primary)] outline-none transition-all" />
-              <button class="absolute right-3 top-1/2 -translate-y-1/2 text-[var(--color-primary)] text-xs font-bold hover:underline">Modifier</button>
-            </div>
-          </div>
         </div>
       </section>
 
-      <section class="bg-[var(--color-surface)] border border-[var(--color-border)] rounded-3xl p-6 space-y-6 text-[var(--color-text-main)]">
-        <div class="flex items-center gap-3 border-b border-[var(--color-border)] pb-4">
-          <i class="fa-solid fa-shield-halved text-[var(--color-accent)]"></i>
-          <h3 class="font-bold">Sécurité</h3>
-        </div>
-
-        <div class="p-4 bg-[var(--color-accent)]/5 border border-[var(--color-accent)]/20 rounded-2xl">
-          <p class="text-sm font-medium mb-4 text-[var(--color-text-main)]">Changer votre mot de passe</p>
-          <div class="space-y-3">
-            <input type="password" placeholder="Mot de passe actuel" class="w-full bg-[var(--color-bg)] border border-[var(--color-border)] rounded-xl p-3 text-sm outline-none text-[var(--color-text-main)]" />
-            <input type="password" placeholder="Nouveau mot de passe" class="w-full bg-[var(--color-bg)] border border-[var(--color-border)] rounded-xl p-3 text-sm outline-none text-[var(--color-text-main)]" />
-            <button class="w-full py-3 bg-[var(--color-accent)] text-white rounded-xl font-bold text-sm shadow-lg shadow-pink-500/20 hover:opacity-90 transition-all">
-              Mettre à jour le mot de passe
-            </button>
-          </div>
-        </div>
-      </section>
-
-      <section class="xl:col-span-2 space-y-4">
-        <div class="flex items-center justify-between text-[var(--color-text-main)]">
-          <h3 class="font-bold flex items-center gap-3">
-            <i class="fa-solid fa-map-location-dot text-[var(--color-primary)]"></i>
-            Carnet d'adresses
-          </h3>
-          <button class="text-sm font-bold text-[var(--color-primary)]">+ Ajouter une adresse</button>
-        </div>
-
-        <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
-          <div class="p-5 bg-[var(--color-surface)] border-2 border-[var(--color-primary)] rounded-3xl relative">
-            <span class="absolute top-4 right-4 text-[var(--color-primary)] text-xs font-black uppercase tracking-widest">Maison</span>
-            <p class="font-bold text-[var(--color-text-main)] mb-1">Christian H.</p>
-            <p class="text-sm text-[var(--color-text-sub)]">123 Rue de la Technologie</p>
-            <p class="text-sm text-[var(--color-text-sub)] mb-4">Douala, Cameroun</p>
-            <div class="flex gap-4">
-              <button class="text-xs font-bold text-[var(--color-primary)] hover:underline">Modifier</button>
-              <button class="text-xs font-bold text-red-500 hover:underline">Supprimer</button>
-            </div>
-          </div>
-
-          <div class="p-5 bg-[var(--color-surface)] border border-[var(--color-border)] rounded-3xl relative opacity-80 hover:opacity-100 transition-opacity">
-            <span class="absolute top-4 right-4 text-[var(--color-text-sub)] text-xs font-black uppercase tracking-widest">Bureau</span>
-            <p class="font-bold text-[var(--color-text-main)] mb-1">CH-Tech HQ</p>
-            <p class="text-sm text-[var(--color-text-sub)]">Immeuble Business Center</p>
-            <p class="text-sm text-[var(--color-text-sub)] mb-4">Yaoundé, Cameroun</p>
-            <div class="flex gap-4">
-              <button class="text-xs font-bold text-[var(--color-primary)] hover:underline">Modifier</button>
-              <button class="text-xs font-bold text-red-500 hover:underline">Supprimer</button>
-            </div>
-          </div>
-        </div>
-      </section>
-
+      <!-- Section Danger Area -->
       <section class="xl:col-span-2 mt-8">
-        <div class="bg-red-500/5 border border-red-500/20 rounded-3xl p-6 flex flex-col md:flex-row items-center justify-between gap-6">
-          <div class="text-center md:text-left">
-            <h3 class="font-bold text-red-500 text-lg">Supprimer mon compte</h3>
+        <div
+          class="bg-red-500/5 border border-red-500/20 rounded-3xl p-8 flex flex-col md:flex-row items-center justify-between gap-8">
+          <div class="text-center md:text-left space-y-2">
+            <h3 class="font-black text-red-500 text-xl tracking-tight">Zone de danger</h3>
             <p class="text-sm text-[var(--color-text-sub)] max-w-md">
-              Attention : Cette action est irréversible. Toutes vos données, commandes et favoris seront définitivement supprimés.
+              Attention : La suppression de votre compte est irréversible. Toutes vos données seront définitivement
+              perdues.
             </p>
           </div>
-          <button @click="handleDeleteAccount" class="px-8 py-3 bg-red-500 text-white rounded-xl font-bold hover:bg-red-600 transition-all shadow-lg shadow-red-500/20 whitespace-nowrap">
-            Supprimer définitivement
+          <button @click="confirmDeleteAccount"
+            class="px-10 py-4 bg-red-500 text-white rounded-2xl font-black text-xs uppercase tracking-[0.2em] hover:bg-red-600 transition-all shadow-xl shadow-red-500/10">
+            Supprimer le compte
           </button>
         </div>
       </section>
@@ -118,17 +137,150 @@
 </template>
 
 <script setup>
-const handleLogout = () => {
-  if(confirm("Voulez-vous vraiment vous déconnecter ?")) {
-    console.log("Déconnexion en cours...");
-    // Ici tu ajouteras ton authStore.logout()
+import { ref, reactive, computed, onMounted } from 'vue';
+import { useAuthStore } from '../stores/auth';
+import { useAlert } from '../composables/useAlert';
+import { useRouter } from 'vue-router';
+import apiClient from '../api';
+
+const authStore = useAuthStore();
+const alert = useAlert();
+const router = useRouter();
+
+const fileInput = ref(null);
+const loadingProfile = ref(false);
+const loadingPassword = ref(false);
+
+const profileForm = reactive({
+  nom: authStore.user?.nom || '',
+  email: authStore.user?.email || '',
+});
+
+const passwordForm = reactive({
+  current: '',
+  new: '',
+  confirm: '',
+});
+
+const profilePhotoUrl = computed(() => {
+  if (authStore.user?.photo) {
+    if (authStore.user.photo.startsWith('http')) return authStore.user.photo;
+    return `http://localhost:8000/storage/${authStore.user.photo}`;
   }
+  return `https://ui-avatars.com/api/?name=${encodeURIComponent(authStore.user?.nom || 'User')}&background=6366f1&color=fff&size=200`;
+});
+
+const triggerFileInput = () => {
+  fileInput.value.click();
+};
+
+const handleFileChange = async (event) => {
+  const file = event.target.files[0];
+  if (!file) return;
+
+  if (file.size > 2 * 1024 * 1024) {
+    alert.error({ title: 'Fichier trop volumineux', message: 'La taille maximale est de 2MB.' });
+    return;
+  }
+
+  const formData = new FormData();
+  formData.append('photo', file);
+
+  try {
+    const response = await apiClient.post('/profile/photo', formData, {
+      headers: { 'Content-Type': 'multipart/form-data' }
+    });
+    authStore.setUser(response.data.user);
+    alert.success({ title: 'Photo mise à jour', message: 'Votre nouvelle photo de profil a été enregistrée.' });
+  } catch (error) {
+    alert.error({ title: 'Erreur', message: 'Impossible de mettre à jour la photo.' });
+  }
+};
+
+const updateProfile = async () => {
+  loadingProfile.value = true;
+  try {
+    const response = await apiClient.post('/updateProfile', profileForm);
+    authStore.setUser(response.data.user);
+    alert.success({ title: 'Profil mis à jour', message: 'Vos informations personnelles ont été enregistrées avec succès.' });
+  } catch (error) {
+    alert.error({ title: 'Oups !', message: error.response?.data?.message || 'Erreur lors de la mise à jour.' });
+  } finally {
+    loadingProfile.value = false;
+  }
+};
+
+const updatePassword = async () => {
+  if (passwordForm.new !== passwordForm.confirm) {
+    alert.warning({ message: 'Les nouveaux mots de passe ne correspondent pas.' });
+    return;
+  }
+
+  loadingPassword.value = true;
+  try {
+    await apiClient.post('/updatePassword', {
+      current_password: passwordForm.current,
+      new_password: passwordForm.new,
+      new_password_confirmation: passwordForm.confirm,
+    });
+    alert.success({ title: 'Succès', message: 'Votre mot de passe a été modifié.' });
+    passwordForm.current = '';
+    passwordForm.new = '';
+    passwordForm.confirm = '';
+  } catch (error) {
+    alert.error({ title: 'Erreur de mot de passe', message: error.response?.data?.message || 'L\'ancien mot de passe est incorrect.' });
+  } finally {
+    loadingPassword.value = false;
+  }
+};
+
+const confirmLogout = () => {
+  alert.confirm({
+    title: 'Déconnexion',
+    message: 'Êtes-vous sûr de vouloir quitter votre session ?',
+    confirmText: 'Se déconnecter',
+    onConfirm: async () => {
+      await authStore.logout();
+      router.push({ name: 'Home' });
+      alert.info({ message: 'Vous avez été déconnecté.' });
+    }
+  });
+};
+
+const confirmDeleteAccount = () => {
+  alert.confirm({
+    title: 'ACTION IRREVERSIBLE',
+    message: 'Voulez-vous vraiment supprimer votre compte ? Toutes vos données seront effacées.',
+    confirmText: 'SUPPRIMER MON COMPTE',
+    type: 'error',
+    onConfirm: async () => {
+      try {
+        await apiClient.delete('/user');
+        await authStore.logout();
+        router.push({ name: 'Home' });
+        alert.success({ title: 'Compte supprimé', message: 'Votre compte a été supprimé avec succès.' });
+      } catch (error) {
+        alert.error({ message: 'Erreur lors de la suppression du compte.' });
+      }
+    }
+  });
+};
+</script>
+
+<style scoped>
+.animate-fade-in {
+  animation: fadeIn 0.5s ease-out;
 }
 
-const handleDeleteAccount = () => {
-  const check = confirm("ÊTES-VOUS SÛR ? Cette action est irréversible.");
-  if(check) {
-    console.log("Suppression du compte...");
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+    transform: translateY(10px);
+  }
+
+  to {
+    opacity: 1;
+    transform: translateY(0);
   }
 }
-</script>
+</style>

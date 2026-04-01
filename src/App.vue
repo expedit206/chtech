@@ -21,6 +21,7 @@
         <router-view />
       </main>
       <Footer v-if="!isMessagesPage" />
+      <CustomAlertDialog />
     </div>
   </div>
 </template>
@@ -31,13 +32,20 @@ import { useRoute } from "vue-router";
 import Footer from "./components/Footer.vue";
 import Header from "./components/Header.vue";
 import Sidebar from "./components/Dashboard/Sidebar.vue";
+import CustomAlertDialog from "./components/CustomAlertDialog.vue";
 import { useAuthStore } from "./stores/auth.js";
 import { useInteractionStore } from "./stores/interactions.js";
 import { useProductStore } from "./stores/products.js";
+import { useSeo } from "./composables/useSeo.js";
 
 const authStore = useAuthStore();
 const interactionStore = useInteractionStore();
 const route = useRoute();
+
+// Global SEO
+useSeo({
+  description: "Sasaye est la plateforme leader au Cameroun pour l'achat et la revente de produits et services. Sécurité, rapidité et fiabilité."
+});
 
 const isSidebarCollapsed = ref(false);
 const isMobileSidebarOpen = ref(false);

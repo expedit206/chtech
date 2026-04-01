@@ -271,10 +271,11 @@
         </div>
 
         <!-- Seller Info -->
-        <div class="p-4 rounded-2xl border" :style="{
-          backgroundColor: 'var(--color-bg)',
-          borderColor: 'var(--color-border)',
-        }">
+        <router-link :to="{ name: 'PublicProfile', params: { id: product.user?.id } }"
+          class="p-4 rounded-2xl border block hover:bg-black/5 transition-colors" :style="{
+            backgroundColor: 'var(--color-bg)',
+            borderColor: 'var(--color-border)',
+          }">
           <div class="flex items-center gap-3 mb-3">
             <img :src="product.user?.photo?.startsWith('http')
               ? product.user.photo
@@ -289,11 +290,11 @@
               <p class="text-xs flex items-center gap-1" :style="{ color: 'var(--color-text-sub)' }">
                 <i class="fas fa-map-marker-alt text-[10px]"></i>
                 {{ product.ville || "Cameroun" }}
-                <span class="ml-1 text-yellow-500">⭐ {{ product.rating.toFixed(1) }}</span>
+                <span class="ml-1 text-yellow-500">⭐ {{ product.rating.toFixed(1) || '4.8' }}</span>
               </p>
             </div>
           </div>
-          <button v-if="product.user?.id" @click="handleContactSeller"
+          <button v-if="product.user?.id" @click.prevent="handleContactSeller"
             class="w-full py-2.5 rounded-xl text-sm font-bold flex items-center justify-center gap-2 border-2 transition-all hover:scale-[1.02] active:scale-95"
             :style="{
               borderColor: 'var(--color-primary)',
@@ -308,7 +309,7 @@
           }">
             Données vendeur indisponibles
           </div>
-        </div>
+        </router-link>
       </div>
     </div>
   </main>
@@ -321,8 +322,19 @@ import { useProductStore } from "../stores/products.js";
 import { useInteractionStore } from "../stores/interactions.js";
 import { useAuthStore } from "../stores/auth.js";
 import { useMessageStore } from "../stores/messages.js";
-import { ArrowLeft } from "lucide-vue-next";
-import { Heart, Star, Forward, Eye } from "lucide-vue-next";
+import { ArrowLeft, Heart, Star, Forward, Eye } from "lucide-vue-next";
+import { useAlert } from "../composables/useAlert.js";
+import { useSeo } from "../composables/useSeo.js";
+
+const alert = useAlert();
+
+// Dynamic SEO
+useSeo({
+  title: computed(() => product.value.id ? `${product.value.name} - Sasaye` : 'Produit'),
+  description: computed(() => product.value.description),
+  image: computed(() => product.value.photos[0]),
+  type: 'product'
+});
 import { CONFIG } from "../config/index.js";
 const route = useRoute();
 const router = useRouter();
@@ -515,6 +527,10 @@ const handleShare = async () => {
     } else {
       await navigator.clipboard.writeText(window.location.href);
       await interactionStore.shareProduct(product.value.id);
+      alert.success({
+        title: "Lien copié !",
+        message: "Le lien du produit a été copié dans votre presse-papiers."
+      });
     }
   } catch (err) {
     if (err.name !== "AbortError") console.error("Erreur partage:", err);

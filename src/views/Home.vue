@@ -83,9 +83,15 @@ import CategoryCard from "../components/CategoryCard.vue";
 import ProductCard from "../components/ProductCard.vue";
 import SkeletonProductCard from "../components/skeletons/SkeletonProductCard.vue";
 import { Star, Search, X } from "lucide-vue-next";
+import { useSeo } from "../composables/useSeo.js";
 
 const router = useRouter();
 const productStore = useProductStore();
+
+useSeo({
+  title: "Vente et Achat au Cameroun - Marketplace Sasaye",
+  description: "Découvrez Sasaye, la plateforme de référence pour l'achat et la revente de produits informatiques, mode, électroménager et services au Cameroun."
+});
 
 
 const isLoading = computed(

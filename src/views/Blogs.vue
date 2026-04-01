@@ -3,14 +3,8 @@
 
   <main class="max-w-7xl mx-auto px-4 py-8">
     <!-- Header -->
-    <div
-      class="mb-12 border-l-4 pl-6"
-      :style="{ borderColor: 'var(--color-primary)' }"
-    >
-      <h2
-        class="text-4xl font-black tracking-tighter uppercase"
-        :style="{ color: 'var(--color-text-main)' }"
-      >
+    <div class="mb-12 border-l-4 pl-6" :style="{ borderColor: 'var(--color-primary)' }">
+      <h2 class="text-4xl font-black tracking-tighter uppercase" :style="{ color: 'var(--color-text-main)' }">
         Conseils &amp; Actualités
       </h2>
       <p class="text-lg" :style="{ color: 'var(--color-text-sub)' }">
@@ -19,31 +13,19 @@
     </div>
 
     <!-- Skeleton while loading -->
-    <div
-      v-if="isLoading"
-      class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6"
-    >
+    <div v-if="isLoading" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
       <SkeletonBlogCard v-for="i in 8" :key="i" />
     </div>
 
     <!-- Blog grid -->
-    <div
-      v-else
-      class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6"
-    >
+    <div v-else class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
       <BlogCard v-for="blog in blogs" :key="blog.id" :blog="blog" />
     </div>
 
     <!-- Empty state -->
     <div v-if="!isLoading && blogs.length === 0" class="py-24 text-center">
-      <i
-        class="fas fa-newspaper text-5xl mb-4 opacity-20"
-        :style="{ color: 'var(--color-text-sub)' }"
-      ></i>
-      <p
-        class="text-lg font-semibold"
-        :style="{ color: 'var(--color-text-sub)' }"
-      >
+      <i class="fas fa-newspaper text-5xl mb-4 opacity-20" :style="{ color: 'var(--color-text-sub)' }"></i>
+      <p class="text-lg font-semibold" :style="{ color: 'var(--color-text-sub)' }">
         Aucun article disponible pour le moment.
       </p>
     </div>
@@ -55,6 +37,12 @@ import { ref, onMounted } from "vue";
 import BlogCard from "../components/BlogCard.vue";
 import SkeletonBlogCard from "../components/skeletons/SkeletonBlogCard.vue";
 import apiClient from "../api/index.js";
+import { useSeo } from "../composables/useSeo.js";
+
+useSeo({
+  title: "Blogs & Conseils - Sasaye",
+  description: "Retrouvez tous nos conseils pour mieux vendre et acheter en toute sécurité sur Sasaye. Actualités, guides et astuces e-commerce au Cameroun."
+});
 
 const isLoading = ref(true);
 const blogs = ref([]);

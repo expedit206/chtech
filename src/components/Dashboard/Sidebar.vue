@@ -1,70 +1,41 @@
 <template>
   <div>
-    <div
-      v-if="isMobileOpen"
-      @click="emit('close-mobile')"
-      class="fixed inset-0 bg-black/50 z-[65] md:hidden transition-opacity"
-    ></div>
+    <div v-if="isMobileOpen" @click="emit('close-mobile')"
+      class="fixed inset-0 bg-black/50 z-[65] md:hidden transition-opacity"></div>
 
-    <aside
-      :class="[
-        'fixed top-0 left-0 h-screen z-[70] transition-all duration-300 ease-in-out border-r flex flex-col',
-        'bg-[var(--color-surface)] border-[var(--color-border)]',
-        // Desktop : On gère la largeur fixe
-        collapsed ? 'md:w-20' : 'md:w-64',
-        // Mobile : Translation complète
-        isMobileOpen
-          ? 'translate-x-0 w-64'
-          : '-translate-x-full md:translate-x-0',
-      ]"
-    >
-      <div
-        class="p-4 flex items-center justify-between border-b border-[var(--color-border)] min-h-[70px]"
-      >
-        <div
-          v-show="!collapsed || isMobileOpen"
-          class="flex items-center gap-3 overflow-hidden"
-        >
-          <div
-            class="w-8 h-8 bg-[var(--color-primary)] rounded-lg flex items-center justify-center shrink-0"
-          >
+    <aside :class="[
+      'fixed top-0 left-0 h-screen z-[70] transition-all duration-300 ease-in-out border-r flex flex-col',
+      'bg-[var(--color-surface)] border-[var(--color-border)]',
+      // Desktop : On gère la largeur fixe
+      collapsed ? 'md:w-20' : 'md:w-64',
+      // Mobile : Translation complète
+      isMobileOpen
+        ? 'translate-x-0 w-64'
+        : '-translate-x-full md:translate-x-0',
+    ]">
+      <div class="p-4 flex items-center justify-between border-b border-[var(--color-border)] min-h-[70px]">
+        <div v-show="!collapsed || isMobileOpen" class="flex items-center gap-3 overflow-hidden">
+          <div class="w-8 h-8 bg-[var(--color-primary)] rounded-lg flex items-center justify-center shrink-0">
             <CloudLightning :size="16" :stroke-width="3" class="text-white" />
           </div>
-          <span class="font-bold text-[var(--color-text-main)] truncate"
-            >Sasaye</span
-          >
+          <span class="font-bold text-[var(--color-text-main)] truncate">Sasaye</span>
         </div>
 
-        <button
-          @click="emit('toggle')"
-          class="hidden md:block p-2 rounded-lg hover:bg-[var(--color-primary)]/10 text-[var(--color-text-sub)]"
-        >
-          <component
-            :is="collapsed ? Indent : Outdent"
-            class="transition-transform duration-200"
-            :size="20"
-          />
+        <button @click="emit('toggle')"
+          class="hidden md:block p-2 rounded-lg hover:bg-[var(--color-primary)]/10 text-[var(--color-text-sub)]">
+          <component :is="collapsed ? Indent : Outdent" class="transition-transform duration-200" :size="20" />
         </button>
 
-        <button
-          @click="emit('close-mobile')"
-          class="md:hidden p-2 text-[var(--color-text-sub)]"
-        >
+        <button @click="emit('close-mobile')" class="md:hidden p-2 text-[var(--color-text-sub)]">
           <X class="text-xl" :size="24" />
         </button>
       </div>
 
       <nav class="flex-1 p-3 space-y-4 overflow-x-hidden">
-        <div
-          v-for="section in menuSections"
-          :key="section.title"
-          class="space-y-1"
-        >
-          <div
-            v-show="!collapsed || isMobileOpen"
+        <div v-for="section in menuSections" :key="section.title" class="space-y-1">
+          <div v-show="!collapsed || isMobileOpen"
             class="px-3 py-1.5 text-[10px] font-black uppercase tracking-widest opacity-40 mt-3 first:mt-0"
-            :style="{ color: 'var(--color-text-sub)' }"
-          >
+            :style="{ color: 'var(--color-text-sub)' }">
             {{ section.title }}
           </div>
           <!-- <RouterLink
@@ -98,36 +69,21 @@
             </span>
           </RouterLink> -->
 
-          <RouterLink
-            v-for="item in section.items"
-            :key="item.name"
-            :to="item.route"
-            @click="emit('close-mobile')"
+          <RouterLink v-for="item in section.items" :key="item.name" :to="item.route" @click="emit('close-mobile')"
             class="flex items-center gap-4 p-3 rounded-xl transition-all group relative text-[var(--color-text-sub)] hover:text-[var(--color-primary)] hover:bg-[var(--color-primary)]/10"
-            active-class="bg-[var(--color-primary)]/10 text-[var(--color-primary)] font-bold shadow-sm"
-          >
+            active-class="bg-[var(--color-primary)]/10 text-[var(--color-primary)] font-bold shadow-sm">
             <!-- Icône -->
             <div class="w-6 flex justify-center items-center shrink-0">
-              <component
-                :is="item.icon"
-                :size="20"
-                class="transition-transform group-hover:scale-110"
-              />
+              <component :is="item.icon" :size="20" class="transition-transform group-hover:scale-110" />
             </div>
 
             <!-- Texte normal si sidebar ouverte -->
-            <span
-              v-show="!collapsed || isMobileOpen"
-              class="font-medium whitespace-nowrap transition-opacity"
-            >
+            <span v-show="!collapsed || isMobileOpen" class="font-medium whitespace-nowrap transition-opacity">
               {{ item.name }}
             </span>
 
             <!-- Tooltip si sidebar réduite -->
-            <span
-              v-if="collapsed"
-              class="tooltip-text absolute left-full top-1/2 -translate-y-1/2 ml-2"
-            >
+            <span v-if="collapsed" class="tooltip-text absolute left-full top-1/2 -translate-y-1/2 ml-2">
               {{ item.name }}
             </span>
           </RouterLink>
@@ -135,31 +91,19 @@
       </nav>
 
       <div class="p-3 border-t border-[var(--color-border)]">
-        <button
-          @click="auth.logout"
-          class="flex items-center gap-4 p-3 w-full rounded-xl text-[var(--color-accent)] hover:bg-[var(--color-accent)]/10 transition-colors"
-        >
+        <button @click="auth.logout"
+          class="flex items-center gap-4 p-3 w-full rounded-xl text-[var(--color-accent)] hover:bg-[var(--color-accent)]/10 transition-colors">
           <div class="w-6 flex justify-center items-center shrink-0">
             <LogOut :size="20" class="text-[var(--color-accent)]" />
           </div>
-          <span
-            v-show="!collapsed || isMobileOpen"
-            class="font-medium text-left"
-            >Déconnexion</span
-          >
+          <span v-show="!collapsed || isMobileOpen" class="font-medium text-left">Déconnexion</span>
         </button>
       </div>
     </aside>
 
-    <button
-      @click="emit('open-mobile')"
-      v-if="!isMobileOpen"
-      class="md:hidden fixed top-1/2 -translate-y-1/2 left-0 w-7 h-20 bg-[var(--color-primary)] text-white rounded-r-xl shadow-lg z-30 flex items-center justify-center gap-1 px-1 transition-all w-9 active:scale-95 group animate-pulse-dashboard"
-    >
-      <span
-        class="text-[10px] font-semibold tracking-wide"
-        style="writing-mode: vertical-rl; text-orientation: mixed"
-      >
+    <button @click="emit('open-mobile')" v-if="!isMobileOpen"
+      class="md:hidden fixed top-1/2 -translate-y-1/2 left-0 w-7 h-20 bg-[var(--color-primary)] text-white rounded-r-xl shadow-lg z-30 flex items-center justify-center gap-1 px-1 transition-all w-9 active:scale-95 group animate-pulse-dashboard">
+      <span class="text-[10px] font-semibold tracking-wide" style="writing-mode: vertical-rl; text-orientation: mixed">
         Tableau de bord
       </span>
 
@@ -249,6 +193,7 @@ const menuSections = computed(() => {
   sections.push({
     title: "Compte",
     items: [
+      { name: "Profil Public", icon: UserCircle, route: { name: "PublicProfile", params: { id: auth.user?.id } } },
       { name: "Paramètres", icon: Settings, route: { name: "Settings" } },
       { name: "Aide & Support", icon: Headphones, route: { name: "Support" } },
     ],
@@ -260,6 +205,7 @@ const menuSections = computed(() => {
 
 <style scoped>
 @keyframes pulse-horizontal {
+
   0%,
   40%,
   100% {

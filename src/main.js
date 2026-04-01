@@ -7,11 +7,14 @@ import './style.css'
 // import  from "lucide-vue-next";
 import App from './App.vue'
 
+import { createHead } from '@unhead/vue'
 import router from './router'
 
 const app = createApp(App)
+const head = createHead()
 
 app.use(createPinia())
 app.use(router)
 app.use(Toast)
+app.use(head)
 app.mount('#app')

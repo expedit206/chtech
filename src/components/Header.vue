@@ -131,10 +131,9 @@
             <Plus :size="16" :stroke-width="3" class="text-sm" />
           </router-link>
 
-          <div v-if="auth.isAuthenticated" class="relative" ref="userMenuRef">
             <div
               @click="toggleUserMenu"
-              class="p-0.5 rounded-full border-2 cursor-pointer transition-transform active:scale-95"
+              class="p-0.5 rounded-full border-2 cursor-pointer transition-transform active:scale-95 flex items-center justify-center shrink-0"
               :style="{
                 borderColor: isUserMenuOpen
                   ? 'var(--color-primary)'
@@ -142,10 +141,7 @@
               }"
             >
               <img
-                :src="
-                  auth.user?.avatar ||
-                  `https://ui-avatars.com/api/?name=${auth.user?.nom || 'U'}&background=6366f1&color=fff`
-                "
+                :src="userPhotoUrl"
                 class="w-7 h-7 rounded-full object-cover"
               />
             </div>
@@ -186,12 +182,12 @@
 
                 <router-link
                   @click="isUserMenuOpen = false"
-                  :to="{ name: 'Dashboard' }"
+                  :to="{ name: 'PublicProfile', params: { id: auth.user?.id } }"
                   class="flex items-center gap-3 px-4 py-3 text-sm hover:bg-black/5 transition-colors"
                   :style="{ color: 'var(--color-text-main)' }"
                 >
                   <UserCircle class="w-5 h-5 opacity-70" />
-                  <span>Mon Profil</span>
+                  <span>Voir mon profil</span>
                 </router-link>
 
                 <router-link
@@ -582,6 +578,14 @@ const productStore = useProductStore();
 const route = useRoute();
 const router = useRouter();
 const { theme, toggleTheme } = useTheme();
+
+const userPhotoUrl = computed(() => {
+  if (auth.user?.photo) {
+    if (auth.user.photo.startsWith('http')) return auth.user.photo;
+    return `http://localhost:8000/storage/${auth.user.photo}`;
+  }
+  return `https://ui-avatars.com/api/?name=${encodeURIComponent(auth.user?.nom || 'U')}&background=6366f1&color=fff&size=64`;
+});
 
 defineProps({
   isSidebarCollapsed: Boolean,

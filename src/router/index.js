@@ -80,6 +80,11 @@ const routes = [
         component: () => import("../views/profile/MyProducts.vue"),
       },
       {
+        path: ":id/public", // Correspond à /profile/:id/public ou /profile/1/public
+        name: "PublicProfile",
+        component: () => import("../views/profile/PublicProfile.vue"),
+      },
+      {
         path: "devenir-vendeur",
         name: "become-vendeur",
         component: () => import("../views/profile/BecomeSupplier.vue"),

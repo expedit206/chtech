@@ -86,6 +86,9 @@ import {
   Forward,
   ArrowRight,
 } from "lucide-vue-next";
+import { useAlert } from "../composables/useAlert.js";
+
+const alert = useAlert();
 
 const interactionStore = useInteractionStore();
 const authStore = useAuthStore();
@@ -201,8 +204,10 @@ const recordViewOnce = () => {
 const handleToggleFavorite = async () => {
   try {
     if (!authStore.isAuthenticated) {
-      alert("Veuillez vous connecter pour ajouter en favori");
-      // TODO: Rediriger vers la page de connexion
+      alert.warning({
+        title: "Connexion requise",
+        message: "Veuillez vous connecter pour ajouter ce produit à vos favoris."
+      });
       return;
     }
 
@@ -226,7 +231,11 @@ const handleShare = async () => {
     } else {
       // Fallback: copier l'URL et enregistrer
       await interactionStore.shareProduct(props.product.id);
-      alert("Lien copié! 📋");
+      navigator.clipboard.writeText(`${window.location.origin}/produit/${props.product.id}`);
+      alert.success({
+        title: "Lien copié",
+        message: "Le lien du produit a été copié dans votre presse-papiers."
+      });
     }
   } catch (err) {
     if (err.name !== "AbortError") {
