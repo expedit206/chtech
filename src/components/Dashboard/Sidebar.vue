@@ -131,6 +131,7 @@ import {
   Box,
   PackageCheck,
   MessageCircle,
+  UserCircle,
 } from "lucide-vue-next";
 import { useAuthStore } from "../../stores/auth.js";
 const auth = useAuthStore();

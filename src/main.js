@@ -7,7 +7,7 @@ import './style.css'
 // import  from "lucide-vue-next";
 import App from './App.vue'
 
-import { createHead } from '@unhead/vue'
+import { createHead } from '@unhead/vue/client'
 import router from './router'
 
 const app = createApp(App)
