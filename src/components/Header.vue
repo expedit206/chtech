@@ -34,7 +34,7 @@
               :to="{ name: 'Home' }"
               @click="productStore.searchQuery = ''"
             >
-              Sasaye
+              𝐒𝐚𝐬𝐚𝐲𝐞
             </RouterLink>
           </h1>
         </div>

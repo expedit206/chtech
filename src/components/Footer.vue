@@ -25,30 +25,36 @@ import { RouterLink } from "vue-router";
             semaine.
           </p>
         </div>
-        <div class="flex w-full md:w-auto gap-2 relative">
-          <!-- Input avec icône -->
-          <input
-            type="tel"
-            placeholder="votre numéro de téléphone"
-            class="px-4 py-2 pr-12 rounded-lg flex-1 md:w-64 outline-none border transition-colors duration-200 focus:ring-2 focus:ring-blue-500"
-            :style="{
-              backgroundColor: 'var(--color-bg)',
-              borderColor: 'var(--color-border)',
-            }"
-          />
+        <div class="flex flex-col w-full md:w-auto gap-2">
+          <!-- Label -->
+          <label class="text-sm font-medium opacity-80">
+            Recevez les promos à temps !
+          </label>
 
-          <!-- Icône de soumission à l'intérieur -->
-          <button
-            class="absolute right-2 top-1/2 -translate-y-1/2 p-2 rounded-full hover:bg-blue-600 transition-colors"
-            :style="{
-              backgroundColor: 'var(--color-primary)',
-              color: 'var(--color-pure)',
-            }"
-            title="Cliquez pour vous inscrire"
-          >
-            <!-- Exemple avec icône Lucide -->
-            <Send class="w-5 h-5" />
-          </button>
+          <!-- Input + bouton -->
+          <div class="relative">
+            <input
+              type="tel"
+              placeholder="675 05 78 01"
+              class="w-full px-4 py-2 pr-12 rounded-lg outline-none border transition-colors duration-200 focus:ring-2 focus:ring-blue-500"
+              :style="{
+                backgroundColor: 'var(--color-bg)',
+                borderColor: 'var(--color-border)',
+              }"
+            />
+
+            <!-- Icône -->
+            <button
+              class="absolute right-2 top-1/2 -translate-y-1/2 p-1 rounded-full hover:bg-blue-600 transition-colors active:scale-95"
+              :style="{
+                backgroundColor: 'var(--color-primary)',
+                color: 'var(--color-pure)',
+              }"
+              title="S'abonner"
+            >
+              <Send class="w-4 h-4" />
+            </button>
+          </div>
         </div>
       </div>
     </div>
@@ -61,7 +67,7 @@ import { RouterLink } from "vue-router";
           class="text-2xl font-black tracking-tighter mb-4"
           :style="{ color: 'var(--color-primary)' }"
         >
-          chtech
+          Sasaye
         </h2>
         <p class="text-sm leading-relaxed opacity-70 mb-6">
           La première marketplace dédiée aux solutions technologiques
@@ -203,7 +209,7 @@ import { RouterLink } from "vue-router";
       <div
         class="max-w-7xl mx-auto px-4 flex flex-col md:row justify-between items-center gap-4 text-[10px] uppercase tracking-widest opacity-60"
       >
-        <p>© {{ new Date().getFullYear() }} CHTECH. TOUS DROITS RÉSERVÉS.</p>
+        <p>© {{ new Date().getFullYear() }} SASAYE. TOUS DROITS RÉSERVÉS.</p>
         <div class="flex gap-6">
           <RouterLink :to="{ name: 'mentions_legales' }"
             >Mentions Légales</RouterLink
