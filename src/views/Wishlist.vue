@@ -32,7 +32,7 @@
         :product="product"
         :show-views="false"
         :show-share="false"
-        @click="goToProduct(product.id)"
+        @click="goToProduct(product.slug || product.id)"
       />
     </div>
     <!-- Empty state -->
@@ -88,8 +88,8 @@ const interactionStore = useInteractionStore();
 const router = useRouter();
 const isLoading = ref(true);
 
-const goToProduct = (id) => {
-  router.push({ name: "DetailProduit", params: { id } });
+const goToProduct = (slugOrId) => {
+  router.push({ name: "DetailProduit", params: { slug: slugOrId } });
 };
 
 const favorites = computed(() => {
@@ -106,6 +106,7 @@ const favorites = computed(() => {
       : `https://ui-avatars.com/api/?name=${encodeURIComponent(p.nom || "P")}&size=200&background=efefef`,
     category: p.category,
     is_promoted: p.is_promoted,
+    slug: p.slug && !p.slug.endsWith(`-${p.id}`) ? `${p.slug}-${p.id}` : (p.slug || p.id),
   }));
 });
 

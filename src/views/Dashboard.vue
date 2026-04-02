@@ -177,7 +177,7 @@
           :key="fav.id"
           class="bg-[var(--color-surface)] border border-[var(--color-border)] p-4 rounded-2xl flex items-center gap-4 hover:border-[var(--color-primary)] transition-all cursor-pointer group"
           @click="
-            $router.push({ name: 'DetailProduit', params: { id: fav.id } })
+            $router.push({ name: 'DetailProduit', params: { slug: fav.slug || fav.id } })
           "
         >
           <div
@@ -313,6 +313,7 @@ onMounted(async () => {
     const favList = interactionStore.favorites || [];
     recentFavorites.value = favList.slice(0, 3).map((p) => ({
       id: p.id,
+      slug: (p.slug && !p.slug.endsWith(`-${p.id}`)) ? `${p.slug}-${p.id}` : (p.slug || p.id),
       name: p.nom || p.name || "Produit",
       price: `${Number(p.prix || 0).toLocaleString("fr-FR")} FCFA`,
       image: p.photos?.[0]

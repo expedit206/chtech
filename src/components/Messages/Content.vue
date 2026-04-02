@@ -76,7 +76,7 @@
                 v-if="message.product?.id"
                 :to="{
                   name: 'DetailProduit',
-                  params: { id: message.product.id },
+                  params: { slug: (message.product.slug && !message.product.slug.endsWith(`-${message.product.id}`)) ? `${message.product.slug}-${message.product.id}` : (message.product.slug || message.product.id) },
                 }"
                 class="flex items-center gap-2 mb-2 bg-black/10 p-2 rounded-lg hover:bg-black/20 transition text-sm font-medium"
                 :class="

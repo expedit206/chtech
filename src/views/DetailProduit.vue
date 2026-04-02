@@ -328,13 +328,7 @@ import { useSeo } from "../composables/useSeo.js";
 
 const alert = useAlert();
 
-// Dynamic SEO
-useSeo({
-  title: computed(() => product.value.id ? `${product.value.name} - Sasaye` : 'Produit'),
-  description: computed(() => product.value.description),
-  image: computed(() => product.value.photos[0]),
-  type: 'product'
-});
+
 import { CONFIG } from "../config/index.js";
 const route = useRoute();
 const router = useRouter();
@@ -414,6 +408,14 @@ const product = ref({
   condition: "Neuf",
 });
 
+// Dynamic SEO
+useSeo({
+  title: computed(() => product.value.id ? `${product.value.name} - Sasaye` : 'Produit'),
+  description: computed(() => product.value.description),
+  image: computed(() => product.value.photos[0]),
+  type: 'product'
+});
+
 const isFavorited = computed(() =>
   interactionStore.isFavorited(product.value.id),
 );
@@ -443,10 +445,10 @@ const getImageUrl = (photo) => {
 
 onMounted(async () => {
   try {
-    const productId = route.params.id;
-    if (!productId) throw new Error("ID du produit manquant");
+    const slug = route.params.slug;
+    if (!slug) throw new Error("Identifiant du produit manquant");
 
-    const produit = await productStore.getProductById(productId);
+    const produit = await productStore.getProductById(slug);
 
     // Map all photos
     const allPhotos = (produit.photos?.length ? produit.photos : []).map(
@@ -493,8 +495,8 @@ onMounted(async () => {
       ],
     };
 
-    interactionStore.recordView(productId);
-    interactionStore.fetchProductCounts(productId);
+    interactionStore.recordView(produit.id);
+    interactionStore.fetchProductCounts(produit.id);
   } catch (err) {
     error.value = err.message;
     console.error("Erreur lors du chargement du produit:", err);

@@ -220,23 +220,24 @@ const handleToggleFavorite = async () => {
 const handleShare = async () => {
   try {
     // Vérifier si l'API de partage native est disponible
-    if (navigator.share) {
-      await navigator.share({
-        title: props.product.name,
-        text: `Découvrez: ${props.product.name}`,
-        url: `${window.location.origin}/produit/${props.product.id}`,
-      });
-      // L'enregistrement du partage se fera automatiquement
-      await interactionStore.shareProduct(props.product.id);
-    } else {
-      // Fallback: copier l'URL et enregistrer
-      await interactionStore.shareProduct(props.product.id);
-      navigator.clipboard.writeText(`${window.location.origin}/produit/${props.product.id}`);
-      alert.success({
-        title: "Lien copié",
-        message: "Le lien du produit a été copié dans votre presse-papiers."
-      });
-    }
+      const productUrl = `${window.location.origin}/produit/${props.product.slug || props.product.id}`;
+      if (navigator.share) {
+        await navigator.share({
+          title: props.product.name,
+          text: `Découvrez: ${props.product.name}`,
+          url: productUrl,
+        });
+        // L'enregistrement du partage se fera automatiquement
+        await interactionStore.shareProduct(props.product.id);
+      } else {
+        // Fallback: copier l'URL et enregistrer
+        await interactionStore.shareProduct(props.product.id);
+        navigator.clipboard.writeText(productUrl);
+        alert.success({
+          title: "Lien copié",
+          message: "Le lien du produit a été copié dans votre presse-papiers."
+        });
+      }
   } catch (err) {
     if (err.name !== "AbortError") {
       console.error("Erreur partage:", err);

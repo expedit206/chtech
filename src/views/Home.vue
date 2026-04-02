@@ -69,7 +69,7 @@
       </div>
 
       <ProductCard v-else v-for="product in productsPart1" :key="product.id" :product="product"
-        @click="goToProduct(product.id)" />
+        @click="goToProduct(product.slug || product.id)" />
     </div>
   </div>
 </template>
@@ -141,6 +141,6 @@ onMounted(() => {
   productStore.fetchProducts();
 });
 
-const goToProduct = (id) =>
-  router.push({ name: "DetailProduit", params: { id } });
+const goToProduct = (slugOrId) =>
+  router.push({ name: "DetailProduit", params: { slug: slugOrId } });
 </script>

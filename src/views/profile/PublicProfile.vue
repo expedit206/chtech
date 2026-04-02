@@ -95,7 +95,7 @@
             <div v-else-if="activeTab === 'products'"
                 class="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 gap-6">
                 <ProductCard v-for="product in products" :key="product.id" :product="product"
-                    @click="router.push({ name: 'DetailProduit', params: { id: product.id } })" />
+                    @click="router.push({ name: 'DetailProduit', params: { slug: product.slug || product.id } })" />
                 <div v-if="products.length === 0" class="col-span-full py-20 text-center opacity-40">
                     <i class="fas fa-box-open text-6xl mb-4"></i>
                     <p class="font-bold">Aucun produit en vente pour le moment.</p>
@@ -176,6 +176,7 @@ const fetchUserItems = async () => {
             ...p,
             id: p.id,
             name: p.nom,
+            slug: (p.slug && !p.slug.endsWith(`-${p.id}`)) ? `${p.slug}-${p.id}` : (p.slug || p.id),
             price: `${Number(p.prix).toLocaleString()} FCFA`,
             image: p.photos?.[0] ? `http://localhost:8000/storage/${p.photos[0]}` : '/placeholder.png'
         }));

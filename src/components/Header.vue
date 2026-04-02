@@ -451,7 +451,7 @@ const closeSearchOverlay = () => {
 const clickResult = (item) => {
   saveHistory(item.nom || item.name);
   closeSearchOverlay();
-  router.push({ name: "DetailProduit", params: { id: item.id } });
+  router.push({ name: "DetailProduit", params: { slug: item.slug || item.id } });
 };
 
 const handleFinalSearch = () => {
@@ -500,7 +500,10 @@ const performLiveSearch = async (query) => {
       params: { q: query, limit: 10 },
     });
     if (response.data.success && response.data.data) {
-      const products = response.data.data.products || [];
+      const products = (response.data.data.products || []).map(p => ({
+          ...p,
+          slug: (p.slug && !p.slug.endsWith(`-${p.id}`)) ? `${p.slug}-${p.id}` : (p.slug || p.id)
+      }));
       const services = response.data.data.services || [];
       liveResults.value = [...products, ...services].slice(0, 10);
     }

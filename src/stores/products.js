@@ -24,7 +24,8 @@ export const useProductStore = defineStore('products', () => {
       user: produit.user,
       quantity: produit.quantite,
       reviews: produit.nombre_avis,
-      ...produit
+      ...produit,
+      slug: (produit.slug && !produit.slug.endsWith(`-${produit.id}`)) ? `${produit.slug}-${produit.id}` : (produit.slug || produit.id)
     }));
   });
 
@@ -105,22 +106,25 @@ export const useProductStore = defineStore('products', () => {
     }
   }
 
-  async function getProductById(id) {
+  async function getProductById(idOrSlug) {
     // 1. Chercher dans le cache local du store
-    const localProduct = products.value.find(p => p.id === id);
+    const localProduct = products.value.find(p => 
+      String(p.id) === String(idOrSlug) || 
+      p.slug === idOrSlug || 
+      ((p.slug && p.slug + '-' + p.id === idOrSlug))
+    );
     if (localProduct) {
       return localProduct;
     }
 
     // 2. Sinon, faire l'appel API
     try {
-      const response = await apiClient.get(`/produits/${id}`);
+      const response = await apiClient.get(`/produits/${idOrSlug}`);
       const product = response.data.data.produit;
       
       // Optionnel : l'ajouter au cache local s'il n'y est pas
       if (product && !products.value.some(p => p.id === product.id)) {
         // On ne l'ajoute que s'il est complet, pour éviter de polluer la liste principale
-        // mais pour l'instant on se contente de le retourner
       }
       
       return product;
