@@ -14,7 +14,7 @@
         </h1>
         <p class="text-[var(--color-text-sub)] text-lg max-w-2xl mx-auto">
           Informations obligatoires concernant l'éditeur et l'hébergeur de la
-          plateforme CH-TECH.
+          plateforme SASAYEE.
         </p>
       </div>
     </header>
@@ -40,7 +40,7 @@
                     class="font-bold text-[var(--color-text-main)] uppercase"
                     >Dénomination :</span
                   >
-                  CH-TECH Solutions
+                  SASAYEE Solutions
                 </p>
                 <p>
                   <span
@@ -68,7 +68,7 @@
                     class="font-bold text-[var(--color-text-main)] uppercase"
                     >Email :</span
                   >
-                  legal@ch-tech.com
+                  legal@sasayee.com
                 </p>
                 <p>
                   <span
@@ -93,7 +93,7 @@
           <div class="flex-1">
             <h2 class="text-xl font-bold mb-4">Hébergement</h2>
             <p class="text-sm text-[var(--color-text-sub)] leading-relaxed">
-              Le site <strong>CH-TECH</strong> est hébergé par : <br />
+              Le site <strong>SASAYEE</strong> est hébergé par : <br />
               <span class="font-bold text-[var(--color-text-main)]"
                 >Hostinger</span
               ><br />
@@ -121,7 +121,7 @@
             <p class="text-sm text-[var(--color-text-sub)] leading-relaxed">
               Sauf mention contraire, tous les éléments accessibles sur le site
               (textes, images, graphismes, logo, icônes, sons, logiciels)
-              restent la propriété exclusive de CH-TECH. Toute exploitation non
+              restent la propriété exclusive de SASAYEE. Toute exploitation non
               autorisée du site ou de l’un des éléments qu’il contient sera
               considérée comme constitutive d’une contrefaçon.
             </p>
@@ -164,7 +164,7 @@
           Une question d'ordre juridique ?
         </p>
         <a
-          href="mailto:legal@ch-tech.com"
+          href="mailto:legal@sasayee.com"
           class="inline-flex items-center gap-3 px-6 py-3 rounded-xl bg-[var(--color-text-main)] text-[var(--color-pure)] font-bold hover:scale-105 transition-transform"
           :style="{
             backgroundColor: 'var(--color-primary)',
@@ -188,4 +188,10 @@ import {
   ArrowRight,
   Mail,
 } from "lucide-vue-next";
+
+import { useSeo } from "../composables/useSeo.js";
+useSeo({
+  title: "Mentions Légales - SASAYEE",
+  description: "Informations légales concernant SASAYEE : éditeur, hébergeur, propriété intellectuelle et conformité au Cameroun."
+});
 </script>

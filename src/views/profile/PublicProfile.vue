@@ -114,6 +114,8 @@
 </template>
 
 <script setup>
+import { CONFIG } from '../../config/index.js';
+
 import { ref, computed, onMounted, watch } from 'vue';
 import { useRoute, useRouter } from 'vue-router';
 import apiClient from '../../api';
@@ -130,7 +132,7 @@ const authStore = useAuthStore();
 // Dynamic SEO
 useSeo({
     title: computed(() => user.value?.nom ? `${user.value.nom} - Profil Vendeur` : 'Profil'),
-    description: computed(() => user.value?.nom ? `Découvrez les produits de ${user.value.nom} sur Sasaye. ${user.value.produits_count} produits disponibles.` : 'Profil vendeur sur Sasaye'),
+    description: computed(() => user.value?.nom ? `Découvrez les produits de ${user.value.nom} sur SASAYEE. ${user.value.produits_count} produits disponibles.` : 'Profil vendeur sur SASAYEE'),
     image: computed(() => userPhotoUrl.value),
     type: 'profile'
 });
@@ -149,7 +151,7 @@ const tabs = [
 const userPhotoUrl = computed(() => {
     if (user.value?.photo) {
         if (user.value.photo.startsWith('http')) return user.value.photo;
-        return `http://localhost:8000/storage/${user.value.photo}`;
+        return `${CONFIG.API_BASE_URL}/storage/${user.value.photo}`;
     }
     return `https://ui-avatars.com/api/?name=${encodeURIComponent(user.value?.nom || 'User')}&background=6366f1&color=fff&size=200`;
 });
@@ -178,7 +180,7 @@ const fetchUserItems = async () => {
             name: p.nom,
             slug: (p.slug && !p.slug.endsWith(`-${p.id}`)) ? `${p.slug}-${p.id}` : (p.slug || p.id),
             price: `${Number(p.prix).toLocaleString()} FCFA`,
-            image: p.photos?.[0] ? `http://localhost:8000/storage/${p.photos[0]}` : '/placeholder.png'
+            image: p.photos?.[0] ? `${CONFIG.API_BASE_URL}/storage/${p.photos[0]}` : '/placeholder.png'
         }));
     } catch (error) {
         console.error("Erreur items:", error);

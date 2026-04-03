@@ -1,3 +1,5 @@
+import { CONFIG } from '../config/index.js';
+
 
 import { defineStore } from "pinia";
 import { ref, computed, onUnmounted } from "vue";
@@ -81,7 +83,7 @@ export const useMessageStore = defineStore("message", () => {
   });
 
   const storageUrl = computed(() => {
-    return "http://localhost:8000/storage/";
+    return (CONFIG.API_BASE_URL) + "/storage/";
   });
 
   // Actions

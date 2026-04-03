@@ -1,4 +1,4 @@
-# ChTech - Vue 3 + Tailwind CSS
+# Sasayee - Vue 3 + Tailwind CSS
 
 Plateforme de marché technologique transformée en Vue.js 3 avec Tailwind CSS.
 

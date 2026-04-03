@@ -12,7 +12,7 @@
         >, ravi de vous revoir !
       </h1>
       <p class="text-[var(--color-text-sub)]">
-        Voici un aperçu de votre activité sur CH-Tech.
+        Voici un aperçu de votre activité sur SASAYEE.
       </p>
     </header>
 
@@ -224,14 +224,22 @@
 </template>
 
 <script setup>
+import { CONFIG } from '../config/index.js';
+
 import { ref, computed, onMounted } from "vue";
 import { useAuthStore } from "../stores/auth.js";
 import { useInteractionStore } from "../stores/interactions.js";
 import SkeletonDashboard from "../components/skeletons/SkeletonDashboard.vue";
 import apiClient from "../api/index.js";
+import { useSeo } from "../composables/useSeo.js";
 
 const authStore = useAuthStore();
 const interactionStore = useInteractionStore();
+
+useSeo({
+  title: "Tableau de Bord - SASAYEE",
+  description: "Gérez votre compte, vos commandes, vos favoris et vos services sur votre espace personnel SASAYEE."
+});
 
 const isLoading = ref(true);
 const lastOrder = ref(null);
@@ -304,7 +312,7 @@ onMounted(async () => {
         name: last.product?.nom || last.items?.[0]?.name || "Produit",
         status: last.status || last.statut || "En cours",
         image: last.product?.photos?.[0]
-          ? `http://localhost:8000/storage/${last.product.photos[0]}`
+          ? `${CONFIG.STORAGE_URL}${last.product.photos[0]}`
           : "https://cdn-icons-png.flaticon.com/512/644/644458.png",
       };
       orderProgress.value = getProgress(lastOrder.value.status);
@@ -319,7 +327,7 @@ onMounted(async () => {
       image: p.photos?.[0]
         ? p.photos[0].startsWith("http")
           ? p.photos[0]
-          : `http://localhost:8000/storage/${p.photos[0]}`
+          : `${CONFIG.STORAGE_URL}${p.photos[0]}`
         : `https://ui-avatars.com/api/?name=${encodeURIComponent(p.nom || "P")}&size=64&background=efefef`,
     }));
 

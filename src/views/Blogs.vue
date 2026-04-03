@@ -33,6 +33,8 @@
 </template>
 
 <script setup>
+import { CONFIG } from '../config/index.js';
+
 import { ref, onMounted } from "vue";
 import BlogCard from "../components/BlogCard.vue";
 import SkeletonBlogCard from "../components/skeletons/SkeletonBlogCard.vue";
@@ -40,8 +42,8 @@ import apiClient from "../api/index.js";
 import { useSeo } from "../composables/useSeo.js";
 
 useSeo({
-  title: "Blogs & Conseils - Sasaye",
-  description: "Retrouvez tous nos conseils pour mieux vendre et acheter en toute sécurité sur Sasaye. Actualités, guides et astuces e-commerce au Cameroun."
+  title: "Blogs & Conseils - SASAYEE",
+  description: "Retrouvez tous nos conseils pour mieux vendre et acheter en toute sécurité sur SASAYEE. Actualités, guides et astuces e-commerce au Cameroun."
 });
 
 const isLoading = ref(true);
@@ -57,11 +59,11 @@ onMounted(async () => {
       image: post.image
         ? post.image.startsWith("http")
           ? post.image
-          : `http://localhost:8000/storage/${post.image}`
+          : `${CONFIG.API_BASE_URL}/storage/${post.image}`
         : "https://images.unsplash.com/photo-1556742049-0cfed4f6a45d?q=80&w=800",
       category: post.category || post.categorie || "Article",
       categoryType: "primary",
-      author: post.author?.nom || post.auteur || "Admin Chtech",
+      author: post.author?.nom || post.auteur || "Admin Sasayee",
       time: formatDate(post.created_at),
       description:
         post.excerpt ||
@@ -83,7 +85,7 @@ onMounted(async () => {
           "https://images.unsplash.com/photo-1556742049-0cfed4f6a45d?q=80&w=800",
         category: "Guide Vendeur",
         categoryType: "primary",
-        author: "Admin Chtech",
+        author: "Admin Sasayee",
         time: "1h",
         description:
           "La qualité des photos et la précision de la description sont les clés pour vendre vos articles en moins de 24h...",
@@ -97,7 +99,7 @@ onMounted(async () => {
           "https://images.unsplash.com/photo-1563013544-824ae1b704d3?q=80&w=800",
         category: "Sécurité",
         categoryType: "accent",
-        author: "Admin Chtech",
+        author: "Admin Sasayee",
         time: "3h",
         description:
           "Découvrez les signaux d'alerte et les conseils d'experts pour acheter en toute confiance...",
@@ -111,7 +113,7 @@ onMounted(async () => {
           "https://images.unsplash.com/photo-1552664730-d307ca884978?q=80&w=800",
         category: "Conseil",
         categoryType: "primary",
-        author: "Admin Chtech",
+        author: "Admin Sasayee",
         time: "5h",
         description:
           "Maîtrisez l'art de la négociation pour obtenir les meilleurs prix...",

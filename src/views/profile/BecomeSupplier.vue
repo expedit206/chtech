@@ -119,7 +119,7 @@
             Notre équipe vous répond sous 24h.
           </p>
           <a
-            href="https://wa.me/237683461329?text=Bonjour%20l'equipe%20SAssaye.com%2C%20je%20suis%20int%C3%A9ress%C3%A9%20par%20l'ouverture%20d'une%20boutique%20vendeur%20sur%20votre%20plateforme.%20Pourriez-vous%20m'indiquer%20les%20%C3%A9tapes%20%C3%A0%20suivre%20%3F"
+            href="https://wa.me/237683461329?text=Bonjour%20l'equipe%20SASAYEE.com%2C%20je%20suis%20int%C3%A9ress%C3%A9%20par%20l'ouverture%20d'une%20boutique%20vendeur%20sur%20votre%20plateforme.%20Pourriez-vous%20m'indiquer%20les%20%C3%A9tapes%20%C3%A0%20suivre%20%3F"
             class="text-[var(--color-primary)] font-bold hover:underline block truncate"
             >WhatsApp: +237 683461329</a
           >
@@ -143,6 +143,12 @@ import {
   ArrowUp,
 } from "lucide-vue-next";
 import { useAlert } from "../../composables/useAlert.js";
+
+import { useSeo } from "../../composables/useSeo.js";
+useSeo({
+  title: "Devenir Vendeur - SASAYEE",
+  description: "Ouvrez votre boutique sur SASAYEE et commencez à vendre vos produits à des milliers de clients au Cameroun. Inscription rapide et support 24/7."
+});
 
 const alert = useAlert();
 

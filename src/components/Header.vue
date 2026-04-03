@@ -3,9 +3,9 @@
     'header-offset': auth.isAuthenticated && !isSidebarCollapsed,
     'header-offset-collapsed': auth.isAuthenticated && isSidebarCollapsed,
   }" :style="{
-      backgroundColor: 'var(--color-surface)',
-      borderColor: 'var(--color-border)',
-    }">
+    backgroundColor: 'var(--color-surface)',
+    borderColor: 'var(--color-border)',
+  }">
     <div class="flex flex-col">
       <div class="flex items-center justify-between px-4 h-14 gap-4">
         <div class="flex items-center gap-3">
@@ -20,7 +20,7 @@
             fontFamily: 'Open Sans, sans-serif',
           }">
             <RouterLink :to="{ name: 'Home' }" @click="productStore.searchQuery = ''">
-              Sasaye
+              SASAYEE
             </RouterLink>
           </h1>
         </div>
@@ -149,7 +149,7 @@
           </router-link>
         </div>
       </div>
-      
+
     </div>
 
     <!-- Mobile search bar toggleable -->
@@ -165,7 +165,7 @@
           :style="{ backgroundColor: 'var(--color-bg)' }" @click="openSearchOverlay">
           <Search :size="16" :style="{ color: 'var(--color-text-sub)' }" />
           <span class="text-xs opacity-50" :style="{ color: 'var(--color-text-main)' }">
-            Rechercher sur SASAYE...
+            Rechercher sur SASAYEE...
           </span>
         </div>
       </div>
@@ -271,8 +271,7 @@
             <button v-for="query in searchHistory" :key="query" @click="
               productStore.searchQuery = query;
             handleFinalSearch();
-            "
-              class="flex items-center gap-2 px-4 py-2 rounded-full border transition-all hover:border-[var(--color-primary)] hover:bg-[var(--color-primary)]/5"
+            " class="flex items-center gap-2 px-4 py-2 rounded-full border transition-all hover:border-[var(--color-primary)] hover:bg-[var(--color-primary)]/5"
               :style="{
                 borderColor: 'var(--color-border)',
                 backgroundColor: 'var(--color-surface)',
@@ -356,6 +355,8 @@
 </template>
 
 <script setup>
+import { CONFIG } from '../config/index.js';
+
 import { ref, computed, watch, onMounted, onUnmounted } from "vue";
 import { useRoute, useRouter, RouterLink } from "vue-router";
 import { useTheme } from "../composables/useTheme.js";
@@ -408,7 +409,7 @@ const { theme, toggleTheme } = useTheme();
 const userPhotoUrl = computed(() => {
   if (auth.user?.photo) {
     if (auth.user.photo.startsWith('http')) return auth.user.photo;
-    return `http://localhost:8000/storage/${auth.user.photo}`;
+    return `${CONFIG.API_BASE_URL}/storage/${auth.user.photo}`;
   }
   return `https://ui-avatars.com/api/?name=${encodeURIComponent(auth.user?.nom || 'U')}&background=6366f1&color=fff&size=64`;
 });
@@ -467,23 +468,23 @@ const handleFinalSearch = () => {
 const saveHistory = (query) => {
   if (!query) return;
   let history = JSON.parse(
-    localStorage.getItem("chtech_search_history") || "[]",
+    localStorage.getItem("sasayee_search_history") || "[]",
   );
   history = history.filter((h) => h !== query);
   history.unshift(query);
   history = history.slice(0, 8);
-  localStorage.setItem("chtech_search_history", JSON.stringify(history));
+  localStorage.setItem("sasayee_search_history", JSON.stringify(history));
   searchHistory.value = history;
 };
 
 const loadHistory = () => {
   searchHistory.value = JSON.parse(
-    localStorage.getItem("chtech_search_history") || "[]",
+    localStorage.getItem("sasayee_search_history") || "[]",
   );
 };
 
 const clearHistory = () => {
-  localStorage.removeItem("chtech_search_history");
+  localStorage.removeItem("sasayee_search_history");
   searchHistory.value = [];
 };
 
@@ -501,8 +502,8 @@ const performLiveSearch = async (query) => {
     });
     if (response.data.success && response.data.data) {
       const products = (response.data.data.products || []).map(p => ({
-          ...p,
-          slug: (p.slug && !p.slug.endsWith(`-${p.id}`)) ? `${p.slug}-${p.id}` : (p.slug || p.id)
+        ...p,
+        slug: (p.slug && !p.slug.endsWith(`-${p.id}`)) ? `${p.slug}-${p.id}` : (p.slug || p.id)
       }));
       const services = response.data.data.services || [];
       liveResults.value = [...products, ...services].slice(0, 10);

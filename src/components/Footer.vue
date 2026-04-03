@@ -5,18 +5,12 @@ import { RouterLink } from "vue-router";
 </script>
 
 <template>
-  <footer
-    class="mt-20 border-t"
-    :style="{
-      backgroundColor: 'var(--color-surface)',
-      borderColor: 'var(--color-border)',
-      color: 'var(--color-text-main)',
-    }"
-  >
-    <div
-      class="max-w-7xl mx-auto px-4 py-12 border-b"
-      :style="{ borderColor: 'var(--color-border)' }"
-    >
+  <footer class="mt-20 border-t" :style="{
+    backgroundColor: 'var(--color-surface)',
+    borderColor: 'var(--color-border)',
+    color: 'var(--color-text-main)',
+  }">
+    <div class="max-w-7xl mx-auto px-4 py-12 border-b" :style="{ borderColor: 'var(--color-border)' }">
       <div class="flex flex-col md:flex-row justify-between items-center gap-6">
         <div>
           <h3 class="text-xl font-bold">Rejoignez la révolution</h3>
@@ -27,25 +21,19 @@ import { RouterLink } from "vue-router";
         </div>
         <div class="flex w-full md:w-auto gap-2 relative">
           <!-- Input avec icône -->
-          <input
-            type="tel"
-            placeholder="votre numéro de téléphone"
+          <input type="tel" placeholder="votre numéro de téléphone"
             class="px-4 py-2 pr-12 rounded-lg flex-1 md:w-64 outline-none border transition-colors duration-200 focus:ring-2 focus:ring-blue-500"
             :style="{
               backgroundColor: 'var(--color-bg)',
               borderColor: 'var(--color-border)',
-            }"
-          />
+            }" />
 
           <!-- Icône de soumission à l'intérieur -->
-          <button
-            class="absolute right-2 top-1/2 -translate-y-1/2 p-2 rounded-full hover:bg-blue-600 transition-colors"
+          <button class="absolute right-2 top-1/2 -translate-y-1/2 p-2 rounded-full hover:bg-blue-600 transition-colors"
             :style="{
               backgroundColor: 'var(--color-primary)',
               color: 'var(--color-pure)',
-            }"
-            title="Cliquez pour vous inscrire"
-          >
+            }" title="Cliquez pour vous inscrire">
             <!-- Exemple avec icône Lucide -->
             <Send class="w-5 h-5" />
           </button>
@@ -53,15 +41,10 @@ import { RouterLink } from "vue-router";
       </div>
     </div>
 
-    <div
-      class="max-w-7xl mx-auto px-4 py-16 grid grid-cols-2 md:grid-cols-4 gap-12"
-    >
+    <div class="max-w-7xl mx-auto px-4 py-16 grid grid-cols-2 md:grid-cols-4 gap-12">
       <div class="col-span-2 md:col-span-1">
-        <h2
-          class="text-2xl font-black tracking-tighter mb-4"
-          :style="{ color: 'var(--color-primary)' }"
-        >
-          chtech
+        <h2 class="text-2xl font-black tracking-tighter mb-4" :style="{ color: 'var(--color-primary)' }">
+          sasayee
         </h2>
         <p class="text-sm leading-relaxed opacity-70 mb-6">
           La première marketplace dédiée aux solutions technologiques
@@ -91,24 +74,16 @@ import { RouterLink } from "vue-router";
         <h4 class="font-bold mb-6">Acheter</h4>
         <ul class="space-y-4 text-sm opacity-70">
           <li>
-            <a href="#" class="hover:text-[var(--color-primary)]"
-              >Toutes les catégories</a
-            >
+            <a href="#" class="hover:text-[var(--color-primary)]">Toutes les catégories</a>
           </li>
           <li>
             <a href="#" class="hover:text-[var(--color-primary)]">Promotions</a>
           </li>
           <li>
-            <a href="#" class="hover:text-[var(--color-primary)]"
-              >Suivi de commande</a
-            >
+            <a href="#" class="hover:text-[var(--color-primary)]">Suivi de commande</a>
           </li>
           <li>
-            <RouterLink
-              :to="{ name: 'Support' }"
-              class="hover:text-[var(--color-primary)]"
-              >Aide & SAV</RouterLink
-            >
+            <RouterLink :to="{ name: 'Support' }" class="hover:text-[var(--color-primary)]">Aide & SAV</RouterLink>
           </li>
         </ul>
       </div>
@@ -117,24 +92,17 @@ import { RouterLink } from "vue-router";
         <h4 class="font-bold mb-6">Vendre</h4>
         <ul class="space-y-4 text-sm opacity-70">
           <li>
-            <RouterLink
-              :to="{ name: 'become-vendeur' }"
-              class="hover:text-[var(--color-primary)]"
-              >Devenir vendeur</RouterLink
-            >
+            <RouterLink :to="{ name: 'become-vendeur' }" class="hover:text-[var(--color-primary)]">Devenir vendeur
+            </RouterLink>
           </li>
           <li>
-            <a href="#" class="hover:text-[var(--color-primary)]"
-              >Règles de la marketplace</a
-            >
+            <a href="#" class="hover:text-[var(--color-primary)]">Règles de la marketplace</a>
           </li>
           <li>
             <a href="#" class="hover:text-[var(--color-primary)]">Espace Pro</a>
           </li>
           <li>
-            <a href="#" class="hover:text-[var(--color-primary)]"
-              >Affiliation</a
-            >
+            <a href="#" class="hover:text-[var(--color-primary)]">Affiliation</a>
           </li>
         </ul>
       </div>
@@ -148,27 +116,11 @@ import { RouterLink } from "vue-router";
 
           <div
             class="w-8 h-8 rounded-md flex items-center justify-center p-1 shadow-sm transition-transform hover:scale-110"
-            style="background-color: #ffcc00"
-            title="MTN Mobile Money"
-          >
+            style="background-color: #ffcc00" title="MTN Mobile Money">
             <svg viewBox="0 0 100 100" class="w-full h-full">
-              <circle
-                cx="50"
-                cy="50"
-                r="48"
-                fill="none"
-                stroke="#004F9F"
-                stroke-width="4"
-              />
-              <text
-                x="50"
-                y="65"
-                font-family="Arial, sans-serif"
-                font-weight="bold"
-                font-size="40"
-                fill="#004F9F"
-                text-anchor="middle"
-              >
+              <circle cx="50" cy="50" r="48" fill="none" stroke="#004F9F" stroke-width="4" />
+              <text x="50" y="65" font-family="Arial, sans-serif" font-weight="bold" font-size="40" fill="#004F9F"
+                text-anchor="middle">
                 MTN
               </text>
             </svg>
@@ -176,9 +128,7 @@ import { RouterLink } from "vue-router";
 
           <div
             class="w-8 h-8 rounded-md flex items-center justify-center p-1 shadow-sm transition-transform hover:scale-110"
-            style="background-color: #ff6600"
-            title="Orange Money"
-          >
+            style="background-color: #ff6600" title="Orange Money">
             <svg viewBox="0 0 24 24" class="w-full h-full" fill="white">
               <path d="M3 3h18v18H3V3zm13 13h3v3h-3v-3z" />
             </svg>
@@ -193,27 +143,18 @@ import { RouterLink } from "vue-router";
       </div>
     </div>
 
-    <div
-      class="py-6 border-t"
-      :style="{
-        borderColor: 'var(--color-border)',
-        backgroundColor: 'rgba(0,0,0,0.02)',
-      }"
-    >
+    <div class="py-6 border-t" :style="{
+      borderColor: 'var(--color-border)',
+      backgroundColor: 'rgba(0,0,0,0.02)',
+    }">
       <div
-        class="max-w-7xl mx-auto px-4 flex flex-col md:row justify-between items-center gap-4 text-[10px] uppercase tracking-widest opacity-60"
-      >
-        <p>© {{ new Date().getFullYear() }} CHTECH. TOUS DROITS RÉSERVÉS.</p>
+        class="max-w-7xl mx-auto px-4 flex flex-col md:row justify-between items-center gap-4 text-[10px] uppercase tracking-widest opacity-60">
+        <p>© {{ new Date().getFullYear() }} SASAYEE. TOUS DROITS RÉSERVÉS.</p>
         <div class="flex gap-6">
-          <RouterLink :to="{ name: 'mentions_legales' }"
-            >Mentions Légales</RouterLink
-          >
-          <RouterLink :to="{ name: 'conditions_generales_d_utilisation' }"
-            >Conditions Générales d'Utilisation</RouterLink
-          >
-          <RouterLink :to="{ name: 'politique_de_confidentialite' }"
-            >Confidentialité</RouterLink
-          >
+          <RouterLink :to="{ name: 'mentions_legales' }">Mentions Légales</RouterLink>
+          <RouterLink :to="{ name: 'conditions_generales_d_utilisation' }">Conditions Générales d'Utilisation
+          </RouterLink>
+          <RouterLink :to="{ name: 'politique_de_confidentialite' }">Confidentialité</RouterLink>
         </div>
       </div>
     </div>

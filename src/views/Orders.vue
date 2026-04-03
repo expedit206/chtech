@@ -164,12 +164,20 @@
 </template>
 
 <script setup>
+import { CONFIG } from '../config/index.js';
+
 import { ref, onMounted } from "vue";
 import SkeletonOrderRow from "../components/skeletons/SkeletonOrderRow.vue";
 import apiClient from "../api/index.js";
+import { useSeo } from "../composables/useSeo.js";
 
 const isLoading = ref(true);
 const orders = ref([]);
+
+useSeo({
+  title: "Mes Commandes - SASAYEE",
+  description: "Consultez l'historique et l'état de vos commandes passées sur SASAYEE."
+});
 
 onMounted(async () => {
   try {
@@ -186,7 +194,7 @@ onMounted(async () => {
       productName: o.product?.nom || o.items?.[0]?.name || "Produit",
       description: o.product?.description || o.items?.[0]?.description || "",
       productImage: o.product?.photos?.[0]
-        ? `http://localhost:8000/storage/${o.product.photos[0]}`
+        ? `${CONFIG.STORAGE_URL}${o.product.photos[0]}`
         : "https://cdn-icons-png.flaticon.com/512/644/644458.png",
     }));
   } catch (err) {

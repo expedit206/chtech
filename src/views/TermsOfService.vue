@@ -4,7 +4,7 @@
       <div class="max-w-4xl mx-auto">
         <h1 class="text-4xl font-extrabold mb-4">Conditions d'utilisation</h1>
         <p class="text-[var(--color-text-sub)] text-lg">
-          Règles et directives pour utiliser la plateforme CH-TECH en toute sécurité.
+          Règles et directives pour utiliser la plateforme SASAYEE en toute sécurité.
         </p>
         <p class="text-xs font-medium text-[var(--color-primary)] mt-6 uppercase tracking-widest">
           Dernière mise à jour : 10 octobre 2025
@@ -30,7 +30,7 @@
           <Info :size="24" class="text-[var(--color-primary)]" /> Introduction
         </h2>
         <p class="text-[var(--color-text-sub)] leading-relaxed">
-          Bienvenue sur <strong>CH-TECH</strong>, votre hub d'innovation technologique. En accédant à nos services, vous acceptez de vous conformer aux présentes conditions. Nous avons conçu ces règles pour garantir une expérience optimale et sécurisée à tous nos utilisateurs.
+          Bienvenue sur <strong>SASAYEE</strong>, votre hub d'innovation technologique. En accédant à nos services, vous acceptez de vous conformer aux présentes conditions. Nous avons conçu ces règles pour garantir une expérience optimale et sécurisée à tous nos utilisateurs.
         </p>
       </section>
 
@@ -45,7 +45,7 @@
               <CheckCircle :size="18" /> Comportement autorisé
             </h3>
             <ul class="space-y-3 text-sm text-[var(--color-text-sub)]">
-              <li class="flex items-start gap-2">• Respect mutuel entre tous les utilisateurs de CH-TECH.</li>
+              <li class="flex items-start gap-2">• Respect mutuel entre tous les utilisateurs de SASAYEE.</li>
               <li class="flex items-start gap-2">• Utilisation honnête des ressources et APIs mises à disposition.</li>
               <li class="flex items-start gap-2">• Respect des engagements pris lors des échanges collaboratifs.</li>
             </ul>
@@ -79,7 +79,7 @@
           <Copyright :size="24" class="text-[var(--color-accent)]" /> Propriété Intellectuelle
         </h2>
         <p class="text-sm text-[var(--color-text-sub)] leading-relaxed">
-          L'ensemble du contenu présent sur la plateforme CH-TECH (logos, designs, codes sources propriétaires) est protégé par les lois internationales sur la propriété intellectuelle. Toute reproduction sans accord préalable est strictement interdite.
+          L'ensemble du contenu présent sur la plateforme SASAYEE (logos, designs, codes sources propriétaires) est protégé par les lois internationales sur la propriété intellectuelle. Toute reproduction sans accord préalable est strictement interdite.
         </p>
       </section>
 
@@ -88,7 +88,7 @@
           <UserMinus :size="24" class="text-red-500" /> Résiliation
         </h2>
         <div class="space-y-3 text-sm text-[var(--color-text-sub)]">
-          <p>Vous pouvez fermer votre compte CH-TECH à tout moment depuis vos paramètres de profil.</p>
+          <p>Vous pouvez fermer votre compte SASAYEE à tout moment depuis vos paramètres de profil.</p>
           <p>Nous nous réservons le droit de suspendre ou de supprimer les comptes qui violent de manière répétée nos règles de sécurité ou de conduite.</p>
         </div>
       </section>
@@ -98,7 +98,7 @@
         <div class="flex flex-col gap-4">
           <div class="flex items-center gap-3 p-4 rounded-xl bg-[var(--color-bg)] border border-[var(--color-border)]">
             <Mail class="text-[var(--color-primary)]" :size="20" />
-            <span class="font-medium">contact@ch-tech.com</span>
+            <span class="font-medium">contact@sasayee.com</span>
           </div>
           <div class="flex items-center gap-3 p-4 rounded-xl bg-[var(--color-bg)] border border-[var(--color-border)]">
             <Clock class="text-amber-500" :size="20" />
@@ -112,6 +112,12 @@
 </template>
 
 <script setup>
+import { useSeo } from "../composables/useSeo.js";
+useSeo({
+  title: "Conditions d'Utilisation - SASAYEE",
+  description: "Consultez les conditions générales d'utilisation de SASAYEE. Règles de conduite, transactions, propriété intellectuelle et responsabilités au Cameroun."
+});
+
 import { 
   Info, ShieldAlert, CheckCircle, XCircle, CreditCard, 
   Copyright, UserMinus, Mail, Clock 

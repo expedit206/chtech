@@ -77,12 +77,19 @@
 </template>
 
 <script setup>
+import { CONFIG } from '../config/index.js';
+
 import { ref, onMounted, computed } from "vue";
 import { useRouter } from "vue-router";
 import { useInteractionStore } from "../stores/interactions.js";
 import ProductCard from "../components/ProductCard.vue";
 import { Heart, Star } from "lucide-vue-next";
 import SkeletonWishlistCard from "../components/skeletons/SkeletonWishlistCard.vue";
+import { useSeo } from "../composables/useSeo.js";
+useSeo({
+  title: "Mes Favoris - SASAYEE",
+  description: "Retrouvez les produits que vous avez aimés sur SASAYEE."
+});
 
 const interactionStore = useInteractionStore();
 const router = useRouter();
@@ -102,7 +109,7 @@ const favorites = computed(() => {
     image: p.photos?.[0]
       ? p.photos[0].startsWith("http")
         ? p.photos[0]
-        : `http://localhost:8000/storage/${p.photos[0]}`
+        : `${CONFIG.API_BASE_URL}/storage/${p.photos[0]}`
       : `https://ui-avatars.com/api/?name=${encodeURIComponent(p.nom || "P")}&size=200&background=efefef`,
     category: p.category,
     is_promoted: p.is_promoted,

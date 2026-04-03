@@ -23,6 +23,7 @@ const routes = [
     path: "/messages/:receiverId?",
     name: "messages",
     component: () => import("../views/Messages.vue"),
+    meta: { requiresAuth: true },
   },
 
   {
@@ -38,6 +39,7 @@ const routes = [
   {
     path: "/profile",
     component: () => import("../Layouts/ProfileLayout.vue"), // Le layout avec la Sidebar
+    meta: { requiresAuth: true },
     children: [
       {
         path: "", // Correspond à /profile
@@ -123,22 +125,39 @@ const router = createRouter({
   routes,
 });
 
-router.beforeEach((to, from, next) => {
-  const publicPages = ["/", "/login", "/register", "/blogs"];
-  const authRequired =
-    !publicPages.includes(to.path) &&
-    !to.path.startsWith("/produit/") &&
-    !to.path.startsWith("/ressources/");
-  const loggedIn = localStorage.getItem("auth_token");
+import { useAlertStore } from "../stores/alert.js";
+import { useAuthStore } from "../stores/auth.js";
 
-  if (authRequired && !loggedIn) {
-    return next({
-      name: "Login",
-      query: { redirect: to.fullPath },
+router.beforeEach((to, from, next) => {
+  const authStore = useAuthStore();
+  const alertStore = useAlertStore();
+  
+  const requiresAuth = to.matched.some(record => record.meta.requiresAuth);
+  const loggedIn = authStore.isAuthenticated;
+
+  if (requiresAuth && !loggedIn) {
+    alertStore.showAlert({
+      title: "Accès Restreint",
+      message: "Vous devez être connecté pour accéder à cette page.",
+      type: "warning",
+      confirmText: "Se connecter",
+      cancelText: "Annuler",
+      showCancel: true,
+      onConfirm: () => {
+        next({
+          name: "Login",
+          query: { redirect: to.fullPath },
+        });
+      },
+      onCancel: () => {
+        next(false);
+      }
     });
+
+    return; // Attendre l'interaction de l'utilisateur
   }
 
-  // Prevent logged in users from visiting login/register
+  // Empêcher les utilisateurs connectés de visiter login/register
   if (loggedIn && (to.name === "Login" || to.name === "Register")) {
     return next({ name: "Home" });  
   }

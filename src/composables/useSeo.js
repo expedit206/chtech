@@ -2,7 +2,7 @@ import { useHead } from '@unhead/vue';
 import { computed, unref } from 'vue';
 
 export function useSeo(options = {}) {
-  const siteName = 'Sasaye';
+  const siteName = 'SASAYEE';
 
   const title = computed(() => {
     const t = unref(options.title);
@@ -10,7 +10,7 @@ export function useSeo(options = {}) {
   });
 
   const description = computed(() => unref(options.description));
-  const image = computed(() => unref(options.image) || 'https://sasaye.com/og-image.jpg');
+  const image = computed(() => unref(options.image) || 'https://SASAYEE.com/og-image.jpg');
   const url = computed(() => unref(options.url) || (typeof window !== 'undefined' ? window.location.href : ''));
   const type = computed(() => unref(options.type) || 'website');
 
@@ -33,6 +33,14 @@ export function useSeo(options = {}) {
     ],
     link: [
       { rel: 'canonical', href: url }
+    ],
+    script: [
+      ...(options.jsonLd ? [
+        {
+          type: 'application/ld+json',
+          children: JSON.stringify(unref(options.jsonLd)),
+        }
+      ] : [])
     ]
   });
 }

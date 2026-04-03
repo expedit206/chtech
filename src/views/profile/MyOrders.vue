@@ -93,6 +93,8 @@
 </template>
 
 <script setup>
+import { CONFIG } from '../../config/index.js';
+
 import { ref, onMounted } from "vue";
 import apiClient from "../../api/index.js";
 import { Truck, Package, MessageCircle } from "lucide-vue-next";
@@ -110,7 +112,7 @@ onMounted(async () => {
       let img = "https://cdn-icons-png.flaticon.com/512/644/644458.png";
       
       if (firstItem && firstItem.produit && firstItem.produit.photos && firstItem.produit.photos[0]) {
-         img = `http://localhost:8000/storage/${firstItem.produit.photos[0]}`;
+         img = `${CONFIG.API_BASE_URL}/storage/${firstItem.produit.photos[0]}`;
       }
 
       return {

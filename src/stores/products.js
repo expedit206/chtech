@@ -1,3 +1,4 @@
+import { CONFIG } from '../config/index.js';
 import { defineStore } from 'pinia';
 import { ref, computed } from 'vue';
 import apiClient from '../api/index.js';
@@ -36,13 +37,12 @@ export const useProductStore = defineStore('products', () => {
   function getImageUrl(photo) {
     if (typeof photo === 'string') {
       if (photo.startsWith('http')) return photo;
-      return `http://localhost:8000/storage/${photo}`;
+      return `${CONFIG.STORAGE_URL}${photo}`;
     }
     return '/placeholder.png';
   }
 
   async function fetchProducts(filters = {}, force = false) {
-    // Si on a déjà des produits et qu'on ne force pas le refresh, on vérifie le cache
     if (!force && products.value.length > 0 && lastFetched.value && (Date.now() - lastFetched.value < CACHE_TIMEOUT) && Object.keys(filters).length === 0) {
       return;
     }
@@ -69,7 +69,6 @@ export const useProductStore = defineStore('products', () => {
           products.value = [];
         }
         
-        // Mettre à jour le timestamp si c'est un fetch global
         if (Object.keys(filters).length === 0) {
           lastFetched.value = Date.now();
         }
@@ -89,17 +88,19 @@ export const useProductStore = defineStore('products', () => {
 
     try {
       const response = await apiClient.get('/produits/categories');
-      let data = [];
+      let rawData = [];
       
-      if (response.data.success && response.data.data) {
-        data = response.data.data;
+      if (response.data && response.data.success && Array.isArray(response.data.data)) {
+        rawData = response.data.data;
       } else if (Array.isArray(response.data)) {
-        data = response.data;
-      } else if (response.data.data) {
-        data = response.data.data;
+        rawData = response.data;
+      } else if (response.data && response.data.data && Array.isArray(response.data.data)) {
+        rawData = response.data.data;
+      } else if (response.data && Array.isArray(response.data.data)) {
+        rawData = response.data.data;
       }
 
-      categories.value = data;
+      categories.value = rawData;
       categoriesLastFetched.value = Date.now();
     } catch (err) {
       console.error('Erreur lors du chargement des catégories:', err);
@@ -107,27 +108,16 @@ export const useProductStore = defineStore('products', () => {
   }
 
   async function getProductById(idOrSlug) {
-    // 1. Chercher dans le cache local du store
     const localProduct = products.value.find(p => 
       String(p.id) === String(idOrSlug) || 
       p.slug === idOrSlug || 
       ((p.slug && p.slug + '-' + p.id === idOrSlug))
     );
-    if (localProduct) {
-      return localProduct;
-    }
+    if (localProduct) return localProduct;
 
-    // 2. Sinon, faire l'appel API
     try {
       const response = await apiClient.get(`/produits/${idOrSlug}`);
-      const product = response.data.data.produit;
-      
-      // Optionnel : l'ajouter au cache local s'il n'y est pas
-      if (product && !products.value.some(p => p.id === product.id)) {
-        // On ne l'ajoute que s'il est complet, pour éviter de polluer la liste principale
-      }
-      
-      return product;
+      return response.data.data.produit;
     } catch (err) {
       console.error('Erreur lors du chargement du produit:', err);
       throw err;

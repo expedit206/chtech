@@ -30,12 +30,30 @@ export function useAlert() {
     });
   };
 
+  const promptLogin = (router, redirectPath = null) => {
+    alertStore.showAlert({
+      title: 'Accès Restreint',
+      message: 'Vous devez être connecté pour accéder à cette fonctionnalité.',
+      type: 'warning',
+      showCancel: true,
+      confirmText: 'Se connecter',
+      cancelText: 'Annuler',
+      onConfirm: () => {
+        router.push({
+          name: 'Login',
+          query: redirectPath ? { redirect: redirectPath } : {}
+        });
+      }
+    });
+  };
+
   return {
     success,
     error,
     warning,
     info,
     confirm,
+    promptLogin,
     close: alertStore.close
   };
 }

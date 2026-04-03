@@ -100,7 +100,7 @@ const searchQuery = ref("");
 const faqs = ref([
   {
     question: "Comment suivre l'avancement de mon projet ?",
-    answer: "Vous pouvez suivre l'état de vos services en temps réel dans votre tableau de bord CH-TECH, section 'Mes Commandes'.",
+    answer: "Vous pouvez suivre l'état de vos services en temps réel dans votre tableau de bord SASAYEE, section 'Mes Commandes'.",
     open: true,
   },
   {
@@ -115,7 +115,7 @@ const faqs = ref([
   },
   {
     question: "Proposez-vous une API pour les développeurs ?",
-    answer: "Oui, CH-TECH dispose d'une documentation API complète pour intégrer nos solutions à vos propres applications.",
+    answer: "Oui, SASAYEE dispose d'une documentation API complète pour intégrer nos solutions à vos propres applications.",
     open: false,
   },
   {
@@ -134,11 +134,17 @@ const faqs = ref([
     open: false,
   },
   {
-    question: "Comment devenir partenaire CH-TECH ?",
+    question: "Comment devenir partenaire SASAYEE ?",
     answer: "Vous pouvez postuler via notre formulaire de contact dédié aux partenariats dans le pied de page.",
     open: false,
   },
 ]);
+
+import { useSeo } from "../composables/useSeo.js";
+useSeo({
+  title: "Support & FAQ - SASAYEE",
+  description: "Besoin d'aide ? Retrouvez toutes les réponses à vos questions sur l'utilisation de SASAYEE, les paiements, la sécurité et le support technique au Cameroun."
+});
 
 // Fonction pour ouvrir une question et fermer les autres (optionnel)
 const toggleFaq = (index) => {

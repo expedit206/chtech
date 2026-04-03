@@ -6,4 +6,8 @@ export const CONFIG = {
   // Platform settings
   PLATFORM_NAME: "CH-TECH",
   CURRENCY: "FCFA",
+
+  // Environment-aware URLs
+  API_BASE_URL: import.meta.env.VITE_API_BASE_URL || "http://localhost:8000/",
+  STORAGE_URL: (import.meta.env.VITE_API_BASE_URL || "http://localhost:8000").replace(/\/$/, "") + "/storage/",
 };

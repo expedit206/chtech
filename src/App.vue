@@ -44,7 +44,19 @@ const route = useRoute();
 
 // Global SEO
 useSeo({
-  description: "Sasaye est la plateforme leader au Cameroun pour l'achat et la revente de produits et services. Sécurité, rapidité et fiabilité."
+  title: "SASAYEE - Vendre et Acheter au Cameroun",
+  description: "SASAYEE est la plateforme leader au Cameroun pour l'achat et la revente de produits et services. Sécurité, rapidité et fiabilité.",
+  jsonLd: {
+    "@context": "https://schema.org",
+    "@type": "Organization",
+    "name": "SASAYEE",
+    "url": "https://sasayee.com",
+    "logo": "https://sasayee.com/logo.png",
+    "sameAs": [
+      "https://facebook.com/SASAYEE",
+      "https://twitter.com/SASAYEE"
+    ]
+  }
 });
 
 const isSidebarCollapsed = ref(false);

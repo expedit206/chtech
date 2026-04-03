@@ -18,7 +18,7 @@
           <div class="w-8 h-8 bg-[var(--color-primary)] rounded-lg flex items-center justify-center shrink-0">
             <CloudLightning :size="16" :stroke-width="3" class="text-white" />
           </div>
-          <span class="font-bold text-[var(--color-text-main)] truncate">Sasaye</span>
+          <span class="font-bold text-[var(--color-text-main)] truncate">SASAYEE</span>
         </div>
 
         <button @click="emit('toggle')"

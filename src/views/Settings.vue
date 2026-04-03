@@ -137,6 +137,8 @@
 </template>
 
 <script setup>
+import { CONFIG } from '../config/index.js';
+
 import { ref, reactive, computed, onMounted } from 'vue';
 import { useAuthStore } from '../stores/auth';
 import { useAlert } from '../composables/useAlert';
@@ -165,7 +167,7 @@ const passwordForm = reactive({
 const profilePhotoUrl = computed(() => {
   if (authStore.user?.photo) {
     if (authStore.user.photo.startsWith('http')) return authStore.user.photo;
-    return `http://localhost:8000/storage/${authStore.user.photo}`;
+    return `${CONFIG.API_BASE_URL}/storage/${authStore.user.photo}`;
   }
   return `https://ui-avatars.com/api/?name=${encodeURIComponent(authStore.user?.nom || 'User')}&background=6366f1&color=fff&size=200`;
 });

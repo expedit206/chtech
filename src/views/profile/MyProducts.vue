@@ -55,7 +55,7 @@
         </h3>
         <p class="text-[var(--color-text-sub)] text-sm mb-8 max-w-sm mx-auto">
           Commencez à vendre vos articles en les ajoutant à votre catalogue
-          CHTECH dès maintenant.
+          SASAYEE dès maintenant.
         </p>
         <button @click="openModal()"
           class="px-8 py-3 bg-[var(--color-primary)] text-white rounded-2xl font-bold hover:opacity-90 transition-all">

@@ -68,7 +68,7 @@
     <div v-if="loading" class="grid grid-cols-1 lg:grid-cols-2 gap-8 animate-pulse">
       <div class="flex gap-3">
         <div class="hidden lg:flex flex-col gap-2">
-          <div v-for="i in 4" :key="i" class="w-16 h-16 rounded-xl bg-[var(--color-surface)] animate-pulse"></div>
+          <div v-for="i in 4" :key="i" class="w-16 h-16 rounded-xl bg-gray-200 dark:bg-gray-800 animate-pulse"></div>
         </div>
         <div class="flex-1 aspect-square rounded-2xl bg-[var(--color-surface)] animate-pulse"></div>
       </div>
@@ -208,7 +208,7 @@
             <span :style="{ color: 'var(--color-text-sub)' }">({{ product.reviews }} avis)</span>
           </div>
 
-          <div class="flex items-center gap-4 text-[11px] font-black uppercase opacity-60"
+          <div class="flex items-center gap-4 text-[11px] font-black  opacity-60"
             :style="{ color: 'var(--color-text-sub)' }">
             <div class="flex items-center gap-1.5">
               <Eye :size="14" :stroke-width="3" />
@@ -216,7 +216,7 @@
             </div>
             <div class="flex items-center gap-1.5">
               <Heart :size="14" :stroke-width="3" />
-              <span>{{ formatNumber(displayCounts.favorites) }} likes</span>
+              <span>{{ formatNumber(displayCounts.favorites) }} favoris</span>
             </div>
             <div class="flex items-center gap-1.5">
               <Forward :size="14" :stroke-width="3" />
@@ -280,7 +280,7 @@
             <img :src="product.user?.photo?.startsWith('http')
               ? product.user.photo
               : product.user?.photo
-                ? `http://localhost:8000/storage/${product.user.photo}`
+                ? CONFIG.STORAGE_URL + product.user.photo
                 : `https://ui-avatars.com/api/?name=${encodeURIComponent(product.user?.nom || 'Vendeur')}&background=6366f1&color=fff&size=64`
               " class="w-12 h-12 rounded-full object-cover ring-2" :style="{ ringColor: 'var(--color-primary)' }" />
             <div>
@@ -316,6 +316,7 @@
 </template>
 
 <script setup>
+import { CONFIG } from "../config/index.js";
 import { ref, computed, onMounted, onUnmounted, nextTick } from "vue";
 import { useRoute, useRouter, RouterLink } from "vue-router";
 import { useProductStore } from "../stores/products.js";
@@ -327,9 +328,6 @@ import { useAlert } from "../composables/useAlert.js";
 import { useSeo } from "../composables/useSeo.js";
 
 const alert = useAlert();
-
-
-import { CONFIG } from "../config/index.js";
 const route = useRoute();
 const router = useRouter();
 const productStore = useProductStore();
@@ -410,10 +408,37 @@ const product = ref({
 
 // Dynamic SEO
 useSeo({
-  title: computed(() => product.value.id ? `${product.value.name} - Sasaye` : 'Produit'),
+  title: computed(() => product.value.id ? `${product.value.name} - SASAYEE` : 'Produit'),
   description: computed(() => product.value.description),
   image: computed(() => product.value.photos[0]),
-  type: 'product'
+  type: 'product',
+  jsonLd: computed(() => {
+    if (!product.value.id) return null;
+    return {
+      "@context": "https://schema.org/",
+      "@type": "Product",
+      "name": product.value.name,
+      "image": product.value.photos,
+      "description": product.value.description,
+      "brand": {
+        "@type": "Brand",
+        "name": "SASAYEE"
+      },
+      "offers": {
+        "@type": "Offer",
+        "url": typeof window !== 'undefined' ? window.location.href : '',
+        "priceCurrency": "XAF",
+        "price": product.value.price_raw,
+        "availability": product.value.quantity > 0 ? "https://schema.org/InStock" : "https://schema.org/OutOfStock",
+        "itemCondition": product.value.condition === "Neuf" ? "https://schema.org/NewCondition" : "https://schema.org/UsedCondition"
+      },
+      "aggregateRating": {
+        "@type": "AggregateRating",
+        "ratingValue": product.value.rating,
+        "reviewCount": product.value.reviews || 1
+      }
+    };
+  })
 });
 
 const isFavorited = computed(() =>
@@ -438,7 +463,7 @@ const formatNumber = (num) => {
 const getImageUrl = (photo) => {
   if (typeof photo === "string") {
     if (photo.startsWith("http")) return photo;
-    return `http://localhost:8000/storage/${photo}`;
+    return `${CONFIG.STORAGE_URL}${photo}`;
   }
   return "/placeholder.png";
 };
@@ -508,7 +533,7 @@ onMounted(async () => {
 const handleToggleFavorite = async () => {
   try {
     if (!authStore.isAuthenticated) {
-      router.push({ name: "Login", query: { redirect: route.fullPath } });
+      alert.promptLogin(router, route.fullPath);
       return;
     }
     await interactionStore.toggleFavorite(product.value.id);
@@ -541,7 +566,7 @@ const handleShare = async () => {
 
 const handleContactSeller = () => {
   if (!authStore.isAuthenticated) {
-    router.push({ name: "Login", query: { redirect: route.fullPath } });
+    alert.promptLogin(router, route.fullPath);
     return;
   }
 

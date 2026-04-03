@@ -1,7 +1,8 @@
+import { CONFIG } from '../config/index.js';
 import axios from 'axios';
 
 const apiClient = axios.create({
-  baseURL: 'http://localhost:8000/', // Added /api prefix
+  baseURL: CONFIG.API_BASE_URL, 
   headers: {
     'Content-Type': 'application/json',
     'Accept': 'application/json',

@@ -89,8 +89,19 @@ const router = useRouter();
 const productStore = useProductStore();
 
 useSeo({
-  title: "Vente et Achat au Cameroun - Marketplace Sasaye",
-  description: "Découvrez Sasaye, la plateforme de référence pour l'achat et la revente de produits informatiques, mode, électroménager et services au Cameroun."
+  title: "Vente et Achat au Cameroun - Marketplace SASAYEE",
+  description: "Découvrez SASAYEE, la plateforme de référence pour l'achat et la revente de produits informatiques, mode, électroménager et services au Cameroun.",
+  jsonLd: {
+    "@context": "https://schema.org",
+    "@type": "WebSite",
+    "name": "SASAYEE",
+    "url": "https://sasayee.com/",
+    "potentialAction": {
+      "@type": "SearchAction",
+      "target": "https://sasayee.com/?search={search_term_string}",
+      "query-input": "required name=search_term_string"
+    }
+  }
 });
 
 

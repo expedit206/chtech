@@ -78,6 +78,7 @@
 
 <script setup>
 import { ref, computed, onMounted } from "vue";
+import { useRouter, useRoute } from "vue-router";
 import { useInteractionStore } from "../stores/interactions.js";
 import { useAuthStore } from "../stores/auth.js";
 import {
@@ -89,6 +90,8 @@ import {
 import { useAlert } from "../composables/useAlert.js";
 
 const alert = useAlert();
+const router = useRouter();
+const route = useRoute();
 
 const interactionStore = useInteractionStore();
 const authStore = useAuthStore();
@@ -204,10 +207,7 @@ const recordViewOnce = () => {
 const handleToggleFavorite = async () => {
   try {
     if (!authStore.isAuthenticated) {
-      alert.warning({
-        title: "Connexion requise",
-        message: "Veuillez vous connecter pour ajouter ce produit à vos favoris."
-      });
+      alert.promptLogin(router, route.fullPath);
       return;
     }
 
