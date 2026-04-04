@@ -179,17 +179,7 @@
 </template>
 
 <script setup>
-import { useHead } from "@vueuse/head";
-useHead({
-  title: "Mentions Légales - Sasaye",
-  meta: [
-    {
-      name: "description",
-      content:
-        "Découvrez les mentions légales de Sasaye : informations sur l'éditeur, l'hébergeur, la propriété intellectuelle et la gestion des données personnelles.",
-    },
-  ],
-});
+
 import {
   Scale,
   Building2,
