@@ -94,10 +94,10 @@
                 v-if="message.type === 'image'"
                 class="overflow-hidden cursor-pointer mb-1"
                 :class="message.content ? 'rounded-lg mb-2' : 'rounded-2xl'"
-                @click="viewImage(message.attachment_url || message.content)"
+                @click="viewImage(getMediaUrl(message.attachment_url || message.content))"
               >
                 <img
-                  :src="message.attachment_url || message.content"
+                  :src="getMediaUrl(message.attachment_url || message.content)"
                   class="max-w-full h-auto max-h-80 object-cover min-w-[200px]"
                   loading="lazy"
                 />
@@ -112,7 +112,7 @@
                 preload="metadata"
               >
                 <source
-                  :src="message.attachment_url || message.content"
+                  :src="getMediaUrl(message.attachment_url || message.content)"
                   type="video/mp4"
                 />
                 Votre navigateur ne supporte pas la vidéo.
@@ -130,7 +130,7 @@
                 "
               >
                 <source
-                  :src="message.attachment_url || message.content"
+                  :src="getMediaUrl(message.attachment_url || message.content)"
                   type="audio/webm"
                 />
                 Audio error
@@ -239,6 +239,7 @@
 <script setup>
 import { ref, onMounted, nextTick, watch, defineProps, defineEmits } from "vue";
 import { useToast } from "vue-toastification";
+import { CONFIG } from "../../config/index.js";
 import apiClient from "../../api/index.js";
 import useI18n from "../../composables/useI18n.js";
 import MessageSkeleton from "./MessageSkeleton.vue";
@@ -252,6 +253,12 @@ const props = defineProps({
   selectedConversation: Object,
   authStore: Object,
 });
+
+const getMediaUrl = (url) => {
+  if (!url) return "";
+  if (String(url).startsWith("http")) return url;
+  return CONFIG.STORAGE_URL + url;
+};
 
 const openMenuId = ref(null);
 const messagesContainer = ref(null);

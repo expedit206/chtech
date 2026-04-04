@@ -1,6 +1,4 @@
 import { CONFIG } from '../config/index.js';
-
-
 import { defineStore } from "pinia";
 import { ref, computed, onUnmounted } from "vue";
 import { useToast } from "vue-toastification";
@@ -58,7 +56,6 @@ export const useMessageStore = defineStore("message", () => {
     const groups = [];
     let lastDate = "";
 
-    // Iteration efficace
     for (let i = 0; i < messages.value.length; i++) {
       const msg = messages.value[i];
       if (!msg.created_at) continue;
@@ -82,13 +79,8 @@ export const useMessageStore = defineStore("message", () => {
     );
   });
 
-  const storageUrl = computed(() => {
-    return (CONFIG.API_BASE_URL) + "/storage/";
-  });
-
   // Actions
   const fetchConversations = async (silent = false, force = false) => {
-    // Cache check for conversations
     if (!force && silent && lastFetchedConversations.value && (Date.now() - lastFetchedConversations.value < CONV_CACHE_TIMEOUT)) {
       return;
     }
@@ -99,7 +91,6 @@ export const useMessageStore = defineStore("message", () => {
       conversations.value = response.data.conversations;
       lastFetchedConversations.value = Date.now();
 
-      // Update badge count
       if (badgeStore.badgeCounts) {
         badgeStore.badgeCounts.messages = unreadCount.value;
       }
@@ -111,27 +102,43 @@ export const useMessageStore = defineStore("message", () => {
     }
   };
 
-  const messagesCache = ref({}); // { [cacheKey]: messages[] }
-  const lastFetchedMessages = ref({}); // { [cacheKey]: timestamp }
-  const MSG_CACHE_TIMEOUT = 2 * 60 * 1000; // 2 minutes
+  const messagesCache = ref({}); 
+  const lastFetchedMessages = ref({}); 
+  const MSG_CACHE_TIMEOUT = 2 * 60 * 1000; 
 
   const fetchMessages = async (receiverId, resetOffset = true, productId = null) => {
     const cacheKey = productId ? `${receiverId}_${productId}` : `${receiverId}_null`;
 
-    // Si on a déjà des messages en cache et qu'on reset, on les affiche tout de suite
-    if (resetOffset && messagesCache.value[cacheKey]) {
-      messages.value = messagesCache.value[cacheKey];
+    if (resetOffset) {
+      // Nettoyage immédiat pour éviter de voir l'ancien chat
+      messages.value = messagesCache.value[cacheKey] || [];
+      
+      // On essaie de trouver la conversation dans la liste locale pour mettre à jour le header tout de suite
+      const convMatch = conversations.value.find(c => String(c.user_id) === String(receiverId) && String(c.product_id || '') === String(productId || ''));
+      
+      if (convMatch) {
+        selectedConversation.value = convMatch;
+      } else {
+        selectedConversation.value = {
+          user_id: receiverId,
+          product_id: productId,
+          name: "Chargement...",
+        };
+        // Si on vient juste de cliquer sur "Acheter un produit", on utilise le localStorage
+        if (product.value && String(product.value.id) === String(productId)) {
+           selectedConversation.value.product_name = product.value.nom;
+        }
+      }
     }
 
-    // Éviter de recharger si c'est très récent (moins de 2 min)
     const now = Date.now();
-    if (resetOffset && lastFetchedMessages.value[cacheKey] && (now - lastFetchedMessages.value[cacheKey] < MSG_CACHE_TIMEOUT)) {
+    // On ne bypass le cache QUE si ce n'est pas un reset (pagination infinie)
+    if (!resetOffset && lastFetchedMessages.value[cacheKey] && (now - lastFetchedMessages.value[cacheKey] < MSG_CACHE_TIMEOUT)) {
       return;
     }
 
     if (!resetOffset) isLoading.value = true;
     else if (!messagesCache.value[cacheKey]) {
-        // N'afficher le loader que si on n'a absolument rien en cache
         isLoading.value = true;
     }
 
@@ -141,7 +148,6 @@ export const useMessageStore = defineStore("message", () => {
       if (productId) params.product_id = productId;
 
       const response = await apiClient.get(`/chat/${receiverId}`, { params });
-
       const newMessages = response.data.messages;
       
       if (resetOffset) {
@@ -157,13 +163,25 @@ export const useMessageStore = defineStore("message", () => {
       
       if (response.data.user) {
         const user = response.data.user;
+        const productData = response.data.product;
         const convMatch = conversations.value.find(c => String(c.user_id) === String(user.id) && String(c.product_id || '') === String(productId || ''));
         
+        let displayName = user.nom;
+        if (convMatch && convMatch.name) {
+          displayName = convMatch.name;
+        } else if (productData) {
+          const clientName = (authStore.user?.role === 'admin' || authStore.user?.email === 'aaa@aaa.com') ? user.nom : authStore.user?.nom;
+          displayName = `${productData.nom} - ${clientName}`;
+        }
+
         selectedConversation.value = {
           user_id: user.id,
-          name: convMatch && convMatch.name ? convMatch.name : user.nom,
+          name: displayName,
           profile_photo: user.photo,
           product_id: productId,
+          product_name: productData ? productData.nom : (convMatch ? convMatch.product_name : null),
+          product_slug: productData ? productData.slug : (convMatch ? convMatch.product_slug : null),
+          product_image: productData && productData.photos ? productData.photos[0] : (convMatch ? convMatch.product_image : null),
           order_status: convMatch ? convMatch.order_status : null,
           ...(convMatch || {})
         };
@@ -181,6 +199,40 @@ export const useMessageStore = defineStore("message", () => {
     }
   };
 
+  const updateConversationLastMessage = (message) => {
+    const cid = String(message.sender_id) === String(authStore.user?.id) ? message.receiver_id : message.sender_id;
+    const pid = message.product_id;
+    const convIndex = conversations.value.findIndex(c => String(c.user_id) === String(cid) && String(c.product_id || '') === String(pid || ''));
+
+    const lastMsg = message.type === "text" ? message.content : `[${message.type}]`;
+
+    if (convIndex !== -1) {
+      // Mettre à jour et remonter en haut
+      const conv = conversations.value.splice(convIndex, 1)[0];
+      conv.last_message = lastMsg;
+      conv.last_message_type = message.type;
+      conv.updated_at = message.updated_at || new Date().toISOString();
+      conversations.value.unshift(conv);
+    } else if (selectedConversation.value && String(selectedConversation.value.user_id) === String(cid) && String(selectedConversation.value.product_id || '') === String(pid || '')) {
+      // Créer une nouvelle entrée dans la sidebar pour cette nouvelle conversation
+      const newConv = {
+        user_id: cid,
+        product_id: pid,
+        name: selectedConversation.value.name,
+        product_name: selectedConversation.value.product_name,
+        product_slug: selectedConversation.value.product_slug,
+        product_image: selectedConversation.value.product_image,
+        user_name: selectedConversation.value.user_name || (authStore.user?.role === 'admin' ? selectedConversation.value.name : authStore.user?.nom),
+        user_photo: selectedConversation.value.profile_photo,
+        last_message: lastMsg,
+        last_message_type: message.type,
+        updated_at: message.updated_at || new Date().toISOString(),
+        unread_count: 0
+      };
+      conversations.value.unshift(newConv);
+    }
+  };
+
   const sendMessage = async (content, type = "text", file = null) => {
     if (!selectedConversation.value) return;
 
@@ -188,7 +240,6 @@ export const useMessageStore = defineStore("message", () => {
     const tempId = -Date.now();
     
     newMessage.value = "";
-    // UI optimistic update
     const tempMessage = {
       id: tempId,
       sender_id: authStore.user?.id,
@@ -223,7 +274,6 @@ export const useMessageStore = defineStore("message", () => {
 
       const realMessage = response.data.data;
 
-      // Replace temporary message
       const index = messages.value.findIndex(m => m.id === tempId);
       if (index !== -1) {
         messages.value[index] = { ...realMessage, isTemporary: false };
@@ -231,7 +281,6 @@ export const useMessageStore = defineStore("message", () => {
 
       updateConversationLastMessage(realMessage);
       if (product.value) clearProductTag();
-      // newMessage.value = "";
       
       return realMessage;
     } catch (error) {
@@ -244,19 +293,17 @@ export const useMessageStore = defineStore("message", () => {
   const startPolling = () => {
     if (pollingInterval) return;
     
-    // Polling adaptatif : plus fréquent si la page est active
     pollingInterval = setInterval(async () => {
       if (!authStore.isAuthenticated || document.hidden) return;
       
-      // Conversations moins fréquentes (via le cache check dans fetchConversations)
       await fetchConversations(true);
       
-      // Messages uniquement si une conv est ouverte
       if (selectedConversation.value && !isLoading.value) {
         const receiverId = selectedConversation.value.user_id;
+        const productId = selectedConversation.value.product_id;
         try {
           const response = await apiClient.get(`/chat/${receiverId}`, {
-            params: { limit: 10 }
+            params: { limit: 10, product_id: productId }
           });
           
           const latestMessages = response.data.messages;
@@ -350,8 +397,12 @@ export const useMessageStore = defineStore("message", () => {
     isSidebarOpen.value = !isSidebarOpen.value;
   };
 
-  const selectConversation = (receiverId) => {
-    router.push({ name: "messages", params: { receiverId } });
+  const selectConversation = (receiverId, productId = null) => {
+    router.push({ 
+      name: "messages", 
+      params: { receiverId }, 
+      query: productId ? { productId } : {} 
+    });
     if (isMobile.value) {
       isSidebarOpen.value = false;
     }
@@ -416,16 +467,6 @@ export const useMessageStore = defineStore("message", () => {
 
   const stopRecordingTimer = () => { if (recordingState.value.timer) clearInterval(recordingState.value.timer); };
 
-  const updateConversationLastMessage = (message) => {
-    const cid = String(message.sender_id) === String(authStore.user?.id) ? message.receiver_id : message.sender_id;
-    const convIndex = conversations.value.findIndex(c => String(c.user_id) === String(cid));
-
-    if (convIndex !== -1) {
-      conversations.value[convIndex].last_message = message.type === "text" ? message.content : `[${message.type}]`;
-      conversations.value[convIndex].last_message_type = message.type;
-      conversations.value[convIndex].updated_at = message.updated_at;
-    }
-  };
 
   const initialize = () => {
     const storedProduct = localStorage.getItem("chatProduct");
@@ -440,12 +481,11 @@ export const useMessageStore = defineStore("message", () => {
   };
 
   const subscribeToChannel = () => {
-    // TODO: Implement real-time with Echo if needed
     // console.log("Real-time subscription requested");
   };
 
   const unsubscribeFromChannel = () => {
-    // TODO: Cleanup real-time
+    // console.log("Unsubscribe from channel");
   };
 
   const cleanup = () => {
@@ -456,7 +496,7 @@ export const useMessageStore = defineStore("message", () => {
 
   return {
     conversations, messages, selectedConversation, isLoading, hasMore, isSidebarOpen, isMobile, product, typingState, recordingState, newMessage,
-    groupedMessages, unreadCount, storageUrl,
+    groupedMessages, unreadCount,
     fetchConversations, fetchMessages, sendMessage, startRecording, stopRecording, toggleRecordingPause, cancelRecording,
     markAllMessagesAsRead, editMessage, deleteMessage, setProductTag, clearProductTag, toggleSidebar, selectConversation,
     initialize, cleanup, subscribeToChannel, unsubscribeFromChannel

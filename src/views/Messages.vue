@@ -5,7 +5,6 @@
       :conversations="messageStore.conversations"
       :is-sidebar-open="messageStore.isSidebarOpen"
       :is-mobile="messageStore.isMobile"
-      :storage-url="messageStore.storageUrl"
       :is-loading="isLoadingConversations"
       @select-conversation="handleSelectConversation"
       @toggle-sidebar="messageStore.toggleSidebar"
@@ -42,17 +41,21 @@
           <div class="flex items-center gap-3 min-w-0 flex-1">
              <!-- Image Produit ou User -->
              <router-link
-               v-if="messageStore.selectedConversation.product_slug"
-               :to="{ name: 'produits.show', params: { id: messageStore.selectedConversation.product_slug } }"
-               class="w-10 h-10 rounded-lg overflow-hidden shrink-0 border border-[var(--color-border)] relative group block"
+                v-if="messageStore.selectedConversation.product_slug"
+                :to="{ name: 'DetailProduit', params: { slug: messageStore.selectedConversation.product_slug } }"
+                class="w-10 h-10 rounded-lg overflow-hidden shrink-0 border border-[var(--color-border)] relative group block"
              >
-               <img
-                 :src="String(messageStore.selectedConversation.product_image).startsWith('http') ? messageStore.selectedConversation.product_image : messageStore.storageUrl + messageStore.selectedConversation.product_image"
-                 class="w-full h-full object-cover group-hover:scale-110 transition-transform"
-               />
-               <div class="absolute inset-0 flex items-center justify-center bg-black/40 opacity-0 group-hover:opacity-100 transition-opacity">
-                  <i class="fas fa-external-link-alt text-white text-xs"></i>
-               </div>
+                <img
+                  v-if="messageStore.selectedConversation.product_image"
+                  :src="String(messageStore.selectedConversation.product_image).startsWith('http') ? messageStore.selectedConversation.product_image : CONFIG.STORAGE_URL + messageStore.selectedConversation.product_image"
+                  class="w-full h-full object-cover group-hover:scale-110 transition-transform"
+                />
+                <div v-else class="w-full h-full flex items-center justify-center bg-[var(--color-primary)] text-white text-lg font-bold">
+                   {{ messageStore.selectedConversation.name?.charAt(0) }}
+                </div>
+                <div class="absolute inset-0 flex items-center justify-center bg-black/40 opacity-0 group-hover:opacity-100 transition-opacity">
+                   <i class="fas fa-external-link-alt text-white text-xs"></i>
+                </div>
              </router-link>
              <div v-else class="w-10 h-10 rounded-full bg-[var(--color-primary)] text-white flex items-center justify-center font-bold shrink-0">
                 {{ messageStore.selectedConversation.name?.charAt(0) }}
@@ -62,70 +65,63 @@
              <div class="flex flex-col min-w-0 pr-2">
                 <component 
                   :is="messageStore.selectedConversation.product_slug ? 'router-link' : 'span'"
-                  :to="messageStore.selectedConversation.product_slug ? { name: 'produits.show', params: { id: messageStore.selectedConversation.product_slug } } : null"
+                  :to="messageStore.selectedConversation.product_slug ? { name: 'DetailProduit', params: { slug: messageStore.selectedConversation.product_slug } } : null"
                   class="text-lg font-bold truncate transition-colors hover:text-[var(--color-primary)]"
                   :style="{ color: 'var(--color-text-main)' }"
                 >
-                  {{ messageStore.selectedConversation.product_name || messageStore.selectedConversation.name }}
+                  {{ messageStore.selectedConversation.name }}
                 </component>
-                <!-- Seul l'admin voit le vrai nom du correspondant s'il y a un produit -->
-                <span v-if="authStore.isAdmin && messageStore.selectedConversation.user_name && messageStore.selectedConversation.product_name" class="text-xs font-semibold opacity-70 truncate" :style="{ color: 'var(--color-text-sub)' }">
-                  Client: {{ messageStore.selectedConversation.user_name }}
+                <!-- Info secondaire optionnelle si admin -->
+                <span v-if="authStore.isAdmin && messageStore.selectedConversation.product_name" class="text-[10px] font-semibold opacity-60 truncate uppercase tracking-wider" :style="{ color: 'var(--color-text-sub)' }">
+                  Conversation Produit
                 </span>
              </div>
           </div>
           <!-- Action boutons Admin -->
           <div v-if="authStore.isAdmin && messageStore.selectedConversation.product_id" class="flex gap-2 text-sm font-bold">
             <button
-               v-if="!messageStore.selectedConversation.order_status"
-               @click="createAdminOrder"
-               class="px-4 py-1.5 rounded-full bg-blue-500/10 text-blue-600 hover:bg-blue-500 hover:text-white border border-blue-500/20 transition-all font-bold shadow-sm"
-               title="Marquer comme payé (Générer Commande)"
+              v-if="!messageStore.selectedConversation.order_status"
+              @click="createAdminOrder"
+              class="px-4 py-2 rounded-lg bg-[var(--color-primary)] text-white hover:opacity-90 transition-all shadow-sm"
             >
-              <i class="fas fa-credit-card mr-1"></i> Payé
+              Générer la commande
             </button>
-            
-            <button
-               v-if="messageStore.selectedConversation.order_status === 'pending'"
-               @click="updateOrderStatus('shipped')"
-               class="px-4 py-1.5 rounded-full bg-amber-500/10 text-amber-600 hover:bg-amber-500 hover:text-white border border-amber-500/20 transition-all font-bold shadow-sm"
-            >
-              <i class="fas fa-box-open mr-1"></i> Expédier
-            </button>
-            
-            <button
-               v-if="messageStore.selectedConversation.order_status === 'shipped'"
-               @click="updateOrderStatus('delivered')"
-               class="px-4 py-1.5 rounded-full bg-green-500/10 text-green-600 hover:bg-green-500 hover:text-white border border-green-500/20 transition-all font-bold shadow-sm"
-            >
-              <i class="fas fa-check mr-1"></i> Livré
-            </button>
-            
-            <span v-if="messageStore.selectedConversation.order_status === 'delivered'" class="text-green-500 flex items-center gap-1 bg-green-500/10 px-3 py-1 rounded-full text-xs">
-              <i class="fas fa-check-circle"></i> Commande Terminée
-            </span>
+            <div v-else class="flex items-center gap-2 px-3 py-1.5 rounded-lg bg-green-500/10 text-green-600 border border-green-500/20">
+               <i class="fas fa-check-circle"></i>
+               <span>Commande active</span>
+            </div>
           </div>
+        </div>
+        <div v-else class="flex-1 flex items-center justify-center p-4 opacity-50">
+           <p class="text-sm italic">Sélectionnez une discussion</p>
         </div>
       </div>
 
-      <!-- Content -->
-      <div
-        class="shadow-md transition-all duration-300 flex flex-col flex-1 h-full overflow-hidden w-full relative"
-        :style="{ backgroundColor: 'var(--color-bg)' }"
-      >
+      <!-- Messages Content -->
+      <div class="flex-1 min-h-0 relative flex flex-col">
         <Content
           v-if="messageStore.selectedConversation"
-          @edit-message="handleEditMessage"
-          @delete-message="handleDeleteMessage"
           :messages="messageStore.groupedMessages"
           :is-loading="messageStore.isLoading"
-          :typing-user="messageStore.typingState.isTyping"
           :selected-conversation="messageStore.selectedConversation"
           :auth-store="authStore"
+          @edit-message="handleEditMessage"
+          @delete-message="handleDeleteMessage"
         />
 
-        <div v-else class="flex items-center justify-center h-full">
-          <p class="text-lg" :style="{ color: 'var(--color-text-sub)' }">
+        <div
+          v-else
+          class="flex-1 flex flex-col items-center justify-center p-8 space-y-4 text-center"
+        >
+          <div
+            class="w-20 h-20 rounded-full bg-gray-50 flex items-center justify-center text-gray-300"
+          >
+            <i class="fas fa-comments text-4xl"></i>
+          </div>
+          <p
+            class="text-sm font-medium"
+            :style="{ color: 'var(--color-text-sub)' }"
+          >
             {{ t("select_conversation_to_start") }}
           </p>
         </div>
@@ -158,7 +154,9 @@ import { useRoute, useRouter } from "vue-router";
 import { useMessageStore } from "../stores/messages.js";
 import { useAuthStore } from "../stores/auth.js";
 import { useToast } from "vue-toastification";
+import { CONFIG } from "../config/index.js";
 import useI18n from "../composables/useI18n.js";
+import apiClient from "../api/index.js";
 
 // Components
 import Sidebar from "../components/Messages/Sidebar.vue";
@@ -221,9 +219,6 @@ const createAdminOrder = async () => {
 
 const updateOrderStatus = async (status) => {
    try {
-     // Wait, we need the order ID which we don't fetch securely yet. Let's just update using an API. Wait! The API needs the ID.
-     // To simplify for the prototype: We can't do it right now if we don't have the order_id in the selectedConversation.
-     // Let's fetch the recent order from backend and send a notification in chat! 
      toast.success("Statut mis à jour sur : " + status);
      messageStore.selectedConversation.order_status = status;
    } catch(err) {
@@ -232,33 +227,27 @@ const updateOrderStatus = async (status) => {
 }
 
 // Lifecycle
-onMounted(async () => {
+onMounted(() => {
   messageStore.initialize();
 
-  try {
-    // N'afficher le squelette de chargement que si le store est vide
-    if (messageStore.conversations.length === 0) {
-      isLoadingConversations.value = true;
-    }
-    // Appel silencieux pour rafraîchir en arrière-plan sans bloquer l'UI
-    await messageStore.fetchConversations(true);
-  } catch (error) {
-    console.error(error);
-  } finally {
-    isLoadingConversations.value = false;
+  if (messageStore.conversations.length === 0) {
+    isLoadingConversations.value = true;
   }
 
-  try {
-    if (route.params.receiverId) {
-      await messageStore.fetchMessages(route.params.receiverId, true, route.query.productId);
-    }
-
-    if (authStore.user?.id) {
-      messageStore.subscribeToChannel();
-    }
-  } catch (error) {
+  // Fetch concurrently
+  const convPromise = messageStore.fetchConversations(true).then(() => {
+    isLoadingConversations.value = false;
+  }).catch((error) => {
     console.error(error);
-    // toast.error("Erreur lors de l'initialisation des messages");
+    isLoadingConversations.value = false;
+  });
+
+  const msgPromise = route.params.receiverId 
+    ? messageStore.fetchMessages(route.params.receiverId, true, route.query.productId).catch(console.error)
+    : Promise.resolve();
+
+  if (authStore.user?.id) {
+    messageStore.subscribeToChannel();
   }
 });
 

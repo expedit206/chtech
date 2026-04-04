@@ -99,29 +99,29 @@
             class="relative flex-shrink-0"
             @click.stop="$emit('view-profile', conv.user_id)"
           >
+            <!-- Image Produit ou User -->
             <div
-              class="w-12 h-12 rounded-full overflow-hidden ring-2 ring-transparent group-hover:ring-gray-100 transition-all"
-              :style="{ backgroundColor: 'var(--color-bg)' }"
+              v-if="conv.product_image"
+              class="w-12 h-12 rounded-xl overflow-hidden shrink-0 border border-[var(--color-border)] relative"
             >
               <img
-                v-if="conv.profile_photo"
-                :src="
-                  String(conv.profile_photo).startsWith('http')
-                    ? conv.profile_photo
-                    : storageUrl + conv.profile_photo
-                "
-                alt=""
-                class="w-full h-full object-cover"
+                :src="String(conv.product_image).startsWith('http') ? conv.product_image : CONFIG.STORAGE_URL + conv.product_image"
+                class="w-full h-full object-cover group-hover:scale-110 transition-transform"
               />
-              <div
-                v-else
-                class="w-full h-full flex items-center justify-center bg-[var(--color-primary)] text-white text-lg font-bold"
-              >
-                {{ conv.name.charAt(0).toUpperCase() }}
-              </div>
             </div>
-            <!-- Online status (mockup) -->
-            <!-- <div class="absolute bottom-0 right-0 w-3 h-3 bg-green-500 rounded-full border-2 border-white"></div> -->
+            <div
+              v-else
+              class="w-12 h-12 rounded-full relative shrink-0 ring-2 ring-transparent transition-all group-hover:ring-[var(--color-primary)]"
+            >
+              <img
+                :src="conv.user_photo?.startsWith('http') ? conv.user_photo : conv.user_photo ? CONFIG.STORAGE_URL + conv.user_photo : `https://ui-avatars.com/api/?name=${encodeURIComponent(conv.name || 'User')}&background=6366f1&color=fff&size=64`"
+                class="w-full h-full rounded-full object-cover transition-transform group-hover:scale-105"
+              />
+              <span
+                v-if="conv.is_online"
+                class="absolute bottom-0.5 right-0.5 w-3 h-3 bg-green-500 border-2 border-white rounded-full"
+              ></span>
+            </div>
           </div>
 
           <!-- Content -->
@@ -148,11 +148,6 @@
               >
                 {{ formatTime(conv.updated_at) }}
               </span>
-            </div>
-
-            <!-- Nom de l'utilisateur affiché pour l'admin si on est dans un contexte produit -->
-            <div v-if="authStore.isAdmin && conv.product_name && conv.user_name" class="text-xs font-semibold mb-1 truncate text-[var(--color-primary)] opacity-80">
-              {{ conv.user_name }}
             </div>
 
             <div class="flex items-center justify-between">
@@ -217,6 +212,7 @@
 <script setup>
 import ConversationSkeleton from "./ConversationSkeleton.vue";
 import { useAuthStore } from "../../stores/auth";
+import { CONFIG } from "../../config/index.js";
 
 const authStore = useAuthStore();
 
@@ -224,7 +220,6 @@ const props = defineProps({
   conversations: Array,
   isSidebarOpen: Boolean,
   isMobile: Boolean,
-  storageUrl: String,
   activeConversationId: [String, Number],
   activeProductId: [String, Number],
   isLoading: Boolean,
