@@ -201,6 +201,18 @@ import {
   EyeOff,
   Ban,
 } from "lucide-vue-next";
+// SEO pour la page de politique de confidentialité
+import { useHead } from "@vueuse/head";
+useHead({
+  title: "Politique de confidentialité - Sasaye",
+  meta: [
+    {
+      name: "description",
+      content:
+        "Découvrez notre politique de confidentialité et comment nous protégeons vos données personnelles sur Sasaye.",
+    },
+  ],
+});
 
 const providedData = [
   {

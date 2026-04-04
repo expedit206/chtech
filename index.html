@@ -1,26 +1,126 @@
 <!doctype html>
-<html lang="en">
+<html lang="fr">
   <head>
+    <!-- Encodage et méta essentielles -->
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    
     <meta name="theme-color" content="#6366f1" />
     <meta name="author" content="SASAYEE" />
-    <meta name="robots" content="index, follow" />
-    <title>SASAYEE - Marché technologique au Cameroun</title>
-
-    <meta
-      name="description"
-      content="SASAYEE est la marketplace de référence au Cameroun pour acheter et vendre des produits informatiques, mode et services."
-    />
-    <meta property="og:site_name" content="SASAYEE" />
-    <meta property="og:type" content="website" />
-    <meta property="og:image" content="https://sasayee.com/og-image.jpg" />
-    <meta name="twitter:card" content="summary_large_image" />
+    <meta name="creator" content="SASAYEE" />
+    <meta name="publisher" content="SASAYEE" />
+    <meta name="robots" content="index, follow, max-image-preview:large, max-snippet:-1, max-video-preview:-1" />
+    <meta name="language" content="French" />
+    <meta name="revisit-after" content="7 days" />
+    <meta name="rating" content="general" />
 
     <link
       rel="stylesheet"
-      href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css"
+      href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/7.0.1/css/all.min.css"
     />
+    <title>SASAYEE - Marché technologique au Cameroun | Achetez au meilleur prix</title>
+    
+    <meta name="description" content="SASAYEE est la marketplace de référence au Cameroun pour acheter et vendre des produits informatiques, mode et services. Livraison rapide et sécurisée." />
+    <meta name="keywords" content="boutique en ligne Cameroun, shopping en ligne, achat en ligne Cameroun, e-commerce Cameroun, SASAYEE, magasin en ligne, produits Cameroun, livraison Cameroun, prix compétitifs" />
+
+    <!-- Canonical URL -->
+    <link rel="canonical" href="https://sasayee.com/" />
+
+    <!-- Open Graph -->
+    <meta property="og:site_name" content="SASAYEE" />
+    <meta property="og:type" content="website" />
+    <meta property="og:title" content="SASAYEE – La boutique en ligne #1 du Cameroun" />
+    <meta property="og:description" content="Achetez vos produits préférés en ligne avec SASAYEE. Meilleurs prix, livraison rapide et service client." />
+    <meta property="og:url" content="https://sasayee.com/" />
+    <meta property="og:image" content="https://sasayee.com/og-image.jpg" />
+    <meta property="og:image:width" content="1200" />
+    <meta property="og:image:height" content="630" />
+    <meta property="og:image:alt" content="SASAYEE - Boutique en ligne au Cameroun" />
+    <meta property="og:locale" content="fr_CM" />
+
+    <!-- Twitter Card -->
+    <meta name="twitter:card" content="summary_large_image" />
+    <meta name="twitter:title" content="SASAYEE – Boutique en ligne au Cameroun" />
+    <meta name="twitter:description" content="Achetez au meilleur prix avec la livraison rapide et sécurisée" />
+    <meta name="twitter:image" content="https://sasayee.com/og-image.jpg" />
+    <meta name="twitter:site" content="@sasayee_cm" />
+    <meta name="twitter:creator" content="@sasayee_cm" />
+
+    <!-- Structuré data (JSON-LD) -->
+    <script type="application/ld+json">
+      {
+        "@context": "https://schema.org",
+        "@type": "WebSite",
+        "name": "SASAYEE",
+        "description": "Boutique en ligne au Cameroun",
+        "url": "https://sasayee.com",
+        "potentialAction": {
+          "@type": "SearchAction",
+          "target": {
+            "@type": "EntryPoint",
+            "urlTemplate": "https://sasayee.com/search?q={search_term_string}"
+          },
+          "query-input": "required name=search_term_string"
+        }
+      }
+    </script>
+
+    <!-- Organisation structurée (JSON-LD) -->
+    <script type="application/ld+json">
+      {
+        "@context": "https://schema.org",
+        "@type": "LocalBusiness",
+        "name": "SASAYEE",
+        "description": "Plateforme de e-commerce au Cameroun",
+        "url": "https://sasayee.com",
+        "logo": "https://sasayee.com/og-image.jpg",
+        "telephone": "+237683461329",
+        "email": "contact@sasayee.com",
+        "areaServed": "CM",
+        "priceRange": "$$",
+        "address": {
+          "@type": "PostalAddress",
+          "streetAddress": "",
+          "addressLocality": "Bafoussam",
+          "addressRegion": "Ouest",
+          "addressCountry": "CM"
+        },
+        "sameAs": [
+          "https://www.facebook.com/sasayee",
+          "https://www.instagram.com/sasayee",
+          "https://twitter.com/sasayee_cm"
+        ]
+      }
+    </script>
+
+    <!-- Favicons -->
+    <link rel="icon" type="image/x-icon" href="/src/assets/logo.png" />
+    <link rel="apple-touch-icon" href="/src/assets/logo.png" />
+    <link
+      rel="icon"
+      type="image/png"
+      sizes="32x32"
+      href="/src/assets/logo.png"
+    />
+    <link
+      rel="icon"
+      type="image/png"
+      sizes="16x16"
+      href="/src/assets/logo.png"
+    />
+
+    <!-- Preconnect aux ressources externes (performance) -->
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link rel="dns-prefetch" href="https://cdnjs.cloudflare.com" />
+
+    <!-- Sitemap et RSS (facultatif) -->
+    <link rel="sitemap" type="application/xml" href="/sitemap.xml" />
+
+    <!-- Security headers -->
+    <meta http-equiv="X-UA-Compatible" content="ie=edge" />
+    <meta http-equiv="X-Content-Type-Options" content="nosniff" />
+    <meta name="referrer" content="strict-origin-when-cross-origin" />
   </head>
   <body>
     <div id="app"></div>

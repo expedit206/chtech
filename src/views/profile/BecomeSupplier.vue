@@ -92,10 +92,18 @@
             Soumettre ma candidature
           </button>
         </form>
+        <div class="">
+          <p class="mt-4 text-sm text-[var(--color-text-sub)] italic">
+            <i
+              >Vos informations seront examinées par notre équipe avant d'être
+              approuvées.</i
+            >
+          </p>
+        </div>
       </section>
 
       <aside class="space-y-8">
-        <div
+        <!-- <div
           class="p-6 bg-[var(--color-surface)] rounded-xl border-l-4 border-[var(--color-primary)] shadow-sm"
         >
           <h3 class="text-xl font-bold mb-4 flex items-center gap-2">
@@ -108,7 +116,7 @@
             </li>
             <li class="flex gap-2">✅ <span>Logo de votre structure</span></li>
           </ul>
-        </div>
+        </div> -->
 
         <div
           class="p-6 bg-[var(--color-surface)] rounded-xl shadow-sm text-center"
@@ -126,8 +134,6 @@
         </div>
       </aside>
     </div>
-
-    
   </div>
 </template>
 

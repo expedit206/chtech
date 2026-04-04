@@ -157,13 +157,11 @@ import { useRouter } from "vue-router";
 import { Eye, EyeOff } from "lucide-vue-next";
 const auth = useAuthStore();
 const router = useRouter();
-
 import { useSeo } from "../composables/useSeo.js";
 useSeo({
   title: "Connexion - SASAYEE",
   description: "Connectez-vous à votre compte SASAYEE pour gérer vos achats, vos ventes et vos messages."
 });
-
 const form = reactive({
   login: "",
   mot_de_passe: "",

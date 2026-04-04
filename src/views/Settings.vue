@@ -168,6 +168,7 @@ const profilePhotoUrl = computed(() => {
   if (authStore.user?.photo) {
     if (authStore.user.photo.startsWith('http')) return authStore.user.photo;
     return `${CONFIG.API_BASE_URL}/storage/${authStore.user.photo}`;
+
   }
   return `https://ui-avatars.com/api/?name=${encodeURIComponent(authStore.user?.nom || 'User')}&background=6366f1&color=fff&size=200`;
 });

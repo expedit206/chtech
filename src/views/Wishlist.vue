@@ -131,5 +131,4 @@ const removeFavorite = async (productId) => {
   await interactionStore.toggleFavorite(productId);
   favorites.value = favorites.value.filter((p) => p.id !== productId);
 };
-
 </script>
