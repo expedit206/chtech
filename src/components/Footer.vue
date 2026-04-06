@@ -60,8 +60,7 @@ import { RouterLink } from "vue-router";
           <img :src="CONFIG.LOGO_URL" alt="SASAYEE Logo" class="h-16 md:h-20 w-auto object-contain" />
         </div>
         <p class="text-sm leading-relaxed opacity-70 mb-6">
-          La première marketplace dédiée aux solutions technologiques
-          révolutionnaires. Achetez, vendez et innovez.
+        La marketplace de référence au Cameroun pour acheter et vendre en toute confiance. Découvrez une sélection de produits de qualité, des offres exclusives et un service client dédié pour une expérience e-commerce inégalée.
         </p>
         <div class="flex gap-4">
           <a href="#" class="hover:opacity-70 transition-opacity">
