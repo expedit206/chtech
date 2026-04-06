@@ -1,22 +1,36 @@
 <template>
   <div class="p-6 space-y-8 animate-fade-in pb-20 max-w-7xl mx-auto">
-    <header class="text-center max-w-2xl mx-auto space-y-6">
+    <header class="text-center max-w-2xl mx-auto space-y-6 relative">
       <h1
         class="text-4xl font-extrabold text-[var(--color-text-main)] tracking-tight"
       >
         Comment pouvons-nous vous aider ?
       </h1>
+
       <div class="relative group">
+        <!-- Icône de recherche -->
         <Search
           class="absolute left-4 top-1/2 -translate-y-1/2 text-[var(--color-text-sub)] group-focus-within:text-[var(--color-primary)] transition-colors"
           :size="20"
         />
+
+        <!-- Input -->
         <input
           v-model="searchQuery"
           type="text"
           placeholder="Rechercher une solution (ex: API, paiement, compte...)"
-          class="w-full pl-12 pr-4 py-4 bg-[var(--color-surface)] border border-[var(--color-border)] rounded-2xl shadow-sm outline-none focus:ring-2 focus:ring-[var(--color-primary)] transition-all"
+          class="w-full pl-12 pr-12 py-4 bg-[var(--color-surface)] border border-[var(--color-border)] rounded-2xl shadow-sm outline-none focus:ring-2 focus:ring-[var(--color-primary)] transition-all"
         />
+
+        <!-- Croix pour effacer, visible seulement si searchQuery n'est pas vide -->
+        <button
+          v-if="searchQuery"
+          @click="searchQuery = ''"
+          type="button"
+          class="absolute right-4 top-1/2 -translate-y-1/2 text-[var(--color-text-sub)] hover:text-[var(--color-primary)] transition-colors"
+        >
+          ✕
+        </button>
       </div>
     </header>
 
@@ -84,7 +98,8 @@
             Réponse moyenne en moins de 2 minutes. Idéal pour les questions
             techniques rapides.
           </p>
-          <RouterLink :to="{ name: 'messages' }"
+          <RouterLink
+            :to="{ name: 'messages' }"
             class="w-full py-3 bg-white text-[var(--color-primary)] rounded-xl font-bold flex items-center justify-center gap-2 hover:shadow-lg transition-all active:scale-95 relative z-10"
           >
             <MessageSquareText :size="18" />
@@ -136,7 +151,8 @@ const searchQuery = ref("");
 const faqs = ref([
   {
     question: "Comment suivre l'avancement de mon projet ?",
-    answer: "Vous pouvez suivre l'état de vos services en temps réel dans votre tableau de bord SASAYEE, section 'Mes Commandes'.",
+    answer:
+      "Vous pouvez suivre l'état de vos services en temps réel dans votre tableau de bord SASAYEE, section 'Mes Commandes'.",
     open: true,
   },
   {
@@ -153,7 +169,8 @@ const faqs = ref([
   },
   {
     question: "Proposez-vous une API pour les développeurs ?",
-    answer: "Oui, SASAYEE dispose d'une documentation API complète pour intégrer nos solutions à vos propres applications.",
+    answer:
+      "Oui, SASAYEE dispose d'une documentation API complète pour intégrer nos solutions à vos propres applications.",
     open: false,
   },
   {
@@ -176,7 +193,8 @@ const faqs = ref([
   },
   {
     question: "Comment devenir partenaire SASAYEE ?",
-    answer: "Vous pouvez postuler via notre formulaire de contact dédié aux partenariats dans le pied de page.",
+    answer:
+      "Vous pouvez postuler via notre formulaire de contact dédié aux partenariats dans le pied de page.",
     open: false,
   },
 ]);
@@ -184,7 +202,8 @@ const faqs = ref([
 import { useSeo } from "../composables/useSeo.js";
 useSeo({
   title: "Support & FAQ - SASAYEE",
-  description: "Besoin d'aide ? Retrouvez toutes les réponses à vos questions sur l'utilisation de SASAYEE, les paiements, la sécurité et le support technique au Cameroun."
+  description:
+    "Besoin d'aide ? Retrouvez toutes les réponses à vos questions sur l'utilisation de SASAYEE, les paiements, la sécurité et le support technique au Cameroun.",
 });
 
 // Fonction pour ouvrir une question et fermer les autres (optionnel)
