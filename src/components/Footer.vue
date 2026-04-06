@@ -1,4 +1,5 @@
 <script setup lang="ts">
+import { CONFIG } from "../config/index.js";
 import FooterActions from "./FooterActions.vue";
 import { Facebook, Twitter, Instagram, Linkedin, Send } from "lucide-vue-next";
 import { RouterLink } from "vue-router";
@@ -55,10 +56,9 @@ import { RouterLink } from "vue-router";
 
     <div class="max-w-7xl mx-auto px-4 py-16 grid grid-cols-2 md:grid-cols-4 gap-12">
       <div class="col-span-2 md:col-span-1">
-        <h2 class="text-2xl font-black tracking-tighter mb-4" :style="{ color: 'var(--color-primary)' }">
-          SASAYEE
-
-        </h2>
+        <div class="mb-6">
+          <img :src="CONFIG.LOGO_URL" alt="SASAYEE Logo" class="h-16 md:h-20 w-auto object-contain" />
+        </div>
         <p class="text-sm leading-relaxed opacity-70 mb-6">
           La première marketplace dédiée aux solutions technologiques
           révolutionnaires. Achetez, vendez et innovez.

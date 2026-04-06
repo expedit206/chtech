@@ -49,7 +49,10 @@
       </div>
 
       <!-- Conversation List -->
-      <div class="flex-1 overflow-y-auto custom-scrollbar p-2 space-y-1">
+      <div 
+        class="flex-1 overflow-y-auto custom-scrollbar p-2 space-y-1"
+        @scroll="handleScroll"
+      >
         <!-- Skeleton Loading -->
         <div v-if="isLoading" class="space-y-2">
           <ConversationSkeleton v-for="i in 8" :key="i" />
@@ -204,6 +207,11 @@
             </div>
           </div>
         </div>
+
+        <!-- Loading More Indicator -->
+        <div v-if="isLoadingMore" class="flex justify-center p-4">
+           <i class="fas fa-spinner fa-spin text-xl" :style="{ color: 'var(--color-primary)' }"></i>
+        </div>
       </div>
     </div>
   </transition>
@@ -223,13 +231,23 @@ const props = defineProps({
   activeConversationId: [String, Number],
   activeProductId: [String, Number],
   isLoading: Boolean,
+  isLoadingMore: Boolean,
+  hasMore: Boolean,
 });
 
 const emit = defineEmits([
   "select-conversation",
   "toggle-sidebar",
   "view-profile",
+  "load-more"
 ]);
+
+const handleScroll = (e) => {
+  const { scrollTop, scrollHeight, clientHeight } = e.target;
+  if (scrollTop + clientHeight >= scrollHeight - 50 && !props.isLoadingMore && props.hasMore) {
+    emit("load-more");
+  }
+};
 
 const formatTime = (dateString) => {
   if (!dateString) return "";

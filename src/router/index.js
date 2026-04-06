@@ -86,18 +86,61 @@ const routes = [
         name: "PublicProfile",
         component: () => import("../views/profile/PublicProfile.vue"),
       },
-      {
-        path: "devenir-vendeur",
-        name: "become-vendeur",
-        component: () => import("../views/profile/BecomeSupplier.vue"),
-      },
-      {
-        path: "/admin/demandes-vendeurs",
-        name: "admin-seller-requests",
-        component: () => import("../views/admin/AdminSupplierRequests.vue"),
-      },
-    ],
-  },
+    {
+      path: "devenir-vendeur",
+      name: "become-vendeur",
+      component: () => import("../views/profile/BecomeSupplier.vue"),
+    },
+  ],
+},
+// Admin routes with dedicated layout
+{
+  path: "/admin",
+  component: () => import("../Layouts/AdminLayout.vue"),
+  meta: { requiresAuth: true, requiresAdmin: true },
+  children: [
+    {
+      path: "",
+      name: "admin-dashboard",
+      component: () => import("../views/admin/AdminDashboard.vue"),
+    },
+    {
+      path: "users",
+      name: "admin-users",
+      component: () => import("../views/admin/AdminUsers.vue"),
+    },
+    {
+      path: "produits",
+      name: "admin-products",
+      component: () => import("../views/admin/AdminProducts.vue"),
+    },
+    {
+      path: "categories",
+      name: "admin-categories",
+      component: () => import("../views/admin/AdminCategories.vue"),
+    },
+    {
+      path: "blog",
+      name: "admin-blog",
+      component: () => import("../views/admin/AdminBlog.vue"),
+    },
+    {
+      path: "finance",
+      name: "admin-finance",
+      component: () => import("../views/admin/AdminFinance.vue"),
+    },
+    {
+      path: "broadcast",
+      name: "admin-broadcast",
+      component: () => import("../views/admin/AdminBroadcast.vue"),
+    },
+    {
+      path: "demandes-vendeurs",
+      name: "admin-seller-requests",
+      component: () => import("../views/admin/AdminSupplierRequests.vue"),
+    },
+  ],
+},
   {
     path: "/ressources",
     children: [
@@ -133,6 +176,7 @@ router.beforeEach((to, from, next) => {
   const alertStore = useAlertStore();
   
   const requiresAuth = to.matched.some(record => record.meta.requiresAuth);
+  const requiresAdmin = to.matched.some(record => record.meta.requiresAdmin);
   const loggedIn = authStore.isAuthenticated;
 
   if (requiresAuth && !loggedIn) {
@@ -153,8 +197,18 @@ router.beforeEach((to, from, next) => {
         next(false);
       }
     });
+    return;
+  }
 
-    return; // Attendre l'interaction de l'utilisateur
+  // Admin guard
+  if (requiresAdmin) {
+    // Check store first, then fallback to localStorage to prevent flickering during hydration
+    const userData = authStore.user || JSON.parse(localStorage.getItem('auth_user') || '{}');
+    const userIsAdmin = userData.role === 'admin';
+
+    if (!loggedIn || !userIsAdmin) {
+      return next({ name: "Home" });
+    }
   }
 
   // Empêcher les utilisateurs connectés de visiter login/register

@@ -8,6 +8,9 @@ export const useProductStore = defineStore('products', () => {
   const categories = ref([]);
   const searchQuery = ref('');
   const loading = ref(false);
+  const loadingMore = ref(false);
+  const hasMore = ref(true);
+  const currentPage = ref(1);
   const error = ref(null);
 
   // Produits avec images mappées
@@ -42,15 +45,29 @@ export const useProductStore = defineStore('products', () => {
     return '/placeholder.png';
   }
 
-  async function fetchProducts(filters = {}, force = false) {
-    if (!force && products.value.length > 0 && lastFetched.value && (Date.now() - lastFetched.value < CACHE_TIMEOUT) && Object.keys(filters).length === 0) {
-      return;
+  async function fetchProducts(filters = {}, force = false, loadMore = false) {
+    if (!loadMore) {
+      if (!force && products.value.length > 0 && lastFetched.value && (Date.now() - lastFetched.value < CACHE_TIMEOUT) && Object.keys(filters).length === 0) {
+        return;
+      }
+      currentPage.value = 1;
+      hasMore.value = true;
+    } else {
+      if (!hasMore.value || loadingMore.value) return;
+      currentPage.value++;
     }
 
-    loading.value = true;
+    if (loadMore) loadingMore.value = true;
+    else loading.value = true;
+
     error.value = null;
     try {
-      const params = { ...filters };
+      const params = { 
+        ...filters,
+        page: currentPage.value,
+        per_page: 20
+      };
+
       if (searchQuery.value) {
         params.search = searchQuery.value;
       }
@@ -58,18 +75,22 @@ export const useProductStore = defineStore('products', () => {
       const response = await apiClient.get('/marketplace/produits', {
         params
       });
-      
+
       if (response.data.success) {
         const paginated = response.data.produits;
-        if (paginated && paginated.data) {
-          products.value = paginated.data;
-        } else if (Array.isArray(paginated)) {
-          products.value = paginated;
+        const meta = response.data.meta;
+
+        const newProducts = Array.isArray(paginated) ? paginated : (paginated?.data || []);
+
+        if (loadMore) {
+          products.value = [...products.value, ...newProducts];
         } else {
-          products.value = [];
+          products.value = newProducts;
         }
-        
-        if (Object.keys(filters).length === 0) {
+
+        hasMore.value = meta ? meta.has_more_pages : (newProducts.length >= 20);
+
+        if (!loadMore && Object.keys(filters).length === 0) {
           lastFetched.value = Date.now();
         }
       }
@@ -78,6 +99,7 @@ export const useProductStore = defineStore('products', () => {
       console.error('Erreur lors du chargement des produits:', err);
     } finally {
       loading.value = false;
+      loadingMore.value = false;
     }
   }
 
@@ -129,6 +151,8 @@ export const useProductStore = defineStore('products', () => {
     productsWithImages,
     categories,
     loading,
+    loadingMore,
+    hasMore,
     searchQuery,
     lastFetched,
     error,

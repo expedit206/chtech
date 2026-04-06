@@ -6,9 +6,12 @@
       :is-sidebar-open="messageStore.isSidebarOpen"
       :is-mobile="messageStore.isMobile"
       :is-loading="isLoadingConversations"
+      :is-loading-more="messageStore.isLoadingMoreConversations"
+      :has-more="messageStore.hasMoreConversations"
       @select-conversation="handleSelectConversation"
       @toggle-sidebar="messageStore.toggleSidebar"
       @view-profile="viewProfile"
+      @load-more="loadMoreConversations"
       :active-conversation-id="messageStore.selectedConversation?.user_id"
       :active-product-id="messageStore.selectedConversation?.product_id"
     />
@@ -175,6 +178,10 @@ const isLoadingConversations = ref(false);
 // Handlers
 const handleSelectConversation = (receiverId, productId) => {
   messageStore.selectConversation(receiverId, productId);
+};
+
+const loadMoreConversations = () => {
+  messageStore.fetchConversations(false, false, true);
 };
 
 const handleSendMessage = () => {

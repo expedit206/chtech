@@ -1,5 +1,5 @@
 <template>
-  <article
+  <RouterLink :to="{name: 'DetailProduit', params: {slug: product.slug || product.id}}"
     class="product-card group relative flex flex-col h-full shadow-sm border rounded-lg overflow-hidden transition-all duration-300"
     :style="{
       borderColor: 'var(--color-border)',
@@ -47,8 +47,7 @@
     <!-- Content -->
 
     <div class="p-2 py-2 flex flex-col flex-grow">
-      <h3 class="text-xs md:text-xs cursor-pointer hover:opacity-70 line-clamp-1" style="color: var(--color-text-main)"
-        @click="$emit('click')">
+      <h3 class="text-xs md:text-xs line-clamp-1" style="color: var(--color-text-main)">
         {{ product.name }}
       </h3>
 
@@ -67,13 +66,13 @@
       <div v-if="showFooter" class="flex flex-col gap-1 mt-auto overflow-hidden">
         <button
           class="w-full flex items-center justify-center gap-2 md:py-2 py-1 px-1 rounded-xl font-bold text-[11px] text-white transition active:scale-95 shadow-sm hover:opacity-90 h-8 mt-2"
-          @click.stop="$emit('click')" style="background: var(--color-primary)">
+           style="background: var(--color-primary)">
           <Eye :size="16" stroke-width="2.5" class="hidden xs:flex" />
           Voir plus
         </button>
       </div>
     </div>
-  </article>
+  </RouterLink>
 </template>
 
 <script setup>

@@ -71,6 +71,14 @@
       <ProductCard v-else v-for="product in productsPart1" :key="product.id" :product="product"
         @click="goToProduct(product.slug || product.id)" />
     </div>
+
+    <!-- Infinite scroll indicator -->
+    <div v-if="productStore.loadingMore" class="flex justify-center pb-12">
+      <div class="flex items-center gap-2 px-6 py-3 rounded-2xl bg-[var(--color-surface)] border border-[var(--color-border)] shadow-xl">
+        <div class="w-5 h-5 border-2 border-[var(--color-primary)]/30 border-t-[var(--color-primary)] rounded-full animate-spin"></div>
+        <span class="text-sm font-bold text-[var(--color-text-main)]">Chargement des pépites...</span>
+      </div>
+    </div>
   </div>
 </template>
 
@@ -150,7 +158,22 @@ const productsPart1 = computed(() => {
 
 onMounted(() => {
   productStore.fetchProducts();
+  window.addEventListener('scroll', handleScroll);
 });
+
+onUnmounted(() => {
+  window.removeEventListener('scroll', handleScroll);
+});
+
+const handleScroll = () => {
+  const scrollHeight = document.documentElement.scrollHeight;
+  const scrollTop = document.documentElement.scrollTop;
+  const clientHeight = document.documentElement.clientHeight;
+  
+  if (scrollTop + clientHeight >= scrollHeight - 300) {
+    productStore.fetchProducts({}, false, true);
+  }
+};
 
 const goToProduct = (slugOrId) =>
   router.push({ name: "DetailProduit", params: { slug: slugOrId } });

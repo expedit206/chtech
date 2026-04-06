@@ -14,11 +14,8 @@
         : '-translate-x-full md:translate-x-0',
     ]">
       <div class="p-4 flex items-center justify-between border-b border-[var(--color-border)] min-h-[70px]">
-        <div v-show="!collapsed || isMobileOpen" class="flex items-center gap-3 overflow-hidden">
-          <div class="w-8 h-8 bg-[var(--color-primary)] rounded-lg flex items-center justify-center shrink-0">
-            <CloudLightning :size="16" :stroke-width="3" class="text-white" />
-          </div>
-          <span class="font-bold text-[var(--color-text-main)] truncate">SASAYEE</span>
+        <div v-show="!collapsed || isMobileOpen" class="flex items-center overflow-hidden">
+          <img :src="CONFIG.LOGO_URL" alt="Logo" class="h-10 w-auto object-contain" />
         </div>
 
         <button @click="emit('toggle')"
@@ -38,36 +35,6 @@
             :style="{ color: 'var(--color-text-sub)' }">
             {{ section.title }}
           </div>
-          <!-- <RouterLink
-            v-for="item in section.items"
-            :key="item.name"
-            :to="item.route"
-            @click="emit('close-mobile')"
-            class="flex items-center gap-4 p-3 rounded-xl transition-all group relative text-[var(--color-text-sub)] hover:text-[var(--color-primary)] hover:bg-[var(--color-primary)]/10"
-            active-class="bg-[var(--color-primary)]/10 text-[var(--color-primary)] font-bold shadow-sm"
-          >
-            <div class="w-6 flex justify-center items-center shrink-0">
-              <component
-                :is="item.icon"
-                :size="20"
-                class="transition-transform group-hover:scale-110"
-              />
-            </div>
-
-            <span
-              v-show="!collapsed || isMobileOpen"
-              class="font-medium whitespace-nowrap transition-opacity"
-            >
-              {{ item.name }}
-            </span>
-
-            <span
-              v-if="collapsed"
-              class="hidden md:block absolute left-16 scale-0 group-hover:scale-100 transition-all origin-left bg-[var(--color-text-main)] text-[var(--color-pure)] px-2 py-1 rounded text-xs z-50"
-            >
-              {{ item.name }}
-            </span>
-          </RouterLink> -->
 
           <RouterLink v-for="item in section.items" :key="item.name" :to="item.route" @click="emit('close-mobile')"
             class="flex items-center gap-4 p-3 rounded-xl transition-all group relative text-[var(--color-text-sub)] hover:text-[var(--color-primary)] hover:bg-[var(--color-primary)]/10"
@@ -132,8 +99,11 @@ import {
   PackageCheck,
   MessageCircle,
   UserCircle,
+  ShieldCheck,
 } from "lucide-vue-next";
+import { CONFIG } from "../../config/index.js";
 import { useAuthStore } from "../../stores/auth.js";
+
 const auth = useAuthStore();
 
 const props = defineProps({
@@ -151,7 +121,7 @@ const menuSections = computed(() => {
         {
           name: "Tableau de bord",
           icon: LayoutDashboard,
-          route: { name: "Dashboard" },
+          route: auth.isAdmin ? { name: "admin-dashboard" } : { name: "Dashboard" },
         },
         { name: "Messages", icon: MessageCircle, route: { name: "messages" } },
         {
@@ -172,6 +142,11 @@ const menuSections = computed(() => {
           name: "Demandes Vendeurs",
           icon: Store,
           route: { name: "admin-seller-requests" },
+        },
+        {
+          name: "Dashboard Admin",
+          icon: ShieldCheck,
+          route: { name: "admin-dashboard" },
         },
       ],
     });

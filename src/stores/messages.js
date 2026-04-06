@@ -17,6 +17,8 @@ export const useMessageStore = defineStore("message", () => {
   const selectedConversation = ref(null);
   const isLoading = ref(false);
   const hasMore = ref(false);
+  const hasMoreConversations = ref(false);
+  const isLoadingMoreConversations = ref(false);
   const offset = ref(0);
   const isSidebarOpen = ref(true);
   const isMobile = ref(window.innerWidth < 768);
@@ -80,15 +82,42 @@ export const useMessageStore = defineStore("message", () => {
   });
 
   // Actions
-  const fetchConversations = async (silent = false, force = false) => {
-    if (!force && silent && lastFetchedConversations.value && (Date.now() - lastFetchedConversations.value < CONV_CACHE_TIMEOUT)) {
+  const fetchConversations = async (silent = false, force = false, loadMore = false) => {
+    if (!force && silent && !loadMore && lastFetchedConversations.value && (Date.now() - lastFetchedConversations.value < CONV_CACHE_TIMEOUT)) {
       return;
     }
 
-    if (!silent) isLoading.value = true;
+    if (loadMore) isLoadingMoreConversations.value = true;
+    else if (!silent) isLoading.value = true;
+    
     try {
-      const response = await apiClient.get('/conversations');
-      conversations.value = response.data.conversations;
+      const currentOffset = loadMore ? conversations.value.length : 0;
+      const params = { offset: currentOffset, limit: 10 };
+      
+      const response = await apiClient.get('/conversations', { params });
+      
+      if (loadMore) {
+        const existingKeys = new Set(conversations.value.map(c => c.user_id + '_' + (c.product_id || '')));
+        const newConvs = response.data.conversations.filter(c => !existingKeys.has(c.user_id + '_' + (c.product_id || '')));
+        conversations.value = [...conversations.value, ...newConvs];
+      } else {
+         if (conversations.value.length === 0 || force || !silent) {
+            conversations.value = response.data.conversations;
+         } else {
+            const fetched = response.data.conversations;
+            fetched.forEach(conv => {
+              const idx = conversations.value.findIndex(c => c.user_id === conv.user_id && String(c.product_id || '') === String(conv.product_id || ''));
+              if (idx !== -1) {
+                 conversations.value[idx] = { ...conversations.value[idx], ...conv };
+              } else {
+                 conversations.value.unshift(conv);
+              }
+            });
+            conversations.value.sort((a,b) => new Date(b.updated_at).getTime() - new Date(a.updated_at).getTime());
+         }
+      }
+
+      hasMoreConversations.value = response.data.hasMore || false;
       lastFetchedConversations.value = Date.now();
 
       if (badgeStore.badgeCounts) {
@@ -96,9 +125,10 @@ export const useMessageStore = defineStore("message", () => {
       }
     } catch (error) {
       console.error("Erreur fetch conversations", error);
-      if (!silent) toast.error("Erreur lors du chargement des conversations");
+      if (!silent && !loadMore) toast.error("Erreur lors du chargement des conversations");
     } finally {
-      if (!silent) isLoading.value = false;
+      if (loadMore) isLoadingMoreConversations.value = false;
+      else if (!silent) isLoading.value = false;
     }
   };
 
@@ -495,7 +525,7 @@ export const useMessageStore = defineStore("message", () => {
   };
 
   return {
-    conversations, messages, selectedConversation, isLoading, hasMore, isSidebarOpen, isMobile, product, typingState, recordingState, newMessage,
+    conversations, messages, selectedConversation, isLoading, hasMore, hasMoreConversations, isLoadingMoreConversations, isSidebarOpen, isMobile, product, typingState, recordingState, newMessage,
     groupedMessages, unreadCount,
     fetchConversations, fetchMessages, sendMessage, startRecording, stopRecording, toggleRecordingPause, cancelRecording,
     markAllMessagesAsRead, editMessage, deleteMessage, setProductTag, clearProductTag, toggleSidebar, selectConversation,

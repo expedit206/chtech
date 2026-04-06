@@ -10,4 +10,5 @@ export const CONFIG = {
   // Environment-aware URLs
   API_BASE_URL: (import.meta.env.VITE_API_BASE_URL || "http://localhost:8000").replace(/\/api$/, "").replace(/\/$/, ""),
   STORAGE_URL: (import.meta.env.VITE_API_BASE_URL || "http://localhost:8000").replace(/\/api$/, "").replace(/\/$/, "") + "/storage/",
+  LOGO_URL: "/logo-sasaye.jpeg",
 };

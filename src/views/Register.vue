@@ -50,18 +50,7 @@
                 '--tw-ring-color': 'var(--color-primary)',
               }" placeholder="••••••••" />
           </div>
-          <div>
-            <label for="parrain_code" class="block text-sm font-medium mb-1"
-              :style="{ color: 'var(--color-text-main)' }">Code de parrainage (optionnel)</label>
-            <input id="parrain_code" v-model="form.parrain_code" name="parrain_code" type="text"
-              class="appearance-none relative block w-full px-4 py-3 border rounded-xl focus:outline-none focus:ring-2 transition-all duration-200 sm:text-sm"
-              :style="{
-                backgroundColor: 'var(--color-bg)',
-                borderColor: 'var(--color-border)',
-                color: 'var(--color-text-main)',
-                '--tw-ring-color': 'var(--color-primary)',
-              }" placeholder="Code parrain" />
-          </div>
+
         </div>
 
         <div v-if="error"
@@ -120,7 +109,6 @@ const form = reactive({
   nom: "",
   telephone: "",
   mot_de_passe: "",
-  parrain_code: "",
 });
 
 const loading = ref(false);

@@ -7,7 +7,7 @@
     borderColor: 'var(--color-border)',
   }">
     <div class="flex flex-col">
-      <div class="flex items-center justify-between px-4 h-14 gap-4">
+      <div class="flex items-center justify-between px-4 h-16 md:h-18 gap-4">
         <div class="flex items-center gap-3">
           <!-- Mobile Sidebar Toggle -->
           <button v-if="auth.isAuthenticated" @click="emit('toggle-mobile-sidebar')"
@@ -15,14 +15,9 @@
             <Menu :size="20" />
           </button>
 
-          <h1 class="text-xl font-black tracking-tighter flex-shrink-0" :style="{
-            color: 'var(--color-primary)',
-            fontFamily: 'Open Sans, sans-serif',
-          }">
-            <RouterLink :to="{ name: 'Home' }" @click="productStore.searchQuery = ''">
-              SASAYEE
-            </RouterLink>
-          </h1>
+          <RouterLink :to="{ name: 'Home' }" @click="productStore.searchQuery = ''" class="flex items-center">
+            <img :src="CONFIG.LOGO_URL" alt="SASAYEE Logo" class="h-12 md:h-14 w-auto object-contain transition-transform hover:scale-105" />
+          </RouterLink>
         </div>
 
         <div class="hidden md:flex flex-1 max-w-xl relative group">
@@ -346,8 +341,8 @@
         <RouterLink :to="{ name: 'Dashboard' }"
           class="group relative flex-1 flex flex-col items-center justify-center border-b-4 transition-colors"
           :style="isActiveName('Dashboard') ? activeStyle : inactiveStyle">
-          <ChartLine size="18" :stroke-width="3" />
-          <span class="text-[9px] font-black mt-1">Analyses</span>
+          <LayoutDashboard size="18" :stroke-width="3" />
+          <span class="text-[9px] font-black mt-1">Dashboard</span>
         </RouterLink>
       </nav>
     </div>
@@ -371,7 +366,7 @@ import {
   Newspaper,
   Bell,
   MessageCircle,
-  ChartLine,
+  LayoutDashboard,
   ShoppingCart,
   Sun,
   Moon,
