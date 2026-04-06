@@ -44,11 +44,11 @@
           </button>
 
           <!-- Panier -->
-          <button
+          <!-- <button
             class="w-8 h-8 rounded-full flex items-center justify-center transition-all hover:bg-black/5 animate-bounce-slow relative group">
             <ShoppingCart :size="20" :stroke-width="3" />
             <span class="tooltip-text">Panier</span>
-          </button>
+          </button> -->
           <button @click="toggleTheme"
             class="w-8 h-8 rounded-full flex items-center justify-center transition-colors hover:bg-black/5 relative group"
             :style="{ color: 'var(--color-text-main)' }">
