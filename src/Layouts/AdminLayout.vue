@@ -1,7 +1,7 @@
 <template>
   <div class="flex min-h-screen" style="background: var(--color-bg)">
     <!-- Sidebar admin -->
-    <AdminSidebar
+    <Sidebar
       :collapsed="isSidebarCollapsed"
       :isMobileOpen="isMobileSidebarOpen"
       @toggle="isSidebarCollapsed = !isSidebarCollapsed"
@@ -63,7 +63,7 @@
 <script setup>
 import { ref, computed } from 'vue';
 import { Menu, Shield } from 'lucide-vue-next';
-import AdminSidebar from '../components/Admin/AdminSidebar.vue';
+import Sidebar from '../components/Dashboard/Sidebar.vue';
 import { useAuthStore } from '../stores/auth.js';
 import { CONFIG } from '../config/index.js';
 

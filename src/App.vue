@@ -38,7 +38,6 @@ import { useRoute } from "vue-router";
 import Footer from "./components/Footer.vue";
 import Header from "./components/Header.vue";
 import Sidebar from "./components/Dashboard/Sidebar.vue";
-import AdminSidebar from "./components/Admin/AdminSidebar.vue";
 import CustomAlertDialog from "./components/CustomAlertDialog.vue";
 import { useAuthStore } from "./stores/auth.js";
 import { useInteractionStore } from "./stores/interactions.js";

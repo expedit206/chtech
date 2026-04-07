@@ -99,7 +99,7 @@
                   <p class="font-bold text-sm truncate max-w-[200px]">{{ post.titre || post.title }}</p>
                 </div>
               </td>
-              <td class="px-6 py-4 hidden md:table-cell text-sm opacity-70">{{ post.user?.nom ?? '—' }}</td>
+              <td class="px-6 py-4 hidden md:table-cell text-sm opacity-70">{{ post.author?.nom ?? '—' }}</td>
               <td class="px-6 py-4">
                 <span class="text-[11px] font-black px-2.5 py-1 rounded-full"
                   :class="post.published_at || post.est_publie ? 'bg-green-500/15 text-green-400' : 'bg-amber-500/15 text-amber-400'">
@@ -168,11 +168,16 @@ const fetchPosts = async (page = 1) => {
   loading.value = true;
   currentPage.value = page;
   try {
-    const { data } = await apiClient.get('/admin/blog/posts', { params: { page } });
-    posts.value = data.data ?? data;
-    lastPage.value = data.last_page ?? 1;
-    total.value = data.total ?? posts.value.length;
-  } catch (e) { console.error(e); } finally { loading.value = false; }
+    const { data: response } = await apiClient.get('/admin/blog/posts', { params: { page } });
+    const paginator = response.data;
+    posts.value = paginator?.data ?? [];
+    lastPage.value = paginator?.last_page ?? 1;
+    total.value = paginator?.total ?? posts.value.length;
+  } catch (e) {
+    console.error(e);
+  } finally {
+    loading.value = false;
+  }
 };
 
 const savePost = async () => {

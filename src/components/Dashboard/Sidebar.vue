@@ -14,9 +14,9 @@
         : '-translate-x-full md:translate-x-0',
     ]">
       <div class="p-4 flex items-center justify-between border-b border-[var(--color-border)] min-h-[70px]">
-        <div v-show="!collapsed || isMobileOpen" class="flex items-center overflow-hidden">
+        <RouterLink :to="{ name : 'Home' }" v-show="!collapsed || isMobileOpen" class="flex items-center overflow-hidden">
           <img :src="CONFIG.LOGO_URL" alt="Logo" class="h-10 w-auto object-contain" />
-        </div>
+        </RouterLink>
 
         <button @click="emit('toggle')"
           class="hidden md:block p-2 rounded-lg hover:bg-[var(--color-primary)]/10 text-[var(--color-text-sub)]">
@@ -100,6 +100,12 @@ import {
   MessageCircle,
   UserCircle,
   ShieldCheck,
+  Users,
+  Package,
+  Tag,
+  FileText,
+  DollarSign,
+  Megaphone,
 } from "lucide-vue-next";
 import { CONFIG } from "../../config/index.js";
 import { useAuthStore } from "../../stores/auth.js";
@@ -114,14 +120,16 @@ const props = defineProps({
 const emit = defineEmits(["toggle", "close-mobile", "open-mobile"]);
 
 const menuSections = computed(() => {
-  const sections = [
-    {
+  const sections = [];
+
+  if (!auth.isAdmin) {
+    sections.push({
       title: "Navigation",
       items: [
         {
           name: "Tableau de bord",
           icon: LayoutDashboard,
-          route: auth.isAdmin ? { name: "admin-dashboard" } : { name: "Dashboard" },
+          route: { name: "Dashboard" },
         },
         { name: "Messages", icon: MessageCircle, route: { name: "messages" } },
         {
@@ -131,23 +139,20 @@ const menuSections = computed(() => {
         },
         { name: "Mes Favoris", icon: Star, route: { name: "Wishlist" } },
       ],
-    },
-  ];
+    });
+  }
 
   if (auth.isAdmin) {
     sections.push({
       title: "Administration",
       items: [
-        {
-          name: "Demandes Vendeurs",
-          icon: Store,
-          route: { name: "admin-seller-requests" },
-        },
-        {
-          name: "Dashboard Admin",
-          icon: ShieldCheck,
-          route: { name: "admin-dashboard" },
-        },
+        { name: "Tableau de bord", icon: ShieldCheck, route: { name: "admin-dashboard" } },
+        { name: "Utilisateurs", icon: Users, route: { name: "admin-users" } },
+        { name: "Vendeurs", icon: Store, route: { name: "admin-users", query: { role: 'vendeur' } } },
+        { name: "Demandes Vendeurs", icon: PackageCheck, route: { name: "admin-seller-requests" } },
+        { name: "Produits", icon: Package, route: { name: "admin-products" } },
+        { name: "Catégories", icon: Tag, route: { name: "admin-categories" } },
+        { name: "Blog", icon: FileText, route: { name: "admin-blog" } },
       ],
     });
   }

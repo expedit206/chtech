@@ -32,7 +32,6 @@ Bouton "Recommander" : Pour racheter le même produit en un clic.
 3. Mes Favoris (❤️ Wishlist)
 Une grille d'images (comme une boutique) mais uniquement avec les produits qu'il a aimés :
 
-Bouton "Ajouter au panier" bien visible sous chaque article.
 
 Alerte Prix : Si un article favori est en promo (comme ta bannière rose !), mets un petit badge "PROMO".
 

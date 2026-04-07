@@ -129,24 +129,9 @@ const props = defineProps({
   },
 });
 
-const emit = defineEmits(["click", "add-to-cart", "toggle-promo"]);
+const emit = defineEmits(["click"]);
 const viewRecorded = ref(false);
 
-// Ajouter au panier en temps réel
-const handleAddToCart = async () => {
-  try {
-    const btn = document.activeElement;
-    if (btn) btn.classList.add("scale-95", "opacity-80");
-
-    await cartStore.addToCart(props.product);
-
-    setTimeout(() => {
-      if (btn) btn.classList.remove("scale-95", "opacity-80");
-    }, 200);
-  } catch (e) {
-    console.error("Erreur lors de l’ajout au panier", e);
-  }
-};
 
 // Computed properties
 const isFavorited = computed(() => {

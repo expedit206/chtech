@@ -80,12 +80,12 @@
               <td class="px-6 py-4 text-right">
                 <div class="flex items-center justify-end gap-2">
                   <button @click="toggleStatus(p)"
-                    class="w-8 h-8 rounded-lg flex items-center justify-center transition-colors opacity-0 group-hover:opacity-100"
+                    class="w-8 h-8 rounded-lg flex items-center justify-center transition-colors opacity-100 group-hover:opacity-100"
                     :class="p.est_actif ? 'hover:bg-amber-500/10 text-amber-400' : 'hover:bg-green-500/10 text-green-400'">
                     <component :is="p.est_actif ? EyeOff : Eye" :size="14" />
                   </button>
                   <button @click="deleteProduct(p)"
-                    class="w-8 h-8 rounded-lg flex items-center justify-center transition-colors hover:bg-red-500/10 text-red-400 opacity-0 group-hover:opacity-100">
+                    class="w-8 h-8 rounded-lg flex items-center justify-center transition-colors hover:bg-red-500/10 text-red-400 opacity-100 group-hover:opacity-100">
                     <Trash2 :size="14" />
                   </button>
                 </div>

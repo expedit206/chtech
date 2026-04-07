@@ -367,7 +367,6 @@ import {
   Bell,
   MessageCircle,
   LayoutDashboard,
-  ShoppingCart,
   Sun,
   Moon,
   Plus,
