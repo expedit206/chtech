@@ -75,11 +75,13 @@ const routes = [
         path: "vendeur-orders",
         name: "vendeur-orders",
         component: () => import("../views/profile/SupplierOrders.vue"),
+        meta: { requiresVendeur: true },
       },
       {
         path: "my-products",
         name: "my-products",
         component: () => import("../views/profile/MyProducts.vue"),
+        meta: { requiresVendeur: true },
       },
       {
         path: ":id/public", // Correspond à /profile/:id/public ou /profile/1/public
@@ -90,6 +92,18 @@ const routes = [
       path: "devenir-vendeur",
       name: "become-vendeur",
       component: () => import("../views/profile/BecomeSupplier.vue"),
+    },
+    {
+      path: "seller/stats",
+      name: "seller-stats",
+      component: () => import("../views/seller/SellerStats.vue"),
+      meta: { requiresVendeur: true },
+    },
+    {
+      path: "seller/shop",
+      name: "seller-shop",
+      component: () => import("../views/seller/SellerShop.vue"),
+      meta: { requiresVendeur: true },
     },
   ],
 },
@@ -177,6 +191,7 @@ router.beforeEach((to, from, next) => {
   
   const requiresAuth = to.matched.some(record => record.meta.requiresAuth);
   const requiresAdmin = to.matched.some(record => record.meta.requiresAdmin);
+  const requiresVendeur = to.matched.some(record => record.meta.requiresVendeur);
   const loggedIn = authStore.isAuthenticated;
 
   if (requiresAuth && !loggedIn) {
@@ -208,6 +223,17 @@ router.beforeEach((to, from, next) => {
 
     if (!loggedIn || !userIsAdmin) {
       return next({ name: "Home" });
+    }
+  }
+
+  // Vendeur guard
+  if (requiresVendeur) {
+    const userData = authStore.user || JSON.parse(localStorage.getItem('auth_user') || '{}');
+    const userIsVendeur = userData.role === 'vendeur' || userData.role === 'fournisseur';
+    const userIsAdmin = userData.role === 'admin';
+
+    if (!loggedIn || (!userIsVendeur && !userIsAdmin)) {
+      return next({ name: "Dashboard" });
     }
   }
 

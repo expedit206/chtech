@@ -106,6 +106,11 @@ import {
   FileText,
   DollarSign,
   Megaphone,
+  House,
+  BarChart2,
+  TrendingUp,
+  Globe,
+  Zap,
 } from "lucide-vue-next";
 import { CONFIG } from "../../config/index.js";
 import { useAuthStore } from "../../stores/auth.js";
@@ -157,15 +162,39 @@ const menuSections = computed(() => {
     });
   }
 
-  if (auth.isVendeur) {
+  if (!auth.isAdmin && !auth.isVendeur) {
     sections.push({
       title: "Vendeur",
       items: [
+        { name: "Devenir Vendeur", icon: Store, route: { name: "become-vendeur" } },
+      ],
+    });
+  }
+
+  if (auth.isVendeur) {
+    sections.push({
+      title: "Ma Boutique",
+      items: [
+        {
+          name: "Tableau de bord",
+          icon: LayoutDashboard,
+          route: { name: "Dashboard" },
+        },
+        {
+          name: "Statistiques",
+          icon: BarChart2,
+          route: { name: "seller-stats" },
+        },
         { name: "Mes Produits", icon: Box, route: { name: "my-products" } },
         {
           name: "Commandes Clients",
           icon: PackageCheck,
           route: { name: "vendeur-orders" },
+        },
+        {
+          name: "Paramètres Boutique",
+          icon: Store,
+          route: { name: "seller-shop" },
         },
       ],
     });
@@ -174,11 +203,19 @@ const menuSections = computed(() => {
   sections.push({
     title: "Compte",
     items: [
-      { name: "Profil Public", icon: UserCircle, route: { name: "PublicProfile", params: { id: auth.user?.id } } },
       { name: "Paramètres", icon: Settings, route: { name: "Settings" } },
       { name: "Aide & Support", icon: Headphones, route: { name: "Support" } },
+
     ],
   });
+  if (auth.isAdmin) {
+    sections.push({
+      title: "Raccourcis",
+      items: [
+        { name: "Retour au site", icon: House, route: { name: "Home" } }
+      ]
+    });
+  }
 
   return sections;
 });

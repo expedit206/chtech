@@ -222,7 +222,7 @@
               </td>
               <td class="px-8 py-6 text-right">
                 <div
-                  class="flex items-center justify-end gap-1 opacity-0 group-hover:opacity-100 transition-opacity"
+                  class="flex items-center justify-end gap-1 opacity-100 group-hover:opacity-100 transition-opacity"
                 >
                   <button
                     @click="openModal(product)"
@@ -304,7 +304,7 @@
                   class="relative group w-24 h-24 rounded-2xl overflow-hidden border shadow-inner">
                   <img :src="photo" class="w-full h-full object-cover" />
                   <button @click.prevent="removePhoto(index)"
-                    class="absolute top-1 right-1 p-1.5 bg-red-500 text-white rounded-lg opacity-0 group-hover:opacity-100 transition-opacity">
+                    class="absolute top-1 right-1 p-1.5 bg-red-500 text-white rounded-lg opacity-100 group-hover:opacity-100 transition-opacity">
                     <Trash2 :size="14" />
                   </button>
                 </div>
@@ -480,7 +480,7 @@
                   <img :src="photo" class="w-full h-full object-cover" />
                   <button
                     @click.prevent="removePhoto(index)"
-                    class="absolute top-1 right-1 p-1 bg-red-500 text-white rounded opacity-0 group-hover:opacity-100 transition-opacity"
+                    class="absolute top-1 right-1 p-1 bg-red-500 text-white rounded opacity-100 group-hover:opacity-100 transition-opacity"
                   >
                     <Trash2 :size="14" />
                   </button>
@@ -524,7 +524,7 @@
                   >
                 </div>
               </div>
-              <div class="space-y-1">
+              <div v-if="isEditing" class="space-y-1">
                 <label
                   class="text-[9px] font-semibold uppercase opacity-50 ml-1"
                   >Ancien prix</label
@@ -599,8 +599,12 @@ import {
   Info,
   Star,
 } from "lucide-vue-next";
-import apiClient from "../../api";
 import { useProductStore } from "../../stores/products.js";
+import { useRoute, useRouter } from "vue-router";
+import apiClient from "../../api/index.js";
+
+const route = useRoute();
+const router = useRouter();
 
 const productStore = useProductStore();
 const products = ref([]);
@@ -683,6 +687,19 @@ const fetchCategories = async () => {
   }
 };
 
+onMounted(() => {
+  fetchMyProducts();
+  fetchCategories();
+
+  if (route.query.add === 'true') {
+    openModal();
+    // Remove the query parameter from the URL to prevent reopening on refresh
+    const newQuery = { ...route.query };
+    delete newQuery.add;
+    router.replace({ query: newQuery });
+  }
+});
+
 const openModal = (product = null) => {
   if (product) {
     isEditing.value = true;
@@ -720,6 +737,11 @@ const openModal = (product = null) => {
 
 const closeModal = () => {
   showModal.value = false;
+  if (route.query.add) {
+    const newQuery = { ...route.query };
+    delete newQuery.add;
+    router.replace({ query: newQuery });
+  }
 };
 
 const handlePhotoUpload = (e) => {
@@ -748,6 +770,18 @@ const removePhoto = (index) => {
 
 const saveProduct = async () => {
   saving.value = true;
+  if (!form.value.category_id) {
+    alert("Veuillez sélectionner une catégorie.");
+    saving.value = false;
+    return;
+  }
+
+  if (newPhotoFiles.value.length === 0 && !isEditing.value) {
+    alert("Veuillez ajouter au moins une photo pour ce produit.");
+    saving.value = false;
+    return;
+  }
+
   const formData = new FormData();
   formData.append("nom", form.value.nom);
   formData.append("description", form.value.description);
@@ -759,6 +793,7 @@ const saveProduct = async () => {
   formData.append("stock", form.value.stock);
   formData.append("ville", form.value.ville);
   formData.append("condition", "neuf");
+  formData.append("revendable", form.value.revendable ? "1" : "0");
 
   newPhotoFiles.value.forEach((file) => {
     formData.append("photos[]", file);
@@ -782,10 +817,13 @@ const saveProduct = async () => {
     await fetchMyProducts();
     closeModal();
   } catch (err) {
-    console.error("Error saving product", err);
-    alert(
-      "Une erreur est survenue lors de l'enregistrement. Vérifiez les champs.",
-    );
+    console.error("Error saving product", err.response?.data || err);
+    const erreurs = err.response?.data?.errors;
+    let msg = "Une erreur est survenue lors de l'enregistrement. Vérifiez les champs.";
+    if (erreurs) {
+      msg += "\n" + JSON.stringify(erreurs, null, 2);
+    }
+    alert(msg);
   } finally {
     saving.value = false;
   }
@@ -803,9 +841,7 @@ const confirmDelete = async (product) => {
   }
 };
 
-import { useRoute, useRouter } from "vue-router";
-const route = useRoute();
-const router = useRouter();
+
 
 watch(
   () => route.query.add,

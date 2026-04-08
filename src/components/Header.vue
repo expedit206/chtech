@@ -73,14 +73,14 @@
             <span class="tooltip-text">Favoris</span>
           </div>
 
-          <router-link :to="{ name: 'my-products', query: { add: 'true' } }"
+          <button v-if="auth.isAuthenticated" @click="handleAddProductClick"
             class="w-8 h-8 rounded-full flex items-center justify-center shadow-md transition-transform active:scale-90"
             :style="{
               backgroundColor: 'var(--color-primary)',
               color: 'var(--color-pure)',
             }">
             <Plus :size="16" :stroke-width="3" class="text-sm" />
-          </router-link>
+          </button>
 
           <div v-if="auth.isAuthenticated" class="relative" ref="userMenuRef">
             <div @click="toggleUserMenu"
@@ -112,7 +112,7 @@
                 </div>
 
                 <router-link @click="isUserMenuOpen = false"
-                  :to="{ name: 'PublicProfile', params: { id: auth.user?.id } }"
+                  :to="{ name: 'PublicProfile', params: { id: auth.user?.id || '0' } }"
                   class="flex items-center gap-3 px-4 py-3 text-sm hover:bg-black/5 transition-colors"
                   :style="{ color: 'var(--color-text-main)' }">
                   <UserCircle class="w-5 h-5 opacity-70" />
@@ -358,6 +358,7 @@ import { useTheme } from "../composables/useTheme.js";
 import { useInteractionStore } from "../stores/interactions.js";
 import { useProductStore } from "../stores/products.js";
 import { useAuthStore } from "../stores/auth.js";
+import { useAlertStore } from "../stores/alert.js";
 // import {  } from "lucide-vue-next";
 import {
   Search,
@@ -396,9 +397,28 @@ const searchInput = ref(null);
 const interactionStore = useInteractionStore();
 const auth = useAuthStore();
 const productStore = useProductStore();
+const alertStore = useAlertStore();
 const route = useRoute();
 const router = useRouter();
 const { theme, toggleTheme } = useTheme();
+
+const handleAddProductClick = () => {
+  if (auth.isVendeur || auth.isAdmin) {
+    router.push({ name: 'my-products', query: { add: 'true' } });
+  } else {
+    alertStore.showAlert({
+      title: "Devenir Vendeur",
+      message: "Vous devez posséder un compte vendeur pour pouvoir vendre des produits. Souhaitez-vous en créer un maintenant ?",
+      type: "info",
+      confirmText: "Devenir Vendeur",
+      cancelText: "Plus tard",
+      showCancel: true,
+      onConfirm: () => {
+        router.push({ name: 'become-vendeur' });
+      }
+    });
+  }
+};
 
 const userPhotoUrl = computed(() => {
   if (auth.user?.photo) {

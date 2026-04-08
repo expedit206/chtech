@@ -3,19 +3,83 @@
   <SkeletonDashboard v-if="isLoading" />
 
   <div v-else class="p-6 space-y-8 animate-fade-in">
-    <header class="flex flex-col gap-1">
-      <h1 class="text-2xl md:text-3xl font-bold text-[var(--color-text-main)]">
-        Bonjour
-        <span class="text-[var(--color-primary)]">{{
-          authStore.user?.nom?.split(" ")[0] || "vous"
-        }}</span
-        >, ravi de vous revoir !
-      </h1>
-      <p class="text-[var(--color-text-sub)]">
-        Voici un aperçu de votre activité sur SASAYEE.
-      </p>
+    <header class="flex flex-col md:flex-row md:items-center justify-between gap-4 mb-2">
+      <div>
+        <h1 class="text-2xl md:text-3xl font-bold text-[var(--color-text-main)]">
+          Bonjour, <span class="text-[var(--color-primary)]">{{ authStore.user?.nom?.split(' ')[0] || 'vous' }}</span> 👋
+        </h1>
+        <p class="text-sm mt-1 text-[var(--color-text-sub)]">
+          {{ authStore.isVendeur ? 'Gérez votre boutique depuis votre espace vendeur.' : 'Voici un aperçu de votre activité sur SASAYEE.' }}
+        </p>
+      </div>
+      <div v-if="authStore.isVendeur" class="flex gap-1 p-1 rounded-xl border self-start"
+        :style="{ backgroundColor: 'var(--color-surface)', borderColor: 'var(--color-border)' }">
+        <button @click="mode = 'seller'"
+          class="px-4 py-2 rounded-lg text-sm font-bold transition-all"
+          :style="mode === 'seller' ? { backgroundColor: 'var(--color-primary)', color: 'white' } : { color: 'var(--color-text-sub)' }">
+          🏪 Boutique
+        </button>
+        <button @click="mode = 'buyer'"
+          class="px-4 py-2 rounded-lg text-sm font-bold transition-all"
+          :style="mode === 'buyer' ? { backgroundColor: 'var(--color-primary)', color: 'white' } : { color: 'var(--color-text-sub)' }">
+          🛒 Acheteur
+        </button>
+      </div>
     </header>
 
+    <!-- === SELLER VIEW === -->
+    <template v-if="authStore.isVendeur && mode === 'seller'">
+      <div class="grid grid-cols-2 md:grid-cols-3 gap-4">
+        <div v-for="kpi in sellerKpis" :key="kpi.label"
+          class="rounded-2xl border p-5 flex flex-col gap-3 relative overflow-hidden group hover:scale-[1.02] transition-transform"
+          :style="{ backgroundColor: 'var(--color-surface)', borderColor: 'var(--color-border)' }">
+          <div class="absolute inset-0 opacity-0 group-hover:opacity-5 transition-opacity rounded-2xl"
+            :style="{ backgroundColor: kpi.color }"></div>
+          <div class="w-10 h-10 rounded-xl flex items-center justify-center"
+            :style="{ backgroundColor: kpi.color + '20', color: kpi.color }">
+            <i :class="kpi.icon" class="text-base"></i>
+          </div>
+          <div>
+            <p class="text-2xl font-black" :style="{ color: 'var(--color-text-main)' }">{{ kpi.value }}</p>
+            <p class="text-xs font-medium mt-0.5" :style="{ color: 'var(--color-text-sub)' }">{{ kpi.label }}</p>
+          </div>
+          <div v-if="kpi.badge" class="text-[10px] font-bold px-2 py-0.5 rounded-full w-fit"
+            :style="{ backgroundColor: kpi.badgeColor + '20', color: kpi.badgeColor }">{{ kpi.badge }}</div>
+        </div>
+      </div>
+      <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
+        <router-link :to="{ name: 'my-products', query: { add: 'true' } }"
+          class="flex items-center gap-4 p-5 rounded-2xl font-bold text-sm hover:opacity-90 text-white"
+          :style="{ backgroundColor: 'var(--color-primary)' }">
+          <i class="fas fa-plus-circle text-xl"></i>
+          <div><p>Ajouter un produit</p><p class="text-xs opacity-70 font-normal">Publier un nouveau produit</p></div>
+        </router-link>
+        <router-link :to="{ name: 'vendeur-orders' }"
+          class="flex items-center gap-4 p-5 rounded-2xl border font-bold text-sm"
+          :style="{ backgroundColor: 'var(--color-surface)', borderColor: 'var(--color-border)', color: 'var(--color-text-main)' }">
+          <i class="fas fa-box-open text-xl" :style="{ color: 'var(--color-primary)' }"></i>
+          <div>
+            <p>Commandes clients</p>
+            <p class="text-xs font-normal" :style="{ color: 'var(--color-text-sub)' }">
+              {{ sellerStats.pending_orders > 0 ? sellerStats.pending_orders + ' en attente' : 'Tout est traité ✓' }}
+            </p>
+          </div>
+        </router-link>
+        <router-link :to="{ name: 'seller-stats' }"
+          class="flex items-center gap-4 p-5 rounded-2xl border font-bold text-sm"
+          :style="{ backgroundColor: 'var(--color-surface)', borderColor: 'var(--color-border)', color: 'var(--color-text-main)' }">
+          <i class="fas fa-chart-bar text-xl" :style="{ color: 'var(--color-accent)' }"></i>
+          <div>
+            <p>Statistiques détaillées</p>
+            <p class="text-xs font-normal" :style="{ color: 'var(--color-text-sub)' }">Voir l'analyse complète</p>
+          </div>
+        </router-link>
+      </div>
+    </template>
+    <!-- === END SELLER VIEW === -->
+
+    <!-- === BUYER VIEW === -->
+    <template v-if="!authStore.isVendeur || mode === 'buyer'">
     <div class="grid grid-cols-1 lg:grid-cols-3 gap-6">
       <!-- Last order -->
       <div
@@ -128,8 +192,10 @@
         </button>
       </div>
     </div>
+    </template>
+    <!-- === END BUYER VIEW === -->
 
-    <!-- Quick stats -->
+    <!-- Quick stats — always visible -->
     <div class="grid grid-cols-2 md:grid-cols-4 gap-4">
       <div
         v-for="stat in quickStats"
@@ -220,12 +286,11 @@
         </div>
       </div>
     </section>
-  </div>
+    </div>
 </template>
 
 <script setup>
 import { CONFIG } from '../config/index.js';
-
 import { ref, computed, onMounted } from "vue";
 import { useAuthStore } from "../stores/auth.js";
 import { useInteractionStore } from "../stores/interactions.js";
@@ -241,10 +306,66 @@ useSeo({
   description: "Gérez votre compte, vos commandes, vos favoris et vos services sur votre espace personnel SASAYEE."
 });
 
+// Seller/buyer mode toggle — sellers see seller view by default
+const mode = ref(authStore.isVendeur ? 'seller' : 'buyer');
+
 const isLoading = ref(true);
 const lastOrder = ref(null);
 const orderProgress = ref(0);
 const stats = ref({ points: 0, orders: 0, products: 0, favorites: 0 });
+
+// Seller stats
+const sellerStats = ref({
+  total_revenue: 0,
+  total_orders: 0,
+  pending_orders: 0,
+  delivered_orders: 0,
+  active_products: 0,
+  total_views: 0,
+});
+
+const sellerKpis = computed(() => [
+  {
+    icon: 'fas fa-chart-line',
+    label: "Chiffre d'affaires (livré)",
+    value: `${Number(sellerStats.value.total_revenue || 0).toLocaleString('fr-FR')} FCFA`,
+    color: '#10b981',
+    badge: 'Confirmé',
+    badgeColor: '#10b981',
+  },
+  {
+    icon: 'fas fa-shopping-cart',
+    label: 'Commandes reçues',
+    value: sellerStats.value.total_orders || 0,
+    color: '#6366f1',
+  },
+  {
+    icon: 'fas fa-clock',
+    label: 'En attente / expédition',
+    value: sellerStats.value.pending_orders || 0,
+    color: '#f59e0b',
+    badge: sellerStats.value.pending_orders > 0 ? 'Action requise' : null,
+    badgeColor: '#f59e0b',
+  },
+  {
+    icon: 'fas fa-check-circle',
+    label: 'Commandes livrées',
+    value: sellerStats.value.delivered_orders || 0,
+    color: '#10b981',
+  },
+  {
+    icon: 'fas fa-box',
+    label: 'Produits actifs',
+    value: sellerStats.value.active_products || 0,
+    color: '#8b5cf6',
+  },
+  {
+    icon: 'fas fa-eye',
+    label: 'Vues produits (total)',
+    value: Number(sellerStats.value.total_views || 0).toLocaleString('fr-FR'),
+    color: '#ec4899',
+  },
+]);
 
 const statusProgressMap = {
   confirmé: 10,
@@ -294,11 +415,18 @@ const recentFavorites = ref([]);
 
 onMounted(async () => {
   try {
-    // Load user stats
-    const [ordersRes, favRes] = await Promise.allSettled([
+    const requests = [
       apiClient.get("/orders"),
       interactionStore.fetchFavorites?.() || Promise.resolve(),
-    ]);
+    ];
+
+    // Also load seller stats if seller
+    if (authStore.isVendeur) {
+      requests.push(apiClient.get("/orders/seller-stats"));
+    }
+
+    const results = await Promise.allSettled(requests);
+    const [ordersRes, , sellerRes] = results;
 
     const ordersData =
       ordersRes.status === "fulfilled"
@@ -337,6 +465,11 @@ onMounted(async () => {
       products: authStore.user?.produits_count || 0,
       points: authStore.user?.jetons || 0,
     };
+
+    // Load seller stats
+    if (authStore.isVendeur && sellerRes?.status === "fulfilled") {
+      sellerStats.value = sellerRes.value.data.data || {};
+    }
   } catch (err) {
     console.error("Dashboard error:", err);
   } finally {

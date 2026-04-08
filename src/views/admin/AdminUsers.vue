@@ -94,7 +94,7 @@
                     <option value="admin">admin</option>
                   </select>
                   <button @click="deleteUser(user)"
-                    class="w-8 h-8 rounded-lg flex items-center justify-center transition-colors hover:bg-red-500/10 text-red-400 opacity-0 group-hover:opacity-100">
+                    class="w-8 h-8 rounded-lg flex items-center justify-center transition-colors hover:bg-red-500/10 text-red-400 opacity-100 group-hover:opacity-100">
                     <Trash2 :size="14" />
                   </button>
                 </div>

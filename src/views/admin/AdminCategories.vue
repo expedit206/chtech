@@ -136,7 +136,8 @@ const saveCategory = async () => {
     if (fileInput.value) fd.append('image', fileInput.value);
 
     if (editingCategory.value) {
-      await apiClient.put(`/admin/categories/${editingCategory.value.id}`, fd, { headers: { 'Content-Type': 'multipart/form-data' } });
+      fd.append('_method', 'PUT');
+      await apiClient.post(`/admin/categories/${editingCategory.value.id}`, fd, { headers: { 'Content-Type': 'multipart/form-data' } });
     } else {
       await apiClient.post('/admin/categories', fd, { headers: { 'Content-Type': 'multipart/form-data' } });
     }

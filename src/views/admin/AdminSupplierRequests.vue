@@ -12,13 +12,12 @@
 
     <!-- Status filter tabs -->
     <div class="flex gap-2 mb-6 flex-wrap">
-      <button v-for="f in filters" :key="f.value" @click="statusFilter = f.value"
+      <button v-for="f in filters" :key="f.value" @click="changeFilter(f.value)"
         class="px-4 py-2 rounded-xl text-sm font-bold transition-all"
         :style="statusFilter === f.value
           ? { backgroundColor: 'var(--color-primary)', color: 'white' }
           : { backgroundColor: 'var(--color-surface)', color: 'var(--color-text-sub)', border: '1px solid var(--color-border)' }">
         {{ f.label }}
-        <span class="ml-1.5 text-xs opacity-70">({{ countByStatus(f.value) }})</span>
       </button>
     </div>
 
@@ -27,7 +26,7 @@
         style="border-color: var(--color-primary) transparent var(--color-primary) transparent" />
     </div>
 
-    <div v-else-if="filteredRequests.length === 0"
+    <div v-else-if="requests.length === 0"
       class="rounded-2xl border flex flex-col items-center py-20 gap-3"
       :style="{ backgroundColor: 'var(--color-surface)', borderColor: 'var(--color-border)' }">
       <Store :size="48" class="opacity-10" :style="{ color: 'var(--color-text-main)' }" />
@@ -35,7 +34,7 @@
     </div>
 
     <div v-else class="grid gap-4">
-      <div v-for="req in filteredRequests" :key="req.id"
+      <div v-for="req in requests" :key="req.id"
         class="rounded-2xl border overflow-hidden hover:shadow-md transition-all"
         :style="{ backgroundColor: 'var(--color-surface)', borderColor: 'var(--color-border)' }">
         <div class="p-6 flex flex-col md:flex-row gap-5 items-start">
@@ -83,6 +82,20 @@
         </div>
       </div>
     </div>
+    
+    <!-- Pagination -->
+    <div v-if="lastPage > 1" class="flex items-center justify-between px-6 py-4 mt-4 border-t"
+        :style="{ borderColor: 'var(--color-border)' }">
+        <span class="text-xs opacity-50" :style="{ color: 'var(--color-text-sub)' }">Page {{ currentPage }} / {{ lastPage }}</span>
+        <div class="flex gap-2">
+          <button @click="fetchRequests(currentPage - 1)" :disabled="currentPage <= 1"
+            class="px-3 py-1.5 rounded-lg text-xs font-bold border disabled:opacity-30"
+            :style="{ borderColor: 'var(--color-border)', color: 'var(--color-text-main)' }">← Précédent</button>
+          <button @click="fetchRequests(currentPage + 1)" :disabled="currentPage >= lastPage"
+            class="px-3 py-1.5 rounded-lg text-xs font-bold border disabled:opacity-30"
+            :style="{ borderColor: 'var(--color-border)', color: 'var(--color-text-main)' }">Suivant →</button>
+        </div>
+      </div>
   </div>
 </template>
 
@@ -95,6 +108,9 @@ import apiClient from '../../api/index.js';
 const requests = ref([]);
 const isLoading = ref(true);
 const statusFilter = ref('all');
+const currentPage = ref(1);
+const lastPage = ref(1);
+const total = ref(0);
 
 const filters = [
   { value: 'all', label: 'Toutes' },
@@ -103,21 +119,23 @@ const filters = [
   { value: 'rejected', label: 'Rejetées' },
 ];
 
-const filteredRequests = computed(() => {
-  if (statusFilter.value === 'all') return requests.value;
-  return requests.value.filter(r => r.status === statusFilter.value);
-});
-
-const countByStatus = (status) => {
-  if (status === 'all') return requests.value.length;
-  return requests.value.filter(r => r.status === status).length;
+const changeFilter = (f) => {
+  statusFilter.value = f;
+  fetchRequests(1);
 };
 
-const fetchRequests = async () => {
+const fetchRequests = async (page = 1) => {
   isLoading.value = true;
+  currentPage.value = page;
   try {
-    const { data } = await apiClient.get('/admin/supplier-requests');
-    requests.value = data.data;
+    const { data } = await apiClient.get('/admin/supplier-requests', { params: { page, status: statusFilter.value } });
+    if (data.data && data.data.data) {
+        requests.value = data.data.data;
+        lastPage.value = data.data.last_page;
+        total.value = data.data.total;
+    } else {
+        requests.value = data.data || [];
+    }
   } catch (e) { console.error(e); } finally { isLoading.value = false; }
 };
 

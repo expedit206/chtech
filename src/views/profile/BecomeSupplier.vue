@@ -36,7 +36,38 @@
           Formulaire Devenir Vendeur
         </h2>
 
-        <form
+        <div v-if="loadingStatus" class="p-8 text-center text-[var(--color-primary)] font-bold animate-pulse">
+          Vérification du statut de votre demande...
+        </div>
+
+        <div v-else-if="existingRequest" class="flex flex-col items-center justify-center p-8 text-center bg-[var(--color-bg)] rounded-xl border border-[var(--color-border)]">
+          <div v-if="existingRequest.status === 'pending'" class="text-amber-500 mb-4">
+            <Clock class="w-16 h-16 mx-auto mb-2" />
+            <h3 class="text-xl font-bold">Demande en cours d'examen</h3>
+            <p class="text-sm text-[var(--color-text-sub)] mt-2">
+              Votre demande pour devenir vendeur est actuellement en cours d'évaluation par notre équipe. 
+              Vous recevrez une notification d'ici peu.
+            </p>
+          </div>
+          <div v-else-if="existingRequest.status === 'approved'" class="text-green-500 mb-4">
+            <CheckCircle class="w-16 h-16 mx-auto mb-2" />
+            <h3 class="text-xl font-bold">Demande approuvée !</h3>
+            <p class="text-sm text-[var(--color-text-sub)] mt-2">
+              Félicitations, vous êtes maintenant un vendeur officiel sur SASAYEE.
+              <br>Reconnectez-vous ou actualisez la page pour voir vos nouvelles fonctionnalités !
+            </p>
+          </div>
+          <div v-else-if="existingRequest.status === 'rejected'" class="text-red-500 mb-4">
+            <XCircle class="w-16 h-16 mx-auto mb-2" />
+            <h3 class="text-xl font-bold">Demande rejetée</h3>
+            <p class="text-sm text-[var(--color-text-sub)] mt-2">
+              Nous n'avons malheureusement pas pu valider votre demande pour devenir vendeur.
+              Veuillez contacter le support pour plus d'informations.
+            </p>
+          </div>
+        </div>
+
+        <form v-else
           @submit.prevent="submitForm"
           class="grid grid-cols-1 md:grid-cols-2 gap-5"
         >
@@ -92,7 +123,7 @@
             Soumettre ma candidature
           </button>
         </form>
-        <div class="">
+        <div class="" v-if="!existingRequest && !loadingStatus">
           <p class="mt-4 text-sm text-[var(--color-text-sub)] italic">
             <i
               >Vos informations seront examinées par notre équipe avant d'être
@@ -147,7 +178,10 @@ import {
   Book,
   Mail,
   ArrowUp,
+  CheckCircle,
+  XCircle,
 } from "lucide-vue-next";
+import apiClient from "../../api";
 import { useAlert } from "../../composables/useAlert.js";
 
 import { useSeo } from "../../composables/useSeo.js";
@@ -174,19 +208,49 @@ const stats = [
 ];
 
 const formSection = ref(null);
+const existingRequest = ref(null);
+const loadingStatus = ref(true);
 
-const submitForm = () => {
-  console.log("Formulaire envoyé:", form);
-  alert.success({
-    title: "Candidature Envoyée",
-    message: "Votre demande a été soumise avec succès ! Notre équipe vous contactera sous 24h."
-  });
-  // Reset form
-  form.nom = "";
-  form.structure = "";
-  form.categorie = "";
-  form.localisation = "";
-  form.contact = "";
+const fetchStatus = async () => {
+  try {
+    const res = await apiClient.get("/supplier-onboarding/status");
+    if (res.data.success && res.data.data) {
+      existingRequest.value = res.data.data;
+    }
+  } catch (error) {
+    console.error("Erreur lors de la récupération du statut :", error);
+  } finally {
+    loadingStatus.value = false;
+  }
+};
+
+import { onMounted } from "vue";
+onMounted(() => {
+  fetchStatus();
+});
+
+const submitForm = async () => {
+  try {
+    const payload = {
+      company_name: form.structure,
+      description: `Nom complet: ${form.nom}\nCatégorie: ${form.categorie}\nLocalisation: ${form.localisation}\nContact: ${form.contact}`
+    };
+    
+    const response = await apiClient.post("/supplier-onboarding/apply", payload);
+    
+    alert.success({
+      title: "Candidature Envoyée",
+      message: response.data.message || "Votre demande a été soumise avec succès ! Notre équipe vous contactera sous 24h."
+    });
+    
+    // Switch to status view
+    fetchStatus();
+  } catch (error) {
+    alert.error({
+      title: "Erreur",
+      message: error.response?.data?.message || "Une erreur s'est produite lors de l'envoi de votre candidature."
+    });
+  }
 };
 
 const scrollToTop = () => {

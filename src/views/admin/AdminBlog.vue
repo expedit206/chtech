@@ -24,26 +24,35 @@
         <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
           <div>
             <label class="block text-xs font-bold mb-1.5 opacity-60" :style="{ color: 'var(--color-text-sub)' }">Titre</label>
-            <input v-model="postForm.titre" required placeholder="Titre de l'article"
+            <input v-model="postForm.title" required placeholder="Titre de l'article"
               class="w-full px-4 py-2.5 rounded-xl border text-sm outline-none"
               :style="{ backgroundColor: 'var(--color-bg)', borderColor: 'var(--color-border)', color: 'var(--color-text-main)' }" />
           </div>
           <div>
-            <label class="block text-xs font-bold mb-1.5 opacity-60" :style="{ color: 'var(--color-text-sub)' }">Image (URL ou fichier)</label>
-            <input v-model="postForm.image" placeholder="https://..."
+            <label class="block text-xs font-bold mb-1.5 opacity-60" :style="{ color: 'var(--color-text-sub)' }">Image de couverture</label>
+            <input type="file" ref="imageUploader" accept="image/*" @change="onImageSelect" class="w-full mb-2 text-sm file:mr-3 file:py-2 file:px-4 file:rounded-xl file:border-0 file:text-xs file:font-bold file:cursor-pointer pb-2" :style="{ color: 'var(--color-text-sub)' }" />
+            
+            <input v-model="postForm.image" placeholder="Ou coller une URL d'image..."
               class="w-full px-4 py-2.5 rounded-xl border text-sm outline-none"
               :style="{ backgroundColor: 'var(--color-bg)', borderColor: 'var(--color-border)', color: 'var(--color-text-main)' }" />
+              
+            <div v-if="imagePreview || postForm.image" class="mt-3 rounded-xl overflow-hidden h-32 border relative" :style="{ borderColor: 'var(--color-border)' }">
+              <img :src="imagePreview || postForm.image" class="w-full h-full object-cover" />
+              <button type="button" v-if="imagePreview" @click="clearFile" class="absolute top-2 right-2 bg-red-500 text-white rounded-lg p-1.5 opacity-80 hover:opacity-100">
+                <Trash2 :size="14" />
+              </button>
+            </div>
           </div>
         </div>
         <div>
           <label class="block text-xs font-bold mb-1.5 opacity-60" :style="{ color: 'var(--color-text-sub)' }">Extrait</label>
-          <input v-model="postForm.extrait" placeholder="Courte description"
+          <input v-model="postForm.excerpt" placeholder="Courte description"
             class="w-full px-4 py-2.5 rounded-xl border text-sm outline-none"
             :style="{ backgroundColor: 'var(--color-bg)', borderColor: 'var(--color-border)', color: 'var(--color-text-main)' }" />
         </div>
         <div>
           <label class="block text-xs font-bold mb-1.5 opacity-60" :style="{ color: 'var(--color-text-sub)' }">Contenu</label>
-          <textarea v-model="postForm.contenu" rows="6" placeholder="Contenu de l'article..."
+          <textarea v-model="postForm.content" rows="6" placeholder="Contenu de l'article..."
             class="w-full px-4 py-3 rounded-xl border text-sm outline-none resize-none"
             :style="{ backgroundColor: 'var(--color-bg)', borderColor: 'var(--color-border)', color: 'var(--color-text-main)' }" />
         </div>
@@ -112,16 +121,16 @@
               <td class="px-6 py-4 text-right">
                 <div class="flex items-center justify-end gap-2">
                   <button @click="togglePublish(post)"
-                    class="w-8 h-8 rounded-lg flex items-center justify-center transition opacity-0 group-hover:opacity-100"
+                    class="w-8 h-8 rounded-lg flex items-center justify-center transition opacity-100 group-hover:opacity-100"
                     :class="(post.published_at || post.est_publie) ? 'hover:bg-amber-500/10 text-amber-400' : 'hover:bg-green-500/10 text-green-400'">
                     <component :is="(post.published_at || post.est_publie) ? EyeOff : Eye" :size="14" />
                   </button>
                   <button @click="editPost(post)"
-                    class="w-8 h-8 rounded-lg flex items-center justify-center transition hover:bg-indigo-500/10 text-indigo-400 opacity-0 group-hover:opacity-100">
+                    class="w-8 h-8 rounded-lg flex items-center justify-center transition hover:bg-indigo-500/10 text-indigo-400 opacity-100 group-hover:opacity-100">
                     <Pencil :size="14" />
                   </button>
                   <button @click="deletePost(post)"
-                    class="w-8 h-8 rounded-lg flex items-center justify-center transition hover:bg-red-500/10 text-red-400 opacity-0 group-hover:opacity-100">
+                    class="w-8 h-8 rounded-lg flex items-center justify-center transition hover:bg-red-500/10 text-red-400 opacity-100 group-hover:opacity-100">
                     <Trash2 :size="14" />
                   </button>
                 </div>
@@ -162,7 +171,24 @@ const currentPage = ref(1);
 const lastPage = ref(1);
 const total = ref(0);
 
-const postForm = ref({ titre: '', extrait: '', contenu: '', image: '' });
+const postForm = ref({ title: '', excerpt: '', content: '', image: '' });
+
+const imagePreview = ref(null);
+const fileInput = ref(null);
+const imageUploader = ref(null);
+
+const onImageSelect = (e) => {
+  const file = e.target.files[0];
+  if (!file) return;
+  fileInput.value = file;
+  imagePreview.value = URL.createObjectURL(file);
+};
+
+const clearFile = () => {
+  fileInput.value = null;
+  imagePreview.value = null;
+  if (imageUploader.value) imageUploader.value.value = '';
+};
 
 const fetchPosts = async (page = 1) => {
   loading.value = true;
@@ -184,7 +210,23 @@ const savePost = async () => {
   saving.value = true;
   try {
     const fd = new FormData();
-    Object.entries(postForm.value).forEach(([k, v]) => v && fd.append(k, v));
+    // Use title/content/excerpt keys
+    fd.append('title', postForm.value.title || '');
+    fd.append('content', postForm.value.content || '');
+    fd.append('excerpt', postForm.value.excerpt || '');
+    
+    // image handling
+    if (fileInput.value) {
+      fd.append('image', fileInput.value);
+    } else if (postForm.value.image) {
+      fd.append('image', postForm.value.image);
+    }
+    
+    // Explicit is_published handling
+    if (editingPost.value) {
+      fd.append('is_published', editingPost.value.is_published ? '1' : '0');
+    }
+
     if (editingPost.value) {
       await apiClient.post(`/admin/blog/posts/${editingPost.value.id}`, fd);
     } else {
@@ -192,20 +234,29 @@ const savePost = async () => {
     }
     await fetchPosts(currentPage.value);
     cancelForm();
-  } catch (e) { console.error(e); } finally { saving.value = false; }
+  } catch (e) {
+    if (e.response?.data?.errors) {
+      console.error('Validation errors:', e.response.data.errors);
+    }
+    console.error(e);
+  } finally {
+    saving.value = false;
+  }
 };
 
 const editPost = (post) => {
   editingPost.value = post;
-  postForm.value = { titre: post.titre || post.title || '', extrait: post.extrait || '', contenu: post.contenu || '', image: post.image || '' };
+  postForm.value = { title: post.title || post.titre || '', excerpt: post.excerpt || post.extrait || '', content: post.content || post.contenu || '', image: post.image || '' };
   showForm.value = true;
+  clearFile();
   window.scrollTo({ top: 0, behavior: 'smooth' });
 };
 
 const cancelForm = () => {
   showForm.value = false;
   editingPost.value = null;
-  postForm.value = { titre: '', extrait: '', contenu: '', image: '' };
+  postForm.value = { title: '', excerpt: '', content: '', image: '' };
+  clearFile();
 };
 
 const togglePublish = async (post) => {
