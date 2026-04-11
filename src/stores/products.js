@@ -129,17 +129,21 @@ export const useProductStore = defineStore('products', () => {
     }
   }
 
-  async function getProductById(idOrSlug) {
-    const localProduct = products.value.find(p => 
-      String(p.id) === String(idOrSlug) || 
-      p.slug === idOrSlug || 
-      ((p.slug && p.slug + '-' + p.id === idOrSlug))
-    );
-    if (localProduct) return localProduct;
+  async function getProductById(idOrSlug, refresh = false) {
+    if (!refresh) {
+      const localProduct = products.value.find(p => 
+        String(p.id) === String(idOrSlug) || 
+        p.slug === idOrSlug || 
+        ((p.slug && p.slug + '-' + p.id === idOrSlug))
+      );
+      if (localProduct) return { produit: localProduct }; // Retourne au format objet attendu
+    }
 
     try {
       const response = await apiClient.get(`/produits/${idOrSlug}`);
-      return response.data.data.produit;
+      // console.log(response.data.data);
+      
+      return response.data.data; // Retourne l'objet complet (produit, similar_produits, etc.)
     } catch (err) {
       console.error('Erreur lors du chargement du produit:', err);
       throw err;

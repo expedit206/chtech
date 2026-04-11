@@ -49,14 +49,7 @@
               <p class="text-sm mt-0.5 opacity-60" :style="{ color: 'var(--color-text-main)' }">
                 Membre depuis le {{ formatDate(auth.user?.created_at) }}
               </p>
-              <div class="flex items-center gap-2 mt-2">
-                <span v-if="auth.isVendeur" class="text-[10px] font-black tracking-widest uppercase px-2.5 py-1 rounded-full text-white bg-green-500">
-                  ✓ Vendeur vérifié
-                </span>
-                <span v-if="auth.user?.premium" class="text-[10px] font-black tracking-widest uppercase px-2.5 py-1 rounded-full text-white bg-yellow-500">
-                  ★ Premium
-                </span>
-              </div>
+            
             </div>
             <router-link :to="{ name: 'PublicProfile', params: { id: auth.user?.id || '0' } }"
               class="flex items-center gap-2 px-4 py-2 rounded-xl text-sm font-bold border transition-all hover:bg-[var(--color-primary)] hover:text-white hover:border-[var(--color-primary)]"
