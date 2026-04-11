@@ -182,15 +182,31 @@ const fetchUserItems = async () => {
             params: { user_id: route.params.id }
         });
 
-        // Formater les prix comme dans Home.vue
-        products.value = (response.data.produits || []).map(p => ({
-            ...p,
-            id: p.id,
-            name: p.nom,
-            slug: (p.slug && !p.slug.endsWith(`-${p.id}`)) ? `${p.slug}-${p.id}` : (p.slug || p.id),
-            price: `${Number(p.prix).toLocaleString()} FCFA`,
-            image: p.photos?.[0] ? `${CONFIG.STORAGE_URL}${p.photos[0]}` : '/placeholder.png'
-        }));
+        // Formater les prix et images comme dans le store
+        products.value = (response.data.produits || []).map(p => {
+            let photoUrl = '/placeholder.png';
+            if (p.photos && p.photos.length > 0) {
+                const firstPhoto = p.photos[0];
+                if (typeof firstPhoto === 'string') {
+                    if (firstPhoto.startsWith('http')) {
+                        photoUrl = firstPhoto;
+                    } else {
+                        // Nettoyer le chemin pour éviter les doubles slashes
+                        const cleanPath = firstPhoto.startsWith('/') ? firstPhoto.substring(1) : firstPhoto;
+                        photoUrl = `${CONFIG.STORAGE_URL}${cleanPath}`;
+                    }
+                }
+            }
+
+            return {
+                ...p,
+                id: p.id,
+                name: p.nom,
+                slug: (p.slug && !p.slug.endsWith(`-${p.id}`)) ? `${p.slug}-${p.id}` : (p.slug || p.id),
+                price: p.prix ? `${Number(p.prix).toLocaleString()} FCFA` : 'N/A',
+                image: photoUrl
+            };
+        });
     } catch (error) {
         console.error("Erreur items:", error);
     } finally {
