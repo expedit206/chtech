@@ -1,6 +1,7 @@
 import { defineStore } from 'pinia';
 import { ref, computed } from 'vue';
 import apiClient from '../api/index.js';
+import router from '../router/index.js';
 
 export const useAuthStore = defineStore('auth', () => {
   const user = ref(JSON.parse(localStorage.getItem('auth_user')) || null);
@@ -9,6 +10,7 @@ export const useAuthStore = defineStore('auth', () => {
   const isAuthenticated = computed(() => {
     return !!token.value;
   });
+// console.log(user.value);
 
   const isAdmin = computed(() => user.value?.role === 'admin');
   const isVendeur = computed(() => user.value?.role === 'vendeur');
@@ -68,7 +70,22 @@ export const useAuthStore = defineStore('auth', () => {
       token.value = null;
       localStorage.removeItem('auth_token');
       localStorage.removeItem('auth_user');
+      router.push({ name: 'Home' });
     }
+  };
+
+  const fetchUser = async () => {
+    if (!token.value) return null;
+    try {
+      const response = await apiClient.get('/user');
+      if (response.data && response.data.user) {
+        setUser(response.data.user);
+        return response.data.user;
+      }
+    } catch (error) {
+      console.error('Failed to fetch user:', error);
+    }
+    return null;
   };
 
   return { 
@@ -82,6 +99,7 @@ export const useAuthStore = defineStore('auth', () => {
     setToken,
     login,
     register,
-    logout
+    logout,
+    fetchUser
   };
 });

@@ -213,7 +213,7 @@ const loadingStatus = ref(true);
 
 const fetchStatus = async () => {
   try {
-    const res = await apiClient.get("/supplier-onboarding/status");
+    const res = await apiClient.get("/vendeur-onboarding/status");
     if (res.data.success && res.data.data) {
       existingRequest.value = res.data.data;
     }
@@ -236,7 +236,7 @@ const submitForm = async () => {
       description: `Nom complet: ${form.nom}\nCatégorie: ${form.categorie}\nLocalisation: ${form.localisation}\nContact: ${form.contact}`
     };
     
-    const response = await apiClient.post("/supplier-onboarding/apply", payload);
+    const response = await apiClient.post("/vendeur-onboarding/apply", payload);
     
     alert.success({
       title: "Candidature Envoyée",

@@ -229,7 +229,7 @@ router.beforeEach((to, from, next) => {
   // Vendeur guard
   if (requiresVendeur) {
     const userData = authStore.user || JSON.parse(localStorage.getItem('auth_user') || '{}');
-    const userIsVendeur = userData.role === 'vendeur' || userData.role === 'fournisseur';
+    const userIsVendeur = userData.role === 'vendeur' || userData.role === 'vendeur';
     const userIsAdmin = userData.role === 'admin';
 
     if (!loggedIn || (!userIsVendeur && !userIsAdmin)) {

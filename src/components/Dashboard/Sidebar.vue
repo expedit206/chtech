@@ -126,8 +126,20 @@ const emit = defineEmits(["toggle", "close-mobile", "open-mobile"]);
 
 const menuSections = computed(() => {
   const sections = [];
+  
+  // Si l'utilisateur n'est pas encore chargé mais qu'on est authentifié, 
+  // on attend pour éviter le flash de la mauvaise sidebar
+  if (!auth.user && auth.isAuthenticated) {
+    return [
+      {
+        title: "Chargement...",
+        items: []
+      }
+    ];
+  }
 
-  if (!auth.isAdmin) {
+  // Navigation standard pour les utilisateurs normaux (utilisateurs simples)
+  if (!auth.isAdmin && !auth.isVendeur) {
     sections.push({
       title: "Navigation",
       items: [
@@ -147,6 +159,7 @@ const menuSections = computed(() => {
     });
   }
 
+  // Administration
   if (auth.isAdmin) {
     sections.push({
       title: "Administration",
@@ -162,6 +175,7 @@ const menuSections = computed(() => {
     });
   }
 
+  // Devenir vendeur (uniquement pour utilisateurs normaux)
   if (!auth.isAdmin && !auth.isVendeur) {
     sections.push({
       title: "Vendeur",
@@ -171,6 +185,7 @@ const menuSections = computed(() => {
     });
   }
 
+  // Espace Vendeur
   if (auth.isVendeur) {
     sections.push({
       title: "Ma Boutique",
@@ -200,14 +215,15 @@ const menuSections = computed(() => {
     });
   }
 
+  // Sections communes à tous
   sections.push({
     title: "Compte",
     items: [
       { name: "Paramètres", icon: Settings, route: { name: "Settings" } },
       { name: "Aide & Support", icon: Headphones, route: { name: "Support" } },
-
     ],
   });
+
   if (auth.isAdmin) {
     sections.push({
       title: "Raccourcis",

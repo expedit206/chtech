@@ -1,7 +1,8 @@
 <template>
     <div class="min-h-screen pb-20" :style="{ backgroundColor: 'var(--color-bg)', color: 'var(--color-text-main)' }">
         <!-- Header/Cover Area -->
-        <div class="h-48 md:h-64 bg-zinc-200 dark:bg-zinc-800 relative">
+        <div class="h-48 md:h-64 relative overflow-hidden bg-zinc-200 dark:bg-zinc-800">
+            <img v-if="userCoverUrl" :src="userCoverUrl" class="w-full h-full object-cover" />
             <div class="absolute inset-0 bg-gradient-to-b from-black/20 to-transparent"></div>
         </div>
 
@@ -129,6 +130,28 @@ const router = useRouter();
 const messageStore = useMessageStore();
 const authStore = useAuthStore();
 
+const user = ref(null);
+const products = ref([]);
+const services = ref([]);
+const loadingItems = ref(true);
+const activeTab = ref('products');
+
+const userCoverUrl = computed(() => {
+    if (user.value?.cover) {
+        if (user.value.cover.startsWith('http')) return user.value.cover;
+        return `${CONFIG.STORAGE_URL}${user.value.cover}`;
+    }
+    return null;
+});
+
+const userPhotoUrl = computed(() => {
+    if (user.value?.photo) {
+        if (user.value.photo.startsWith('http')) return user.value.photo;
+        return `${CONFIG.STORAGE_URL}${user.value.photo}`;
+    }
+    return `https://ui-avatars.com/api/?name=${encodeURIComponent(user.value?.nom || 'User')}&background=6366f1&color=fff&size=256`;
+});
+
 // Dynamic SEO
 useSeo({
     title: computed(() => user.value?.nom ? `${user.value.nom} - Profil Vendeur` : 'Profil'),
@@ -137,28 +160,14 @@ useSeo({
     type: 'profile'
 });
 
-const user = ref(null);
-const products = ref([]);
-const services = ref([]);
-const loadingItems = ref(true);
-const activeTab = ref('products');
-
 const tabs = [
     { id: 'products', label: 'Produits' },
     { id: 'services', label: 'Services' },
 ];
 
-const userPhotoUrl = computed(() => {
-    if (user.value?.photo) {
-        if (user.value.photo.startsWith('http')) return user.value.photo;
-        return `${CONFIG.API_BASE_URL}/storage/${user.value.photo}`;
-    }
-    return `https://ui-avatars.com/api/?name=${encodeURIComponent(user.value?.nom || 'User')}&background=6366f1&color=fff&size=200`;
-});
-
 const fetchProfile = async () => {
     try {
-        const response = await apiClient.get(`/profile/${route.params.id}/public`);
+        const response = await apiClient.get(`/profile/public/${route.params.id}`);
         user.value = response.data;
     } catch (error) {
         console.error("Erreur profil:", error);
@@ -169,18 +178,18 @@ const fetchUserItems = async () => {
     loadingItems.value = true;
     try {
         // En supposant qu'on a un endpoint pour filtrer les produits par utilisateur
-        const response = await apiClient.get('/marketplace/products', {
+        const response = await apiClient.get('/marketplace/produits', {
             params: { user_id: route.params.id }
         });
 
         // Formater les prix comme dans Home.vue
-        products.value = (response.data.data || []).map(p => ({
+        products.value = (response.data.produits || []).map(p => ({
             ...p,
             id: p.id,
             name: p.nom,
             slug: (p.slug && !p.slug.endsWith(`-${p.id}`)) ? `${p.slug}-${p.id}` : (p.slug || p.id),
             price: `${Number(p.prix).toLocaleString()} FCFA`,
-            image: p.photos?.[0] ? `${CONFIG.API_BASE_URL}/storage/${p.photos[0]}` : '/placeholder.png'
+            image: p.photos?.[0] ? `${CONFIG.STORAGE_URL}${p.photos[0]}` : '/placeholder.png'
         }));
     } catch (error) {
         console.error("Erreur items:", error);

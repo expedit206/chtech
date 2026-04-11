@@ -128,7 +128,7 @@ const fetchRequests = async (page = 1) => {
   isLoading.value = true;
   currentPage.value = page;
   try {
-    const { data } = await apiClient.get('/admin/supplier-requests', { params: { page, status: statusFilter.value } });
+    const { data } = await apiClient.get('/admin/vendeur-requests', { params: { page, status: statusFilter.value } });
     if (data.data && data.data.data) {
         requests.value = data.data.data;
         lastPage.value = data.data.last_page;
@@ -141,7 +141,7 @@ const fetchRequests = async (page = 1) => {
 
 const handleAction = async (id, status) => {
   try {
-    await apiClient.put(`/admin/supplier-requests/${id}`, { status });
+    await apiClient.put(`/admin/vendeur-requests/${id}`, { status });
     const req = requests.value.find(r => r.id === id);
     if (req) req.status = status;
   } catch (e) { console.error(e); }

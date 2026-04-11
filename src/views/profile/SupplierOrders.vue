@@ -190,7 +190,7 @@ const isLoading = ref(true);
 const fetchOrders = async () => {
   isLoading.value = true;
   try {
-    const response = await apiClient.get("/orders/supplier");
+    const response = await apiClient.get("/orders/seller");
     orders.value = response.data.data;
   } catch (error) {
     toast.error("Erreur lors du chargement des commandes");

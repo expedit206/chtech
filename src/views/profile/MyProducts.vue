@@ -793,7 +793,6 @@ const saveProduct = async () => {
   formData.append("stock", form.value.stock);
   formData.append("ville", form.value.ville);
   formData.append("condition", "neuf");
-  formData.append("revendable", form.value.revendable ? "1" : "0");
 
   newPhotoFiles.value.forEach((file) => {
     formData.append("photos[]", file);

@@ -28,7 +28,7 @@
           </div>
           <div>
             <label for="telephone" class="block text-sm font-medium mb-1"
-              :style="{ color: 'var(--color-text-main)' }">Téléphone</label>
+              :style="{ color: 'var(--color-text-main)' }">Téléphone / Email</label>
             <input id="telephone" v-model="form.telephone" name="telephone" type="tel" required
               class="appearance-none relative block w-full px-4 py-3 border rounded-xl focus:outline-none focus:ring-2 transition-all duration-200 sm:text-sm"
               :style="{

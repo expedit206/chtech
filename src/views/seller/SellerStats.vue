@@ -84,8 +84,8 @@
             </p>
           </div>
           <span class="text-[10px] font-bold px-2 py-1 rounded-full"
-            :style="{ backgroundColor: p.is_available ? '#10b98120' : '#ef444420', color: p.is_available ? '#10b981' : '#ef4444' }">
-            {{ p.is_available ? 'Actif' : 'Inactif' }}
+            :style="{ backgroundColor: p.quantite > 0 ? '#10b98120' : '#ef444420', color: p.quantite > 0 ? '#10b981' : '#ef4444' }">
+            {{ p.quantite > 0 ? 'En stock' : 'Rupture' }}
           </span>
         </div>
       </div>
@@ -221,8 +221,8 @@ const statusLabel = (status) => {
 onMounted(async () => {
   const [statsRes, productsRes, ordersRes] = await Promise.allSettled([
     apiClient.get('/orders/seller-stats'),
-    apiClient.get('/produits/mine'),
-    apiClient.get('/orders/supplier'),
+    apiClient.get('/user/mesProduits'),
+    apiClient.get('/orders/seller'),
   ]);
 
   if (statsRes.status === 'fulfilled') {
@@ -232,12 +232,14 @@ onMounted(async () => {
 
   if (productsRes.status === 'fulfilled') {
     const d = productsRes.value.data;
-    products.value = (d.data ?? d) || [];
+    // Handle both { data: [...] } and { produits: [...] } or direct [...]
+    products.value = d.data || d.produits || (Array.isArray(d) ? d : []);
   }
   productsLoading.value = false;
 
   if (ordersRes.status === 'fulfilled') {
-    recentOrders.value = ordersRes.value.data.data || [];
+    const d = ordersRes.value.data;
+    recentOrders.value = d.data || (Array.isArray(d) ? d : []);
   }
   ordersLoading.value = false;
 });

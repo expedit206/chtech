@@ -9,12 +9,6 @@ Favoris récents : Les 3 derniers articles ajoutés à la Wishlist.
 
 Message de bienvenue : "Bonjour [Nom], ravi de vous revoir !"
 
-
-
-
-
-
-
 2. Mes Commandes (📦 Orders)
 C'est la page la plus consultée. Elle doit être très claire :
 

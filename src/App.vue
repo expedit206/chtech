@@ -96,6 +96,7 @@ const loadUserData = async () => {
 
   if (authStore.isAuthenticated) {
     await Promise.all([
+      authStore.fetchUser(),
       interactionStore.fetchFavorites(),
     ]);
   }
