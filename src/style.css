@@ -50,6 +50,28 @@
   }
 }
 
+
+#nprogress {
+  pointer-events: none;
+}
+
+#nprogress .bar {
+  background: var(--color-primary); /* 🔥 ta couleur principale */
+  height: 3px;
+}
+
+#nprogress .peg {
+  box-shadow: 0 0 10px var(--color-primary),
+              0 0 5px var(--color-primary);
+}
+
+#nprogress .spinner {
+  display: none;
+}
+
+
+
+
 body {
   margin: 0;
   font-family:

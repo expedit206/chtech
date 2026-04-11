@@ -33,6 +33,7 @@
 </template>
 
 <script setup>
+
 import { onMounted, watch, ref, computed } from "vue";
 import { useRoute } from "vue-router";
 import Footer from "./components/Footer.vue";
@@ -43,7 +44,7 @@ import { useAuthStore } from "./stores/auth.js";
 import { useInteractionStore } from "./stores/interactions.js";
 import { useProductStore } from "./stores/products.js";
 import { useSeo } from "./composables/useSeo.js";
-
+import NProgress from 'nprogress'
 const authStore = useAuthStore();
 const interactionStore = useInteractionStore();
 const route = useRoute();
@@ -117,4 +118,8 @@ watch(
     }
   },
 );
+
+
+
+
 </script>

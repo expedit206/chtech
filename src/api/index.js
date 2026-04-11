@@ -1,21 +1,34 @@
-import { CONFIG } from '../config/index.js';
-import axios from 'axios';
+import { CONFIG } from "../config/index.js";
+import axios from "axios";
 
 const apiClient = axios.create({
-  baseURL: CONFIG.API_BASE_URL, 
+  baseURL: CONFIG.API_BASE_URL,
   headers: {
-    'Content-Type': 'application/json',
-    'Accept': 'application/json',
+    "Content-Type": "application/json",
+    Accept: "application/json",
   },
   withCredentials: true,
 });
 
 apiClient.interceptors.request.use((config) => {
-  const token = localStorage.getItem('auth_token');
+
+  const token = localStorage.getItem("auth_token");
   if (token) {
     config.headers.Authorization = `Bearer ${token}`;
   }
   return config;
 });
+
+// réponse reçue
+axios.interceptors.response.use(
+  (response) => {
+
+    return response;
+  },
+  (error) => {
+
+    return Promise.reject(error);
+  },
+);
 
 export default apiClient;

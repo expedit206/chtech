@@ -2,7 +2,7 @@ import { createRouter, createWebHistory } from "vue-router";
 import Home from "../views/Home.vue";
 import Blogs from "../views/Blogs.vue";
 import DetailProduit from "../views/DetailProduit.vue";
-
+import NProgress from 'nprogress'
 const routes = [
   {
     path: "/",
@@ -245,4 +245,27 @@ router.beforeEach((to, from, next) => {
   next();
 });
 
+
+
+
+router.beforeEach((to, from, next) => {
+  NProgress.start()
+  next()
+})
+
+router.afterEach(() => {
+  NProgress.done()
+})
+
+let timer
+
+router.beforeEach((to, from, next) => {
+  timer = setTimeout(() => NProgress.start(), 200)
+  next()
+})
+
+router.afterEach(() => {
+  clearTimeout(timer)
+  NProgress.done()
+})
 export default router;
