@@ -53,10 +53,6 @@
                         <p class="text-3xl font-black">{{ user?.produits_count || 0 }}</p>
                     </div>
                     <div class="text-center md:text-left">
-                        <p class="text-xs font-black uppercase tracking-widest opacity-40 mb-1">Services</p>
-                        <p class="text-3xl font-black">{{ user?.services_count || 0 }}</p>
-                    </div>
-                    <div class="text-center md:text-left">
                         <p class="text-xs font-black uppercase tracking-widest opacity-40 mb-1">Vues Totales</p>
                         <p class="text-3xl font-black">{{ formatLargeNumber(user?.total_views || 0) }}</p>
                     </div>
@@ -99,13 +95,6 @@
                 </div>
             </div>
 
-            <!-- Services Grid (Placeholder) -->
-            <div v-else-if="activeTab === 'services'" class="grid grid-cols-1 md:grid-cols-2 gap-6">
-                <div v-if="services.length === 0" class="col-span-full py-20 text-center opacity-40">
-                    <i class="fas fa-concierge-bell text-6xl mb-4"></i>
-                    <p class="font-bold">Aucun service proposé pour le moment.</p>
-                </div>
-            </div>
         </div>
     </div>
 </template>
@@ -128,7 +117,6 @@ const authStore = useAuthStore();
 
 const user = ref(null);
 const products = ref([]);
-const services = ref([]);
 const loadingItems = ref(true);
 const activeTab = ref('products');
 
@@ -158,7 +146,6 @@ useSeo({
 
 const tabs = [
     { id: 'products', label: 'Produits' },
-    { id: 'services', label: 'Services' },
 ];
 
 const fetchProfile = async () => {

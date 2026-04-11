@@ -150,9 +150,9 @@ const searchQuery = ref("");
 
 const faqs = ref([
   {
-    question: "Comment suivre l'avancement de mon projet ?",
+    question: "Comment suivre l'avancement de ma commande ?",
     answer:
-      "Vous pouvez suivre l'état de vos services en temps réel dans votre tableau de bord SASAYEE, section 'Mes Commandes'.",
+      "Vous pouvez suivre l'état de vos commandes en temps réel dans votre tableau de bord SASAYEE, section 'Mes Commandes'.",
     open: true,
   },
   {

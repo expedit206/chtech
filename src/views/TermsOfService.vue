@@ -68,7 +68,7 @@
           <CreditCard :size="24" class="text-[var(--color-primary)]" /> Transactions et Paiements
         </h2>
         <div class="space-y-4 text-sm text-[var(--color-text-sub)]">
-          <p><span class="font-bold text-[var(--color-text-main)]">Abonnements :</span> Nos services premium sont soumis à une facturation périodique claire et sans frais cachés.</p>
+          <p><span class="font-bold text-[var(--color-text-main)]">Abonnements :</span> Nos options premium sont soumises à une facturation périodique claire et sans frais cachés.</p>
           <p><span class="font-bold text-[var(--color-text-main)]">Sécurité :</span> Nous utilisons des protocoles de paiement sécurisés pour toutes vos transactions bancaires.</p>
           <p><span class="font-bold text-[var(--color-text-main)]">Responsabilité :</span> Vous êtes responsable de la gestion de vos factures et du maintien à jour de vos informations de paiement.</p>
         </div>

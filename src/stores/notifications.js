@@ -5,6 +5,7 @@ export const useNotificationStore = defineStore('notifications', {
   state: () => ({
     notifications: [],
     unreadCount: 0,
+    activeFilter: 'all',
     loading: false,
     pagination: {
       current_page: 1,
@@ -14,6 +15,10 @@ export const useNotificationStore = defineStore('notifications', {
   }),
 
   actions: {
+    setFilter(filter) {
+      this.activeFilter = filter;
+      // Optionnel: on pourrait recharger depuis le serveur si le backend supporte le filtrage
+    },
     async fetchNotifications(page = 1) {
       this.loading = true;
       try {
