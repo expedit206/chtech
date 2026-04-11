@@ -26,37 +26,7 @@ import { RouterLink } from "vue-router";
             semaine.
           </p>
         </div>
-        <div class="flex flex-col w-full md:w-auto gap-2">
-          <!-- Label -->
-          <label class="text-sm font-medium opacity-80">
-            Recevez les promos à temps !
-          </label>
-
-          <!-- Input + bouton -->
-          <div class="relative">
-            <input
-              type="tel"
-              placeholder="votre numéro de téléphone"
-              class="w-full px-4 py-2 pr-12 rounded-lg outline-none border transition-colors duration-200 focus:ring-2 focus:ring-blue-500"
-              :style="{
-                backgroundColor: 'var(--color-bg)',
-                borderColor: 'var(--color-border)',
-              }"
-            />
-
-            <!-- Icône -->
-            <button
-              class="absolute right-2 top-1/2 -translate-y-1/2 p-2 rounded-full hover:bg-blue-600 transition-colors active:scale-95"
-              :style="{
-                backgroundColor: 'var(--color-primary)',
-                color: 'var(--color-pure)',
-              }"
-              title="S'abonner"
-            >
-              <Send class="w-5 h-5" />
-            </button>
-          </div>
-        </div>
+        
       </div>
     </div>
 

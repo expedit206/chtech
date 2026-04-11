@@ -70,9 +70,12 @@ const blogs = ref([]);
 
 onMounted(async () => {
   try {
-    const res = await apiClient.get("/blog/posts");
+    const res = await apiClient.get("/blogs/posts");
+    console.log("🔥 RESPONSE COMPLETE:", res);
+    console.log("📦 res.data:", res.data);
+    console.log("📦 res.data.data:", res.data?.data);
     // Map backend fields to what BlogCard expects
-    blogs.value = (res.data.data || res.data || []).map((post) => ({
+    blogs.value = (res.data.data.data || res.data || []).map((post) => ({
       id: post.id,
       title: post.title || post.titre,
       image: post.image
@@ -93,6 +96,8 @@ onMounted(async () => {
       comments: post.comments_count || post.comments || 0,
       slug: post.slug,
     }));
+
+    console.log("API RESPONSE:", res.data);
   } catch (err) {
     console.error("Erreur chargement articles:", err);
     // Fallback static articles if API fails
