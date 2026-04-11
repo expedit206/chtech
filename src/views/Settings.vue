@@ -75,7 +75,7 @@
           <button @click="updateProfile" :disabled="loadingProfile"
             class="w-full py-4 bg-[var(--color-primary)] text-white rounded-2xl font-black text-sm tracking-widest hover:opacity-90 transition-all flex items-center justify-center gap-2 shadow-xl shadow-primary/20 disabled:opacity-50">
             <i v-if="loadingProfile" class="fas fa-circle-notch fa-spin"></i>
-            SAUVEGARDER LES MODIFICATIONS
+            Sauvegarder les modifications
           </button>
         </div>
       </section>
