@@ -29,7 +29,7 @@
               class="absolute left-4 top-1/2 -translate-y-1/2 transition-colors" />
             <span class="text-sm opacity-50" :style="{ color: 'var(--color-text-main)' }">
               {{
-                productStore.searchQuery || "Rechercher un produit, service..."
+                productStore.searchQuery || "Rechercher un produit..."
               }}
             </span>
           </div>
@@ -216,7 +216,7 @@
                     {{ item.nom || item.titre || item.name }}
                   </h4>
                   <span class="text-[9px] uppercase font-black opacity-30">
-                    {{ item.result_type === "product" ? "Produit" : "Service" }}
+                    Produit
                   </span>
                 </div>
                 <div class="flex items-center gap-2 mt-0.5">
@@ -226,8 +226,7 @@
                   <span class="text-[10px] opacity-40 px-1.5 py-0.5 rounded bg-black/5"
                     :style="{ color: 'var(--color-text-sub)' }">
                     {{
-                      item.category?.nom ||
-                      (item.result_type === "product" ? "Produit" : "Service")
+                      item.category?.nom || "Produit"
                     }}
                   </span>
                 </div>
@@ -510,8 +509,7 @@ const performLiveSearch = async (query) => {
         ...p,
         slug: (p.slug && !p.slug.endsWith(`-${p.id}`)) ? `${p.slug}-${p.id}` : (p.slug || p.id)
       }));
-      const services = response.data.data.services || [];
-      liveResults.value = [...products, ...services].slice(0, 10);
+      liveResults.value = products.slice(0, 10);
     }
   } catch (error) {
     console.error("Erreur search live", error);

@@ -100,7 +100,7 @@ import { useRouter } from "vue-router";
 import { useSeo } from "../composables/useSeo.js";
 useSeo({
   title: "Inscription - SASAYEE",
-  description: "Créez votre compte SASAYEE en quelques secondes et commencez à vendre ou acheter des produits et services partout au Cameroun."
+  description: "Créez votre compte SASAYEE en quelques secondes et commencez à vendre ou acheter des produits partout au Cameroun."
 });
 const auth = useAuthStore();
 const router = useRouter();
