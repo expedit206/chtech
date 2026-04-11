@@ -312,17 +312,65 @@
         </router-link>
       </div>
     </div>
+
+    <!-- Related Products Sections -->
+    <div v-if="!loading" class="mt-16 space-y-16">
+      <!-- Section: Same Seller -->
+      <section v-if="shopProducts.length > 0">
+        <div class="flex items-center justify-between mb-8 gap-4 flex-wrap">
+          <div class="flex items-center gap-3">
+            <div class="w-1.5 h-8 bg-[var(--color-primary)] rounded-full"></div>
+            <h2 class="text-2xl font-black text-[var(--color-text-main)] uppercase tracking-tight">Dans la même boutique</h2>
+          </div>
+          <router-link 
+            :to="{ name: 'PublicProfile', params: { id: product.user?.id } }"
+            class="px-6 py-2.5 rounded-xl border-2 font-bold text-xs tracking-widest transition-all hover:bg-[var(--color-primary)] hover:text-white hover:border-[var(--color-primary)] active:scale-95"
+            :style="{ borderColor: 'var(--color-primary)', color: 'var(--color-primary)' }"
+          >
+            VOIR LA BOUTIQUE
+          </router-link>
+        </div>
+        <div class="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-6 gap-6">
+          <ProductCard 
+            v-for="p in shopProducts" 
+            :key="p.id" 
+            :product="p" 
+            :show-footer="false"
+          />
+        </div>
+      </section>
+
+      <!-- Section: Similar Products -->
+      <section v-if="similarProducts.length > 0">
+        <div class="flex items-center gap-3 mb-8">
+          <div class="w-1.5 h-8 bg-[var(--color-primary)] rounded-full"></div>
+          <div>
+            <h2 class="text-2xl font-black text-[var(--color-text-main)]">Produits similaires</h2>
+            <p class="text-sm font-bold opacity-50 uppercase tracking-widest">D'autres pépites dans la catégorie {{ product.category }}</p>
+          </div>
+        </div>
+        <div class="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-6 gap-6">
+          <ProductCard 
+            v-for="p in similarProducts" 
+            :key="p.id" 
+            :product="p" 
+            :show-footer="false"
+          />
+        </div>
+      </section>
+    </div>
   </main>
 </template>
 
 <script setup>
 import { CONFIG } from "../config/index.js";
-import { ref, computed, onMounted, onUnmounted, nextTick } from "vue";
+import { ref, computed, onMounted, onUnmounted, nextTick, watch } from "vue";
 import { useRoute, useRouter, RouterLink } from "vue-router";
 import { useProductStore } from "../stores/products.js";
 import { useInteractionStore } from "../stores/interactions.js";
 import { useAuthStore } from "../stores/auth.js";
 import { useMessageStore } from "../stores/messages.js";
+import ProductCard from "../components/ProductCard.vue";
 import { ArrowLeft, Heart, Star, Forward, Eye } from "lucide-vue-next";
 import { useAlert } from "../composables/useAlert.js";
 import { useSeo } from "../composables/useSeo.js";
@@ -339,6 +387,8 @@ const loading = ref(true);
 const error = ref(null);
 const selectedPhotoIndex = ref(0);
 const lightboxEl = ref(null);
+const shopProducts = ref([]);
+const similarProducts = ref([]);
 
 // Lightbox state
 const lightbox = ref({ open: false, index: 0 });
@@ -385,8 +435,18 @@ const handleKeydown = (e) => {
   if (e.key === "ArrowRight") nextLightbox();
 };
 
-onMounted(() => window.addEventListener("keydown", handleKeydown));
+onMounted(() => {
+  window.addEventListener("keydown", handleKeydown);
+  fetchProductData();
+});
+
 onUnmounted(() => window.removeEventListener("keydown", handleKeydown));
+
+watch(() => route.params.slug, () => {
+  fetchProductData();
+  // Scroll back to top smoothly
+  window.scrollTo({ top: 0, behavior: 'smooth' });
+});
 
 // Product data
 const product = ref({
@@ -468,12 +528,15 @@ const getImageUrl = (photo) => {
   return "/placeholder.png";
 };
 
-onMounted(async () => {
+const fetchProductData = async () => {
+  loading.value = true;
+  selectedPhotoIndex.value = 0; // Reset gallery
   try {
     const slug = route.params.slug;
     if (!slug) throw new Error("Identifiant du produit manquant");
 
-    const produit = await productStore.getProductById(slug);
+    const data = await productStore.getProductById(slug, true);
+    const { produit, similar_produits, shop_produits } = data;
 
     // Map all photos
     const allPhotos = (produit.photos?.length ? produit.photos : []).map(
@@ -520,6 +583,21 @@ onMounted(async () => {
       ],
     };
 
+    // Map related products
+    const mapRelated = (list) => (list || []).map(p => ({
+      ...p,
+      id: p.id,
+      name: p.nom,
+      price: `${Number(p.prix).toLocaleString("fr-FR")} FCFA`,
+      old_price: p.ancien_prix ? `${Number(p.ancien_prix).toLocaleString("fr-FR")} FCFA` : null,
+      image: p.photos && p.photos.length > 0 ? getImageUrl(p.photos[0]) : '/placeholder.png',
+      slug: (p.slug && !p.slug.endsWith(`-${p.id}`)) ? `${p.slug}-${p.id}` : (p.slug || p.id),
+      category: p.category ? { nom: p.category.nom } : { nom: 'Produit' }
+    }));
+
+    similarProducts.value = mapRelated(similar_produits);
+    shopProducts.value = mapRelated(shop_produits);
+
     interactionStore.recordView(produit.id);
     interactionStore.fetchProductCounts(produit.id);
   } catch (err) {
@@ -528,7 +606,7 @@ onMounted(async () => {
   } finally {
     loading.value = false;
   }
-});
+};
 
 const handleToggleFavorite = async () => {
   try {

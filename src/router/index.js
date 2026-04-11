@@ -99,14 +99,19 @@ const routes = [
       component: () => import("../views/seller/SellerStats.vue"),
       meta: { requiresVendeur: true },
     },
-    {
-      path: "seller/shop",
-      name: "seller-shop",
-      component: () => import("../views/seller/SellerShop.vue"),
-      meta: { requiresVendeur: true },
-    },
-  ],
-},
+      {
+        path: "seller/shop",
+        name: "seller-shop",
+        component: () => import("../views/seller/SellerShop.vue"),
+        meta: { requiresVendeur: true },
+      },
+      {
+        path: "notifications",
+        name: "Notifications",
+        component: () => import("../views/Notifications.vue"),
+      },
+    ],
+  },
 // Admin routes with dedicated layout
 {
   path: "/admin",

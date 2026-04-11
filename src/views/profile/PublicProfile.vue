@@ -15,18 +15,14 @@
                             class="w-40 h-40 rounded-[2rem] border-8 border-[var(--color-surface)] overflow-hidden shadow-xl bg-[var(--color-bg)]">
                             <img :src="userPhotoUrl" class="w-full h-full object-cover" />
                         </div>
-                        <div v-if="user?.premium"
-                            class="absolute -top-4 -right-4 w-12 h-12 bg-yellow-400 rounded-2xl flex items-center justify-center shadow-lg rotate-12 border-4 border-[var(--color-surface)]">
-                            <i class="fas fa-crown text-white"></i>
-                        </div>
+               
                     </div>
 
                     <div class="flex-1 text-center md:text-left pb-2">
                         <div class="flex items-center justify-center md:justify-start gap-3 mb-2">
                             <h1 class="text-3xl md:text-4xl font-serif font-black tracking-tighter">{{ user?.nom ||
                                 'Chargement...' }}</h1>
-                            <span v-if="user?.premium"
-                                class="text-[10px] font-black uppercase tracking-[0.2em] bg-yellow-400/20 text-yellow-600 px-3 py-1 rounded-full">Premium</span>
+                           
                         </div>
 
                         <div
@@ -55,10 +51,6 @@
                     <div class="text-center md:text-left">
                         <p class="text-xs font-black uppercase tracking-widest opacity-40 mb-1">Produits</p>
                         <p class="text-3xl font-black">{{ user?.produits_count || 0 }}</p>
-                    </div>
-                    <div class="text-center md:text-left">
-                        <p class="text-xs font-black uppercase tracking-widest opacity-40 mb-1">Services</p>
-                        <p class="text-3xl font-black">{{ user?.services_count || 0 }}</p>
                     </div>
                     <div class="text-center md:text-left">
                         <p class="text-xs font-black uppercase tracking-widest opacity-40 mb-1">Vues Totales</p>
@@ -103,13 +95,6 @@
                 </div>
             </div>
 
-            <!-- Services Grid (Placeholder) -->
-            <div v-else-if="activeTab === 'services'" class="grid grid-cols-1 md:grid-cols-2 gap-6">
-                <div v-if="services.length === 0" class="col-span-full py-20 text-center opacity-40">
-                    <i class="fas fa-concierge-bell text-6xl mb-4"></i>
-                    <p class="font-bold">Aucun service proposé pour le moment.</p>
-                </div>
-            </div>
         </div>
     </div>
 </template>
@@ -132,7 +117,6 @@ const authStore = useAuthStore();
 
 const user = ref(null);
 const products = ref([]);
-const services = ref([]);
 const loadingItems = ref(true);
 const activeTab = ref('products');
 
@@ -162,7 +146,6 @@ useSeo({
 
 const tabs = [
     { id: 'products', label: 'Produits' },
-    { id: 'services', label: 'Services' },
 ];
 
 const fetchProfile = async () => {

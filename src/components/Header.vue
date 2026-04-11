@@ -16,7 +16,8 @@
           </button>
 
           <RouterLink :to="{ name: 'Home' }" @click="productStore.searchQuery = ''" class="flex items-center">
-            <img :src="CONFIG.LOGO_URL" alt="SASAYEE Logo" class="h-12 md:h-14 w-auto object-contain transition-transform hover:scale-105" />
+            <img :src="CONFIG.LOGO_URL" alt="SASAYEE Logo"
+              class="h-12 md:h-14 w-auto object-contain transition-transform hover:scale-105" />
           </RouterLink>
         </div>
 
@@ -56,96 +57,84 @@
             <span class="tooltip-text">Thème</span>
           </button>
 
-          <div @click="router.push({ name: 'Wishlist' })" class="relative cursor-pointer group">
-            <Heart :stroke-width="3" :style="{ color: 'var(--color-text-main)' }"
-              class="text-lg transition-transform group-hover:scale-110" />
-            <span v-if="interactionStore.favorited.size > 0"
-              class="absolute -top-1.5 -right-1.5 flex items-center justify-center rounded-full text-[9px] font-bold animate-bounce-subtle"
-              :style="{
-                backgroundColor: 'var(--color-accent)',
-                color: 'var(--color-pure)',
-                width: '16px',
-                height: '16px',
-                border: '2px solid var(--color-surface)',
-              }">
-              {{ interactionStore.favorited.size }}
-            </span>
-            <span class="tooltip-text">Favoris</span>
-          </div>
-
-          <button v-if="auth.isAuthenticated" @click="handleAddProductClick"
-            class="w-8 h-8 rounded-full flex items-center justify-center shadow-md transition-transform active:scale-90"
-            :style="{
-              backgroundColor: 'var(--color-primary)',
-              color: 'var(--color-pure)',
-            }">
-            <Plus :size="16" :stroke-width="3" class="text-sm" />
-          </button>
-
-          <div v-if="auth.isAuthenticated" class="relative" ref="userMenuRef">
-            <div @click="toggleUserMenu"
-              class="p-0.5 rounded-full border-2 cursor-pointer transition-transform active:scale-95 flex items-center justify-center shrink-0"
-              :style="{
-                borderColor: isUserMenuOpen
-                  ? 'var(--color-primary)'
-                  : 'transparent',
-              }">
-              <img :src="userPhotoUrl" class="w-7 h-7 rounded-full object-cover" />
-            </div>
-
-            <transition enter-active-class="transition duration-200 ease-out"
-              enter-from-class="transform scale-95 opacity-0" enter-to-class="transform scale-100 opacity-100"
-              leave-active-class="transition duration-150 ease-in" leave-from-class="transform scale-100 opacity-100"
-              leave-to-class="transform scale-95 opacity-0">
-              <div v-show="isUserMenuOpen"
-                class="absolute right-0 mt-3 w-56 rounded-2xl shadow-2xl border backdrop-blur-xl py-2 z-[100]" :style="{
-                  backgroundColor: 'var(--color-surface)',
-                  borderColor: 'var(--color-border)',
-                }">
-                <div class="px-4 py-3 border-b mb-1" :style="{ borderColor: 'var(--color-border)' }">
-                  <p class="text-sm font-bold truncate" :style="{ color: 'var(--color-text-main)' }">
-                    {{ auth.user?.nom }}
-                  </p>
-                  <p class="text-[11px] opacity-60 truncate" :style="{ color: 'var(--color-text-sub)' }">
-                    {{ auth.user?.telephone || auth.user?.email }}
-                  </p>
-                </div>
-
-                <router-link @click="isUserMenuOpen = false"
-                  :to="{ name: 'PublicProfile', params: { id: auth.user?.id || '0' } }"
-                  class="flex items-center gap-3 px-4 py-3 text-sm hover:bg-black/5 transition-colors"
-                  :style="{ color: 'var(--color-text-main)' }">
-                  <UserCircle class="w-5 h-5 opacity-70" />
-                  <span>Voir mon profil</span>
-                </router-link>
-
-                <router-link @click="isUserMenuOpen = false" :to="{ name: 'my-orders' }"
-                  class="flex items-center gap-3 px-4 py-3 text-sm hover:bg-black/5 transition-colors"
-                  :style="{ color: 'var(--color-text-main)' }">
-                  <ShoppingBag class="w-5 h-5 opacity-70" />
-                  <span>Mes Commandes</span>
-                </router-link>
-
-                <button @click="auth.logout"
-                  class="w-full flex items-center gap-3 px-4 py-3 text-sm text-red-500 hover:bg-red-500/10 border-t mt-1"
-                  :style="{ borderColor: 'var(--color-border)' }">
-                  <LogOut class="w-5 h-5" />
-                  <span>Déconnexion</span>
-                </button>
-              </div>
-            </transition>
-          </div>
-          <router-link v-else :to="{ name: 'Login' }"
-            class="px-4 py-1.5 rounded-full text-xs font-bold transition-all hover:opacity-90 active:scale-95" :style="{
-              backgroundColor: 'var(--color-primary)',
-              color: 'var(--color-pure)',
-            }">
-            Connexion
-          </router-link>
+          <span class="tooltip-text">Favoris</span>
         </div>
-      </div>
 
+        <!-- Cloche de Notification (uniquement si authentifié) -->
+        <NotificationBell v-if="auth.isAuthenticated" />
+
+        <button v-if="auth.isAuthenticated" @click="handleAddProductClick"
+          class="w-8 h-8 rounded-full flex items-center justify-center shadow-md transition-transform active:scale-90"
+          :style="{
+            backgroundColor: 'var(--color-primary)',
+            color: 'var(--color-pure)',
+          }">
+          <Plus :size="16" :stroke-width="3" class="text-sm" />
+        </button>
+
+        <div v-if="auth.isAuthenticated" class="relative" ref="userMenuRef">
+          <div @click="toggleUserMenu"
+            class="p-0.5 rounded-full border-2 cursor-pointer transition-transform active:scale-95 flex items-center justify-center shrink-0"
+            :style="{
+              borderColor: isUserMenuOpen
+                ? 'var(--color-primary)'
+                : 'transparent',
+            }">
+            <img :src="userPhotoUrl" class="w-7 h-7 rounded-full object-cover" />
+          </div>
+
+          <transition enter-active-class="transition duration-200 ease-out"
+            enter-from-class="transform scale-95 opacity-0" enter-to-class="transform scale-100 opacity-100"
+            leave-active-class="transition duration-150 ease-in" leave-from-class="transform scale-100 opacity-100"
+            leave-to-class="transform scale-95 opacity-0">
+            <div v-show="isUserMenuOpen"
+              class="absolute right-0 mt-3 w-56 rounded-2xl shadow-2xl border backdrop-blur-xl py-2 z-[100]" :style="{
+                backgroundColor: 'var(--color-surface)',
+                borderColor: 'var(--color-border)',
+              }">
+              <div class="px-4 py-3 border-b mb-1" :style="{ borderColor: 'var(--color-border)' }">
+                <p class="text-sm font-bold truncate" :style="{ color: 'var(--color-text-main)' }">
+                  {{ auth.user?.nom }}
+                </p>
+                <p class="text-[11px] opacity-60 truncate" :style="{ color: 'var(--color-text-sub)' }">
+                  {{ auth.user?.telephone || auth.user?.email }}
+                </p>
+              </div>
+
+              <router-link @click="isUserMenuOpen = false"
+                :to="{ name: 'PublicProfile', params: { id: auth.user?.id || '0' } }"
+                class="flex items-center gap-3 px-4 py-3 text-sm hover:bg-black/5 transition-colors"
+                :style="{ color: 'var(--color-text-main)' }">
+                <UserCircle class="w-5 h-5 opacity-70" />
+                <span>Voir mon profil</span>
+              </router-link>
+
+              <router-link @click="isUserMenuOpen = false" :to="{ name: 'my-orders' }"
+                class="flex items-center gap-3 px-4 py-3 text-sm hover:bg-black/5 transition-colors"
+                :style="{ color: 'var(--color-text-main)' }">
+                <ShoppingBag class="w-5 h-5 opacity-70" />
+                <span>Mes Commandes</span>
+              </router-link>
+
+              <button @click="auth.logout"
+                class="w-full flex items-center gap-3 px-4 py-3 text-sm text-red-500 hover:bg-red-500/10 border-t mt-1"
+                :style="{ borderColor: 'var(--color-border)' }">
+                <LogOut class="w-5 h-5" />
+                <span>Déconnexion</span>
+              </button>
+            </div>
+          </transition>
+        </div>
+        <router-link v-else :to="{ name: 'Login' }"
+          class="px-4 py-1.5 rounded-full text-xs font-bold transition-all hover:opacity-90 active:scale-95" :style="{
+            backgroundColor: 'var(--color-primary)',
+            color: 'var(--color-pure)',
+          }">
+          Connexion
+        </router-link>
+      </div>
     </div>
+
 
     <!-- Mobile search bar toggleable -->
     <transition enter-active-class="transition-all duration-300 ease-out"
@@ -321,15 +310,15 @@
           <span class="text-[9px] font-black mt-1">Blogs</span>
         </RouterLink>
 
-        <a href="#"
-          class="group relative flex-1 flex flex-col items-center justify-center hover:bg-black/5 transition-colors"
-          :style="{ color: 'var(--color-text-sub)' }">
+        <RouterLink :to="{ name: 'Notifications' }"
+          class="group relative flex-1 flex flex-col items-center justify-center border-b-4 transition-colors"
+          :style="isActiveName('Notifications') ? activeStyle : inactiveStyle">
           <div class="relative">
             <Bell size="18" :stroke-width="3" />
-            <span class="nav-badge"></span>
+            <span v-if="useNotificationStore().unreadCount > 0" class="nav-badge"></span>
           </div>
           <span class="text-[9px] font-black mt-1">Alertes</span>
-        </a>
+        </RouterLink>
 
         <RouterLink :to="{ name: 'messages' }"
           class="group relative flex-1 flex flex-col items-center justify-center border-b-4 transition-colors"
@@ -358,7 +347,9 @@ import { useTheme } from "../composables/useTheme.js";
 import { useInteractionStore } from "../stores/interactions.js";
 import { useProductStore } from "../stores/products.js";
 import { useAuthStore } from "../stores/auth.js";
+import { useNotificationStore } from "../stores/notifications.js";
 import { useAlertStore } from "../stores/alert.js";
+import NotificationBell from "./NotificationBell.vue";
 // import {  } from "lucide-vue-next";
 import {
   Search,

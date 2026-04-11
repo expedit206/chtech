@@ -6,16 +6,6 @@
     </div>
 
 
-    <!-- Tabs -->
-    <div class="flex gap-2 mb-6">
-      <button v-for="tab in ['Produits', 'Services']" :key="tab" @click="activeTab = tab"
-        class="px-5 py-2 rounded-xl text-sm font-bold transition-all"
-        :style="activeTab === tab
-          ? { backgroundColor: 'var(--color-primary)', color: 'white' }
-          : { backgroundColor: 'var(--color-surface)', color: 'var(--color-text-sub)', border: '1px solid var(--color-border)' }">
-        {{ tab }}
-      </button>
-    </div>
 
     <div class="grid grid-cols-1 lg:grid-cols-3 gap-6">
       <!-- Form -->
@@ -107,18 +97,15 @@ import { Tag, Trash2 } from 'lucide-vue-next';
 
 import apiClient from '../../api/index.js';
 
-const allCategories = ref({ products: [], services: [] });
+const allCategories = ref({ products: [] });
 const loading = ref(true);
 const saving = ref(false);
-const activeTab = ref('Produits');
 const editingCategory = ref(null);
 const form = ref({ nom: '' });
 const fileInput = ref(null);
 const previewUrl = ref(null);
 
-const currentList = computed(() =>
-  activeTab.value === 'Produits' ? allCategories.value.products : allCategories.value.services
-);
+const currentList = computed(() => allCategories.value.products);
 
 const onFileChange = (e) => {
   const file = e.target.files[0];
@@ -132,7 +119,7 @@ const saveCategory = async () => {
   try {
     const fd = new FormData();
     fd.append('nom', form.value.nom);
-    fd.append('type', activeTab.value === 'Produits' ? 'product' : 'service');
+    fd.append('type', 'product');
     if (fileInput.value) fd.append('image', fileInput.value);
 
     if (editingCategory.value) {
@@ -163,8 +150,7 @@ const resetForm = () => {
 const deleteCategory = async (cat) => {
   if (!confirm(`Supprimer "${cat.nom}" ?`)) return;
   try {
-    const type = activeTab.value === 'Produits' ? 'product' : 'service';
-    await apiClient.delete(`/admin/categories/${cat.id}?type=${type}`);
+    await apiClient.delete(`/admin/categories/${cat.id}?type=product`);
     await fetchCategories();
   } catch (e) { console.error(e); }
 };

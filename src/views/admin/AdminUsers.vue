@@ -143,15 +143,8 @@
                     :style="{ borderColor: 'var(--color-border)' }"
                   />
                   <div class="min-w-0">
-                    <p class="font-bold text-sm truncate max-w-[140px]">
-                      {{ user.nom }}
-                    </p>
-                    <p
-                      v-if="user.premium"
-                      class="text-[10px] font-black text-amber-500"
-                    >
-                      ⭐ Premium
-                    </p>
+                    <p class="font-bold text-sm truncate max-w-[140px]">{{ user.nom }}</p>
+
                   </div>
                 </div>
               </td>
