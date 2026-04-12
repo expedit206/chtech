@@ -51,14 +51,12 @@
               class="text-sm opacity-50"
               :style="{ color: 'var(--color-text-main)' }"
             >
-              {{
-                productStore.searchQuery || "Rechercher un produit..."
-              }}
+              {{ productStore.searchQuery || "Rechercher un produit..." }}
             </span>
           </div>
         </div>
 
-        <div class="flex items-center gap-3 md:gap-4">
+        <div class="flex items-center gap-2 md:gap-3">
           <button
             class="md:hidden"
             @click="isMobileSearchOpen = !isMobileSearchOpen"
@@ -71,13 +69,14 @@
             <component :is="isMobileSearchOpen ? X : Search" class="text-lg" />
           </button>
 
-          <!-- Panier -->
-          <button
+          <router-link
+            :to="{ name:'Wishlist' }"
             class="w-8 h-8 rounded-full flex items-center justify-center transition-all hover:bg-black/5 relative group"
           >
             <Heart :size="20" :stroke-width="3" />
-            <span class="tooltip-text">Favori</span>
-          </button>
+            <span class="tooltip-text">Favoris</span>
+          </router-link>
+
           <button
             @click="toggleTheme"
             class="w-8 h-8 rounded-full flex items-center justify-center transition-colors hover:bg-black/5 relative group"
@@ -91,126 +90,116 @@
             />
             <span class="tooltip-text">Thème</span>
           </button>
-          <!-- <button @click="toggleTheme"
-            class="w-8 h-8 rounded-full flex items-center justify-center transition-colors hover:bg-black/5 relative group"
-            :style="{ color: 'var(--color-text-main)' }">
-            <component :is="themeIcon" :size="20" :stroke-width="3" class="text-lg" />
-            <span class="tooltip-text">Favoris</span>
-          </button> -->
 
-          <!-- <span class="tooltip-text">Favoris</span> -->
-
-          <!-- Cloche de Notification (uniquement si authentifié) -->
-          <!-- <NotificationBell v-if="auth.isAuthenticated" /> -->
-        </div>
-        <button
-          v-if="auth.isAuthenticated"
-          @click="handleAddProductClick"
-          class="w-8 h-8 rounded-full flex items-center justify-center shadow-md transition-transform active:scale-90"
-          :style="{
-            backgroundColor: 'var(--color-primary)',
-            color: 'var(--color-pure)',
-          }"
-        >
-          <Plus :size="16" :stroke-width="3" class="text-sm" />
-        </button>
-
-        <div v-if="auth.isAuthenticated" class="relative" ref="userMenuRef">
-          <div
-            @click="toggleUserMenu"
-            class="p-0.5 rounded-full border-2 cursor-pointer transition-transform active:scale-95 flex items-center justify-center shrink-0"
+          <button
+            v-if="auth.isAuthenticated"
+            @click="handleAddProductClick"
+            class="w-8 h-8 rounded-full flex items-center justify-center shadow-md transition-transform active:scale-90"
             :style="{
-              borderColor: isUserMenuOpen
-                ? 'var(--color-primary)'
-                : 'transparent',
+              backgroundColor: 'var(--color-primary)',
+              color: 'var(--color-pure)',
             }"
           >
-            <img
-              :src="userPhotoUrl"
-              class="w-7 h-7 rounded-full object-cover"
-            />
-          </div>
+            <Plus :size="16" :stroke-width="3" class="text-sm" />
+          </button>
 
-          <transition
-            enter-active-class="transition duration-200 ease-out"
-            enter-from-class="transform scale-95 opacity-0"
-            enter-to-class="transform scale-100 opacity-100"
-            leave-active-class="transition duration-150 ease-in"
-            leave-from-class="transform scale-100 opacity-100"
-            leave-to-class="transform scale-95 opacity-0"
-          >
+          <div v-if="auth.isAuthenticated" class="relative" ref="userMenuRef">
             <div
-              v-show="isUserMenuOpen"
-              class="absolute right-0 mt-3 w-56 rounded-2xl shadow-2xl border backdrop-blur-xl py-2 z-[100]"
+              @click="toggleUserMenu"
+              class="p-0.5 rounded-full border-2 cursor-pointer transition-transform active:scale-95 flex items-center justify-center shrink-0"
               :style="{
-                backgroundColor: 'var(--color-surface)',
-                borderColor: 'var(--color-border)',
+                borderColor: isUserMenuOpen
+                  ? 'var(--color-primary)'
+                  : 'transparent',
               }"
             >
+              <img
+                :src="userPhotoUrl"
+                class="w-7 h-7 rounded-full object-cover"
+              />
+            </div>
+
+            <transition
+              enter-active-class="transition duration-200 ease-out"
+              enter-from-class="transform scale-95 opacity-0"
+              enter-to-class="transform scale-100 opacity-100"
+              leave-active-class="transition duration-150 ease-in"
+              leave-from-class="transform scale-100 opacity-100"
+              leave-to-class="transform scale-95 opacity-0"
+            >
               <div
-                class="px-4 py-3 border-b mb-1"
-                :style="{ borderColor: 'var(--color-border)' }"
+                v-show="isUserMenuOpen"
+                class="absolute right-0 mt-3 w-56 rounded-2xl shadow-2xl border backdrop-blur-xl py-2 z-[100]"
+                :style="{
+                  backgroundColor: 'var(--color-surface)',
+                  borderColor: 'var(--color-border)',
+                }"
               >
-                <p
-                  class="text-sm font-bold truncate"
+                <div
+                  class="px-4 py-3 border-b mb-1"
+                  :style="{ borderColor: 'var(--color-border)' }"
+                >
+                  <p
+                    class="text-sm font-bold truncate"
+                    :style="{ color: 'var(--color-text-main)' }"
+                  >
+                    {{ auth.user?.nom }}
+                  </p>
+                  <p
+                    class="text-[11px] opacity-60 truncate"
+                    :style="{ color: 'var(--color-text-sub)' }"
+                  >
+                    {{ auth.user?.telephone || auth.user?.email }}
+                  </p>
+                </div>
+
+                <router-link
+                  @click="isUserMenuOpen = false"
+                  :to="{
+                    name: 'PublicProfile',
+                    params: { id: auth.user?.id || '0' },
+                  }"
+                  class="flex items-center gap-3 px-4 py-3 text-sm hover:bg-black/5 transition-colors"
                   :style="{ color: 'var(--color-text-main)' }"
                 >
-                  {{ auth.user?.nom }}
-                </p>
-                <p
-                  class="text-[11px] opacity-60 truncate"
-                  :style="{ color: 'var(--color-text-sub)' }"
+                  <UserCircle class="w-5 h-5 opacity-70" />
+                  <span>Voir mon profil</span>
+                </router-link>
+
+                <router-link
+                  @click="isUserMenuOpen = false"
+                  :to="{ name: 'my-orders' }"
+                  class="flex items-center gap-3 px-4 py-3 text-sm hover:bg-black/5 transition-colors"
+                  :style="{ color: 'var(--color-text-main)' }"
                 >
-                  {{ auth.user?.telephone || auth.user?.email }}
-                </p>
+                  <ShoppingBag class="w-5 h-5 opacity-70" />
+                  <span>Mes Commandes</span>
+                </router-link>
+
+                <button
+                  @click="auth.logout"
+                  class="w-full flex items-center gap-3 px-4 py-3 text-sm text-red-500 hover:bg-red-500/10 border-t mt-1"
+                  :style="{ borderColor: 'var(--color-border)' }"
+                >
+                  <LogOut class="w-5 h-5" />
+                  <span>Déconnexion</span>
+                </button>
               </div>
+            </transition>
+          </div>
 
-              <router-link
-                @click="isUserMenuOpen = false"
-                :to="{
-                  name: 'PublicProfile',
-                  params: { id: auth.user?.id || '0' },
-                }"
-                class="flex items-center gap-3 px-4 py-3 text-sm hover:bg-black/5 transition-colors"
-                :style="{ color: 'var(--color-text-main)' }"
-              >
-                <UserCircle class="w-5 h-5 opacity-70" />
-                <span>Voir mon profil</span>
-              </router-link>
-
-              <router-link
-                @click="isUserMenuOpen = false"
-                :to="{ name: 'my-orders' }"
-                class="flex items-center gap-3 px-4 py-3 text-sm hover:bg-black/5 transition-colors"
-                :style="{ color: 'var(--color-text-main)' }"
-              >
-                <ShoppingBag class="w-5 h-5 opacity-70" />
-                <span>Mes Commandes</span>
-              </router-link>
-
-              <button
-                @click="auth.logout"
-                class="w-full flex items-center gap-3 px-4 py-3 text-sm text-red-500 hover:bg-red-500/10 border-t mt-1"
-                :style="{ borderColor: 'var(--color-border)' }"
-              >
-                <LogOut class="w-5 h-5" />
-                <span>Déconnexion</span>
-              </button>
-            </div>
-          </transition>
+          <router-link
+            v-else
+            :to="{ name: 'Login' }"
+            class="px-4 py-1.5 rounded-full text-xs font-bold transition-all hover:opacity-90 active:scale-95"
+            :style="{
+              backgroundColor: 'var(--color-primary)',
+              color: 'var(--color-pure)',
+            }"
+          >
+            Connexion
+          </router-link>
         </div>
-
-        <router-link
-          v-else
-          :to="{ name: 'Login' }"
-          class="px-4 py-1.5 rounded-full text-xs font-bold transition-all hover:opacity-90 active:scale-95"
-          :style="{
-            backgroundColor: 'var(--color-primary)',
-            color: 'var(--color-pure)',
-          }"
-        >
-          Connexion
-        </router-link>
       </div>
     </div>
 
@@ -366,9 +355,7 @@
                     class="text-[10px] opacity-40 px-1.5 py-0.5 rounded bg-black/5"
                     :style="{ color: 'var(--color-text-sub)' }"
                   >
-                    {{
-                      item.category?.nom || "Produit"
-                    }}
+                    {{ item.category?.nom || "Produit" }}
                   </span>
                 </div>
               </div>
