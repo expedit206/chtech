@@ -346,7 +346,7 @@
           <div class="w-1.5 h-8 bg-[var(--color-primary)] rounded-full"></div>
           <div>
             <h2 class="text-2xl font-black text-[var(--color-text-main)]">Produits similaires</h2>
-            <p class="text-sm font-bold opacity-50 uppercase tracking-widest">D'autres pépites dans la catégorie {{ product.category }}</p>
+            <p class="text-sm font-bold opacity-50  tracking-widest">D'autres pépites dans la catégorie {{ product.category }}</p>
           </div>
         </div>
         <div class="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-6 gap-6">

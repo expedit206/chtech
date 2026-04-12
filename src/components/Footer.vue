@@ -14,21 +14,7 @@ import { RouterLink } from "vue-router";
       color: 'var(--color-text-main)',
     }"
   >
-    <div
-      class="max-w-7xl mx-auto px-4 py-12 border-b"
-      :style="{ borderColor: 'var(--color-border)' }"
-    >
-      <div class="flex flex-col md:flex-row justify-between items-center gap-6">
-        <div>
-          <h3 class="text-xl font-bold">Rejoignez la révolution</h3>
-          <p class="text-sm opacity-70">
-            Recevez les meilleures offres et les nouveaux projets chaque
-            semaine.
-          </p>
-        </div>
-        
-      </div>
-    </div>
+  
 
     <div
       class="max-w-7xl mx-auto px-4 py-16 grid grid-cols-2 md:grid-cols-4 gap-12"
