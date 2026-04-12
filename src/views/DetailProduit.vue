@@ -320,14 +320,14 @@
         <div class="flex items-center justify-between mb-8 gap-4 flex-wrap">
           <div class="flex items-center gap-3">
             <div class="w-1.5 h-8 bg-[var(--color-primary)] rounded-full"></div>
-            <h2 class="text-2xl font-black text-[var(--color-text-main)] uppercase tracking-tight">Dans la même boutique</h2>
+            <h2 class="text-2xl font-black text-[var(--color-text-main)]  tracking-tight">Dans la même boutique</h2>
           </div>
           <router-link 
             :to="{ name: 'PublicProfile', params: { id: product.user?.id } }"
             class="px-6 py-2.5 rounded-xl border-2 font-bold text-xs tracking-widest transition-all hover:bg-[var(--color-primary)] hover:text-white hover:border-[var(--color-primary)] active:scale-95"
-            :style="{ borderColor: 'var(--color-primary)', color: 'var(--color-primary)' }"
+            :style="{ borderColor: 'var(--color-primary)' }"
           >
-            VOIR LA BOUTIQUE
+            Voir la boutique
           </router-link>
         </div>
         <div class="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-6 gap-6">
