@@ -56,19 +56,7 @@ import { RouterLink } from "vue-router";
       <div>
         <h4 class="font-bold mb-6">Acheter</h4>
         <ul class="space-y-4 text-sm opacity-70">
-          <li>
-            <a href="#" class="hover:text-[var(--color-primary)]"
-              >Toutes les catégories</a
-            >
-          </li>
-          <li>
-            <a href="#" class="hover:text-[var(--color-primary)]">Promotions</a>
-          </li>
-          <li>
-            <a href="#" class="hover:text-[var(--color-primary)]"
-              >Suivi de commande</a
-            >
-          </li>
+         
           <li>
             <RouterLink
               :to="{ name: 'Support' }"
@@ -76,12 +64,6 @@ import { RouterLink } from "vue-router";
               >Aide & SAV</RouterLink
             >
           </li>
-        </ul>
-      </div>
-
-      <div>
-        <h4 class="font-bold mb-6">Vendre</h4>
-        <ul class="space-y-4 text-sm opacity-70">
           <li>
             <RouterLink
               :to="{ name: 'become-vendeur' }"
@@ -89,21 +71,10 @@ import { RouterLink } from "vue-router";
               >Devenir vendeur
             </RouterLink>
           </li>
-          <li>
-            <a href="#" class="hover:text-[var(--color-primary)]"
-              >Règles de la marketplace</a
-            >
-          </li>
-          <li>
-            <a href="#" class="hover:text-[var(--color-primary)]">Espace Pro</a>
-          </li>
-          <li>
-            <a href="#" class="hover:text-[var(--color-primary)]"
-              >Affiliation</a
-            >
-          </li>
         </ul>
       </div>
+
+    
 
       <div>
         <h4 class="font-bold mb-6">Paiement sécurisé</h4>
