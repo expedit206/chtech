@@ -168,18 +168,7 @@
 
     <!-- Save button -->
     <div class="sticky bottom-6 flex flex-col items-end gap-3 z-20">
-      <!-- Feedback messages -->
-      <transition name="slide-up">
-        <div v-if="saveSuccess" class="flex items-center gap-2 px-6 py-3 rounded-2xl bg-green-500 text-white font-black text-sm shadow-xl">
-          <Check :size="18" /> Boutique mise à jour !
-        </div>
-      </transition>
-      
-      <transition name="slide-up">
-        <div v-if="saveError" class="flex items-center gap-2 px-6 py-3 rounded-2xl bg-red-500 text-white font-black text-sm shadow-xl">
-          <X :size="18" /> {{ saveError }}
-        </div>
-      </transition>
+      <!-- Le feedback est désormais gérée par les messages flash -->
 
       <button @click="saveSettings" :disabled="saving"
         class="flex items-center gap-3 px-10 py-4 rounded-2xl font-black text-sm text-white shadow-2xl transition-all hover:scale-105 active:scale-95 disabled:opacity-50 disabled:scale-100 group"
@@ -199,6 +188,9 @@ import { useAuthStore } from '../../stores/auth.js';
 import apiClient from '../../api/index.js';
 import { CONFIG } from '../../config/index.js';
 import { useSeo } from '../../composables/useSeo.js';
+import { useFlash } from '../../composables/useFlash.js';
+
+const flash = useFlash();
 
 useSeo({ 
   title: 'Paramètres Boutique - SASAYEE', 
@@ -237,8 +229,7 @@ const onCoverSelect = async (e) => {
   if (!file) return;
 
   if (file.size > 5 * 1024 * 1024) {
-    saveError.value = "La bannière est trop lourde (max 5 Mo)";
-    setTimeout(() => { saveError.value = ''; }, 4000);
+    flash.error("La bannière est trop lourde (max 5 Mo)");
     return;
   }
 
@@ -251,12 +242,10 @@ const onCoverSelect = async (e) => {
       headers: { 'Content-Type': 'multipart/form-data' }
     });
     await auth.fetchUser();
-    saveSuccess.value = true;
-    setTimeout(() => { saveSuccess.value = false; }, 3000);
+    flash.success("Bannière mise à jour !");
   } catch (err) {
     console.error(err);
-    saveError.value = err.response?.data?.message || "Erreur lors de l'envoi de la bannière";
-    setTimeout(() => { saveError.value = ''; }, 4000);
+    flash.error(err.response?.data?.message || "Erreur lors de l'envoi de la bannière");
   } finally {
     uploadingCover.value = false;
   }
@@ -267,8 +256,7 @@ const onAvatarSelect = async (e) => {
   if (!file) return;
 
   if (file.size > 2 * 1024 * 1024) {
-    saveError.value = "La photo est trop lourde (max 2 Mo)";
-    setTimeout(() => { saveError.value = ''; }, 4000);
+    flash.error("La photo est trop lourde (max 2 Mo)");
     return;
   }
 
@@ -281,33 +269,26 @@ const onAvatarSelect = async (e) => {
       headers: { 'Content-Type': 'multipart/form-data' }
     });
     await auth.fetchUser();
-    saveSuccess.value = true;
-    setTimeout(() => { saveSuccess.value = false; }, 3000);
+    flash.success("Photo de profil mise à jour !");
   } catch (err) {
     console.error(err);
-    saveError.value = err.response?.data?.message || "Erreur lors de l'envoi de la photo";
-    setTimeout(() => { saveError.value = ''; }, 4000);
+    flash.error(err.response?.data?.message || "Erreur lors de l'envoi de la photo");
   } finally {
     uploadingAvatar.value = false;
   }
 };
 
-const saveSuccess = ref(false);
-const saveError = ref('');
+
 
 const saveSettings = async () => {
   saving.value = true;
-  saveSuccess.value = false;
-  saveError.value = '';
   try {
     await apiClient.post('/updateProfile', shopForm.value);
     await auth.fetchUser();
-    saveSuccess.value = true;
-    setTimeout(() => { saveSuccess.value = false; }, 3500);
+    flash.success("Boutique mise à jour avec succès !");
   } catch (e) {
     console.error(e);
-    saveError.value = e?.response?.data?.message || 'Erreur lors de la sauvegarde.';
-    setTimeout(() => { saveError.value = ''; }, 4000);
+    flash.error(e?.response?.data?.message || 'Erreur lors de la sauvegarde.');
   } finally {
     saving.value = false;
   }

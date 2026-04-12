@@ -171,7 +171,7 @@
 <script setup>
 import { ref, onMounted } from "vue";
 import apiClient from "../../api/index.js";
-import { useToast } from "vue-toastification";
+import { useFlash } from "../../composables/useFlash.js";
 import {
   Loader2,
   PackageOpen,
@@ -183,7 +183,7 @@ import {
   MessageCircle,
 } from "lucide-vue-next";
 
-const toast = useToast();
+const flash = useFlash();
 const orders = ref([]);
 const isLoading = ref(true);
 
@@ -193,7 +193,7 @@ const fetchOrders = async () => {
     const response = await apiClient.get("/orders/seller");
     orders.value = response.data.data;
   } catch (error) {
-    toast.error("Erreur lors du chargement des commandes");
+    flash.error("Erreur lors du chargement des commandes");
   } finally {
     isLoading.value = false;
   }
@@ -204,10 +204,10 @@ const updateStatus = async (orderId, status) => {
     const response = await apiClient.put(`/orders/${orderId}/status`, {
       status,
     });
-    toast.success(response.data.message);
+    flash.success(response.data.message);
     fetchOrders(); // Refresh
   } catch (error) {
-    toast.error("Erreur lors de la mise à jour");
+    flash.error("Erreur lors de la mise à jour");
   }
 };
 

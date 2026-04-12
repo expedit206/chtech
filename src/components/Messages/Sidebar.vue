@@ -125,6 +125,14 @@
                 class="absolute bottom-0.5 right-0.5 w-3 h-3 bg-green-500 border-2 border-white rounded-full"
               ></span>
             </div>
+
+            <!-- Order status dot indicator -->
+            <span
+              v-if="authStore.isAdmin && conv.order_status"
+              class="absolute -bottom-0.5 -right-0.5 w-3.5 h-3.5 rounded-full border-2 border-[var(--color-surface)]"
+              :class="orderStatusDotClass(conv.order_status)"
+              :title="orderStatusLabel(conv.order_status)"
+            ></span>
           </div>
 
           <!-- Content -->
@@ -198,11 +206,28 @@
               </div>
 
               <!-- Unread Badge -->
-              <div
-                v-if="conv.unread_count > 0"
-                class="ml-2 bg-[var(--color-primary)] text-white text-[10px] font-bold h-5 min-w-[20px] px-1.5 rounded-full flex items-center justify-center shadow-sm"
-              >
-                {{ conv.unread_count }}
+              <div class="ml-2 flex-shrink-0 flex flex-col items-end gap-1">
+                <div
+                  v-if="conv.unread_count > 0"
+                  class="bg-[var(--color-primary)] text-white text-[10px] font-bold h-5 min-w-[20px] px-1.5 rounded-full flex items-center justify-center shadow-sm"
+                >
+                  {{ conv.unread_count }}
+                </div>
+                <!-- Order status badge (admin only) -->
+                <div
+                  v-if="authStore.isAdmin && conv.order_status"
+                  class="text-[8px] font-black uppercase tracking-wider px-1.5 py-0.5 rounded-full border"
+                  :class="orderStatusBadgeClass(conv.order_status)"
+                >
+                  {{ orderStatusLabel(conv.order_status) }}
+                </div>
+                <!-- No order yet — needs attention badge -->
+                <div
+                  v-else-if="authStore.isAdmin && conv.product_id && !conv.order_status"
+                  class="text-[8px] font-black uppercase tracking-wider px-1.5 py-0.5 rounded-full border bg-orange-500/10 text-orange-600 border-orange-500/20"
+                >
+                  À valider
+                </div>
               </div>
             </div>
           </div>
@@ -248,6 +273,24 @@ const handleScroll = (e) => {
     emit("load-more");
   }
 };
+
+// Status translation helpers
+const STATUS_FR = { pending: 'En attente', shipped: 'Expédié', delivered: 'Livré', cancelled: 'Annulé' };
+const STATUS_BADGE = {
+  pending:   'bg-yellow-500/10 text-yellow-600 border-yellow-500/20',
+  shipped:   'bg-blue-500/10 text-blue-600 border-blue-500/20',
+  delivered: 'bg-green-500/10 text-green-600 border-green-500/20',
+  cancelled: 'bg-red-500/10 text-red-500 border-red-500/20',
+};
+const STATUS_DOT = {
+  pending:   'bg-yellow-500',
+  shipped:   'bg-blue-500',
+  delivered: 'bg-green-500',
+  cancelled: 'bg-red-500',
+};
+const orderStatusLabel     = (s) => STATUS_FR[s] || s;
+const orderStatusBadgeClass = (s) => STATUS_BADGE[s] || 'bg-gray-500/10 text-gray-500 border-gray-500/20';
+const orderStatusDotClass   = (s) => STATUS_DOT[s] || 'bg-gray-400';
 
 const formatTime = (dateString) => {
   if (!dateString) return "";

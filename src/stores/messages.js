@@ -1,7 +1,7 @@
 import { CONFIG } from '../config/index.js';
 import { defineStore } from "pinia";
 import { ref, computed, onUnmounted } from "vue";
-import { useToast } from "vue-toastification";
+import { useFlash } from '../composables/useFlash.js';
 import { useRouter } from "vue-router";
 import apiClient from "../api/index.js";
 import { useAuthStore } from "./auth.js";
@@ -9,7 +9,7 @@ import { useBadgeStore } from "./badgeStore.js";
 
 export const useMessageStore = defineStore("message", () => {
   const router = useRouter();
-  const toast = useToast();
+  const flash = useFlash();
 
   // State
   const conversations = ref([]);
@@ -125,7 +125,7 @@ export const useMessageStore = defineStore("message", () => {
       }
     } catch (error) {
       console.error("Erreur fetch conversations", error);
-      if (!silent && !loadMore) toast.error("Erreur lors du chargement des conversations");
+      if (!silent && !loadMore) flash.error("Erreur lors du chargement des conversations");
     } finally {
       if (loadMore) isLoadingMoreConversations.value = false;
       else if (!silent) isLoading.value = false;
@@ -315,7 +315,7 @@ export const useMessageStore = defineStore("message", () => {
       return realMessage;
     } catch (error) {
       messages.value = messages.value.filter(m => m.id !== tempId);
-      toast.error("Échec de l'envoi");
+      flash.error("Échec de l'envoi");
       throw error;
     }
   };
@@ -329,12 +329,22 @@ export const useMessageStore = defineStore("message", () => {
       await fetchConversations(true);
       
       if (selectedConversation.value && !isLoading.value) {
-        const receiverId = selectedConversation.value.user_id;
-        const productId = selectedConversation.value.product_id;
+        // Capture the current context BEFORE the async call
+        const capturedReceiverId = selectedConversation.value.user_id;
+        const capturedProductId = selectedConversation.value.product_id;
+        
         try {
-          const response = await apiClient.get(`/chat/${receiverId}`, {
-            params: { limit: 10, product_id: productId }
+          const response = await apiClient.get(`/chat/${capturedReceiverId}`, {
+            params: { limit: 10, product_id: capturedProductId }
           });
+          
+          // Guard: if user switched conversations while we were awaiting, discard stale results
+          if (
+            selectedConversation.value?.user_id !== capturedReceiverId ||
+            String(selectedConversation.value?.product_id || '') !== String(capturedProductId || '')
+          ) {
+            return;
+          }
           
           const latestMessages = response.data.messages;
           const existingIds = new Set(messages.value.map(m => m.id));
@@ -392,7 +402,7 @@ export const useMessageStore = defineStore("message", () => {
       
       updateConversationLastMessage(updatedMessage);
     } catch (error) {
-      toast.error("Erreur lors de la modification");
+      flash.error("Erreur lors de la modification");
       throw error;
     }
   };
@@ -408,7 +418,7 @@ export const useMessageStore = defineStore("message", () => {
         fetchConversations(true);
       }
     } catch (error) {
-      toast.error("Erreur lors de la suppression");
+      flash.error("Erreur lors de la suppression");
       throw error;
     }
   };
@@ -440,7 +450,7 @@ export const useMessageStore = defineStore("message", () => {
 
   const startRecording = async () => {
     if (!navigator.mediaDevices?.getUserMedia) {
-      toast.error("Audio non supporté");
+      flash.error("Audio non supporté");
       return;
     }
     try {
@@ -455,7 +465,7 @@ export const useMessageStore = defineStore("message", () => {
       };
       mediaRecorder.start();
       startRecordingTimer();
-    } catch (e) { toast.error("Erreur micro"); }
+    } catch (e) { flash.error("Erreur micro"); }
   };
 
   const stopRecording = () => {

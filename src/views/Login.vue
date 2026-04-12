@@ -86,12 +86,7 @@
           </div>
         </div>
 
-        <div
-          v-if="error"
-          class="text-red-400 text-sm text-center bg-red-400/10 py-2 rounded-lg border border-red-400/20"
-        >
-          {{ error }}
-        </div>
+        <!-- L'erreur globale est désormais gérée par les messages flash -->
 
         <div>
           <button
@@ -155,8 +150,11 @@ import { ref, reactive } from "vue";
 import { useAuthStore } from "../stores/auth";
 import { useRouter } from "vue-router";
 import { Eye, EyeOff } from "lucide-vue-next";
+import { useFlash } from "../composables/useFlash";
+
 const auth = useAuthStore();
 const router = useRouter();
+const flash = useFlash();
 import { useSeo } from "../composables/useSeo.js";
 useSeo({
   title: "Connexion - SASAYEE",
@@ -168,17 +166,17 @@ const form = reactive({
 });
 
 const loading = ref(false);
-const error = ref(null);
 
 const handleLogin = async () => {
   loading.value = true;
-  error.value = null;
   try {
     await auth.login(form);
+    flash.success("Connexion réussie !");
     const redirectPath = router.currentRoute.value.query.redirect;
     router.push(redirectPath ? { path: redirectPath } : { name: "Home" });
   } catch (err) {
-    error.value = err.response?.data?.message || "Identifiants incorrects";
+    const errorMsg = err.response?.data?.message || "Identifiants incorrects";
+    flash.error(errorMsg);
   } finally {
     loading.value = false;
   }

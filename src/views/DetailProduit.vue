@@ -385,8 +385,10 @@ import ProductCard from "../components/ProductCard.vue";
 import { ArrowLeft, Heart, Star, Forward, Eye } from "lucide-vue-next";
 import { useAlert } from "../composables/useAlert.js";
 import { useSeo } from "../composables/useSeo.js";
+import { useFlash } from "../composables/useFlash";
 
 const alert = useAlert();
+const flash = useFlash();
 const route = useRoute();
 const router = useRouter();
 const productStore = useProductStore();
@@ -395,7 +397,6 @@ const authStore = useAuthStore();
 const messageStore = useMessageStore();
 
 const loading = ref(true);
-const error = ref(null);
 const selectedPhotoIndex = ref(0);
 const lightboxEl = ref(null);
 const shopProducts = ref([]);
@@ -655,7 +656,7 @@ const fetchProductData = async () => {
 
     // Les vues et les compteurs sont maintenant gérés nativement par l'API principale.
   } catch (err) {
-    error.value = err.message;
+    flash.error(err.response?.data?.message || "Impossible de charger le produit");
     console.error("Erreur lors du chargement du produit:", err);
   } finally {
     loading.value = false;

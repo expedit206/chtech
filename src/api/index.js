@@ -20,12 +20,28 @@ apiClient.interceptors.request.use((config) => {
 });
 
 // réponse reçue
-axios.interceptors.response.use(
-  (response) => {
+import { useToast } from 'vue-toastification';
 
+apiClient.interceptors.response.use(
+  (response) => {
     return response;
   },
   (error) => {
+    const toast = useToast();
+
+    if (!error.response) {
+      toast.error("Erreur de connexion au serveur. Vérifiez votre connexion internet.");
+    } else {
+      const status = error.response.status;
+      if (status >= 500) {
+        toast.error("Une erreur interne du serveur s'est produite. Veuillez réessayer plus tard.");
+      } else if (status === 401 || status === 403) {
+        // Optionnel : ne pas toast 401 pour ne pas spammer si la session expire,
+        // mais souvent géré au cas par cas dans le auth store.
+      } else if (status === 429) {
+        toast.warning("Trop de requêtes. Veuillez patienter.");
+      }
+    }
 
     return Promise.reject(error);
   },
