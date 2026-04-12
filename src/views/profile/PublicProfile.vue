@@ -38,12 +38,7 @@
                         </div>
                     </div>
 
-                    <div class="flex gap-3">
-                        <button @click="handleContact"
-                            class="px-8 py-4 bg-[var(--color-primary)] text-white rounded-2xl font-black text-sm tracking-widest shadow-xl shadow-primary/20 hover:scale-105 transition-transform active:scale-95">
-                            CONTACTER
-                        </button>
-                    </div>
+                  
                 </div>
 
                 <!-- Stats Bar -->
