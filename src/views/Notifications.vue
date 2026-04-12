@@ -5,26 +5,7 @@
       <div
         class="flex flex-col md:flex-row md:items-center justify-between gap-6 mb-10"
       >
-        <!-- <div>
-          <h1
-            class="text-3xl font-black tracking-tight mb-2 flex items-center gap-4"
-            :style="{ color: 'var(--color-text-main)' }"
-          >
-            <Bell class="text-[var(--color-primary)]" :size="32" />
-            Centre de Notifications
-            <span
-              v-if="unreadCount > 0"
-              class="px-3 py-1 bg-[var(--color-primary)] text-white text-base font-black rounded-full animate-pulse"
-            >
-              {{ unreadCount }}
-            </span>
-          </h1>
-          <p
-            class="text-[var(--color-text-sub)] opacity-70 font-medium text-sm"
-          >
-            Restez informé de toute l'activité sur votre compte SASAYEE
-          </p>
-        </div> -->
+    
         <div class="flex items-center gap-3">
           <button
             v-if="unreadCount > 0"
