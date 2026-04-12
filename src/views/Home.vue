@@ -98,7 +98,7 @@ const productStore = useProductStore();
 
 useSeo({
   title: "Vente et Achat au Cameroun - Marketplace SASAYEE",
-  description: "Découvrez SASAYEE, la plateforme de référence pour l'achat et la revente de produits informatiques, mode, électroménager et services au Cameroun.",
+  description: "Découvrez SASAYEE, la plateforme de référence pour l'achat et la revente de produits informatiques, mode et électroménager au Cameroun.",
   jsonLd: {
     "@context": "https://schema.org",
     "@type": "WebSite",

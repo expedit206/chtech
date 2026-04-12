@@ -321,6 +321,7 @@ const getIcon = (type) => {
     case 'message': return MessageCircle;
     case 'wallet': return Wallet;
     case 'success': return CheckCircle;
+    case 'error': return XCircle;
     default: return Info;
   }
 };
@@ -331,6 +332,8 @@ const getBgColor = (type) => {
     case 'sale': return 'rgba(34, 197, 94, 0.1)';
     case 'message': return 'rgba(168, 85, 247, 0.1)';
     case 'wallet': return 'rgba(234, 179, 8, 0.1)';
+    case 'success': return 'rgba(34, 197, 94, 0.1)';
+    case 'error': return 'rgba(239, 68, 68, 0.1)';
     default: return 'rgba(107, 114, 128, 0.1)';
   }
 };
@@ -341,6 +344,8 @@ const getColor = (type) => {
     case 'sale': return '#22c55e';
     case 'message': return '#a855f7';
     case 'wallet': return '#eab308';
+    case 'success': return '#22c55e';
+    case 'error': return '#ef4444';
     default: return '#6b7280';
   }
 };

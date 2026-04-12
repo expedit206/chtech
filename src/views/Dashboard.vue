@@ -303,7 +303,7 @@ const interactionStore = useInteractionStore();
 
 useSeo({
   title: "Tableau de Bord - SASAYEE",
-  description: "Gérez votre compte, vos commandes, vos favoris et vos services sur votre espace personnel SASAYEE."
+  description: "Gérez votre compte, vos commandes et vos favoris sur votre espace personnel SASAYEE."
 });
 
 // Seller/buyer mode toggle — sellers see seller view by default
