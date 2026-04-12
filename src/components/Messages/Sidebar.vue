@@ -35,17 +35,33 @@
             Messages
           </h2>
         </div>
-        <button
-          v-if="isMobile"
-          @click="$emit('toggle-sidebar')"
-          class="w-8 h-8 rounded-full flex items-center justify-center transition-colors"
-          :style="{
-            backgroundColor: 'var(--color-bg)',
-            color: 'var(--color-text-sub)',
-          }"
-        >
-          <i class="fas fa-times"></i>
-        </button>
+
+        <div class="flex items-center gap-2">
+          <!-- Command Link -->
+          <router-link
+            :to="{ name: 'Orders' }"
+            class="w-9 h-9 rounded-xl flex items-center justify-center hover:bg-(--color-primary)/10 transition-all group relative mr-1"
+            title="Mes Commandes"
+          >
+            <i
+              class="fas fa-shopping-bag text-sm"
+              :style="{ color: 'var(--color-primary)' }"
+            ></i>
+            <!-- Small indicator if needed in future -->
+          </router-link>
+
+          <button
+            v-if="isMobile"
+            @click="$emit('toggle-sidebar')"
+            class="w-8 h-8 rounded-full flex items-center justify-center transition-colors"
+            :style="{
+              backgroundColor: 'var(--color-bg)',
+              color: 'var(--color-text-sub)',
+            }"
+          >
+            <i class="fas fa-times"></i>
+          </button>
+        </div>
       </div>
 
       <!-- Conversation List -->
