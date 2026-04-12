@@ -9,8 +9,7 @@
       borderColor: 'var(--color-border)',
     }">
       <img :src="product?.image" :alt="product?.name"
-        class="w-full h-full object-cover group-hover:scale-105 transition duration-300" loading="lazy"
-        @load="recordViewOnce" />
+        class="w-full h-full object-cover group-hover:scale-105 transition duration-300" loading="lazy" />
 
       <div class="absolute top-2 left-2 view-badge px-2 py-1 rounded-full text-xs font-semibold flex items-center gap-1"
         style="
@@ -130,8 +129,6 @@ const props = defineProps({
 });
 
 const emit = defineEmits(["click"]);
-const viewRecorded = ref(false);
-
 
 // Computed properties
 const isFavorited = computed(() => {
@@ -180,13 +177,7 @@ const formatNumber = (num) => {
   return num.toString();
 };
 
-const recordViewOnce = () => {
-  if (!viewRecorded.value && props.product.id) {
-    viewRecorded.value = true;
-    interactionStore.recordView(props.product.id);
-    localViews.value = parseInt((displayViews.value || 0) + 1);
-  }
-};
+
 
 const handleToggleFavorite = async () => {
   try {

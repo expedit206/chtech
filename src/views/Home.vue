@@ -15,13 +15,13 @@
         </div>
 
         <!-- Skeleton categories -->
-        <div v-if="isLoading" class="flex gap-4 px-4 py-2 overflow-hidden">
+        <div v-if="isLoading" class="flex gap-4 px-4 py-4 overflow-hidden">
           <div v-for="i in 8" :key="i"
             class="flex-shrink-0 h-8 w-24 rounded-full bg-[var(--color-surface)] animate-pulse"></div>
         </div>
 
         <div v-else class="flex overflow-hidden">
-          <div class="scroll-track flex items-center py-2">
+          <div class="scroll-track flex items-center py-4">
             <!-- First set of categories -->
             <CategoryCard v-for="category in categories" :key="category.id" :icon="getCategoryIcon(category.name)"
               :name="category.name" :active="category.active" />
@@ -166,6 +166,8 @@ onUnmounted(() => {
 });
 
 const handleScroll = () => {
+  if (productStore.loading || productStore.loadingMore || !productStore.hasMore) return;
+
   const scrollHeight = document.documentElement.scrollHeight;
   const scrollTop = document.documentElement.scrollTop;
   const clientHeight = document.documentElement.clientHeight;

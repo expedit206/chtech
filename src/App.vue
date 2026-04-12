@@ -26,7 +26,7 @@
         <router-view />
       </main>
 
-      <Footer v-if="!isMessagesPage" />
+      <Footer v-if="shouldShowFooter" />
       <CustomAlertDialog />
     </div>
   </div>
@@ -71,6 +71,16 @@ const isMobileSidebarOpen = ref(false);
 
 const isMessagesPage = computed(() => {
   return route.path.startsWith("/messages");
+});
+
+const isHomePage = computed(() => {
+  return route.name === "Home" || route.path === "/";
+});
+
+const shouldShowFooter = computed(() => {
+  if (isMessagesPage.value) return false;
+  if (isHomePage.value && productStore.hasMore) return false;
+  return true;
 });
 
 // isAdminRoute uses window.location for immediate value (no flash on load)

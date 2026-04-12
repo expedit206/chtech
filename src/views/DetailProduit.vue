@@ -313,17 +313,27 @@
       </div>
     </div>
 
-    <!-- Related Products Sections -->
-    <div v-if="!loading" class="mt-16 space-y-16">
-      <!-- Section: Same Seller -->
-      <section v-if="shopProducts.length > 0">
-        <div class="flex items-center justify-between mb-8 gap-4 flex-wrap">
+    <!-- Related Products Sections (Lazy loaded) -->
+    <div v-if="!loading" class="mt-16" ref="relatedContainer">
+      <div v-if="loadingRelated" class="space-y-16 py-8">
+         <!-- Spinner or Skeleton for related products -->
+         <div class="flex justify-center items-center gap-2 opacity-50">
+           <i class="fas fa-spinner fa-spin text-2xl text-[var(--color-primary)]"></i>
+           <span class="font-semibold text-sm">Chargement des suggestions...</span>
+         </div>
+      </div>
+      
+      <div v-else-if="loadedRelated" class="space-y-16">
+        <!-- Section: Same Seller -->
+        <section v-if="shopProducts.length > 0">
+          <div class="flex items-center justify-between mb-8 gap-4 flex-wrap">
           <div class="flex items-center gap-3">
             <div class="w-1.5 h-8 bg-[var(--color-primary)] rounded-full"></div>
             <h2 class="text-2xl font-black text-[var(--color-text-main)] uppercase tracking-tight">Dans la même boutique</h2>
           </div>
           <router-link 
-            :to="{ name: 'PublicProfile', params: { id: product.user?.id } }"
+            v-if="product?.user?.id"
+            :to="{ name: 'PublicProfile', params: { id: product.user.id } }"
             class="px-6 py-2.5 rounded-xl border-2 font-bold text-xs tracking-widest transition-all hover:bg-[var(--color-primary)] hover:text-white hover:border-[var(--color-primary)] active:scale-95"
             :style="{ borderColor: 'var(--color-primary)', color: 'var(--color-primary)' }"
           >
@@ -358,6 +368,7 @@
           />
         </div>
       </section>
+      </div> <!-- End loaded wrapper -->
     </div>
   </main>
 </template>
@@ -389,6 +400,48 @@ const selectedPhotoIndex = ref(0);
 const lightboxEl = ref(null);
 const shopProducts = ref([]);
 const similarProducts = ref([]);
+
+const relatedContainer = ref(null);
+const loadingRelated = ref(false);
+const loadedRelated = ref(false);
+
+const getImageUrl = (photo) => {
+  if (typeof photo === "string") {
+    if (photo.startsWith("http")) return photo;
+    return `${CONFIG.STORAGE_URL}${photo}`;
+  }
+  return "/placeholder.png";
+};
+
+const mapRelated = (list) => (list || []).map(p => ({
+  ...p,
+  id: p.id,
+  name: p.nom,
+  price: `${Number(p.prix).toLocaleString("fr-FR")} FCFA`,
+  old_price: p.ancien_prix ? `${Number(p.ancien_prix).toLocaleString("fr-FR")} FCFA` : null,
+  image: p.photos && p.photos.length > 0 ? getImageUrl(p.photos[0]) : '/placeholder.png',
+  slug: (p.slug && !p.slug.endsWith(`-${p.id}`)) ? `${p.slug}-${p.id}` : (p.slug || p.id),
+  category: p.category ? { nom: p.category.nom } : { nom: 'Produit' }
+}));
+
+const loadRelatedProducts = async () => {
+  if (loadedRelated.value || loadingRelated.value || !product.value.id) return;
+  loadingRelated.value = true;
+  try {
+    const [similarData, shopData] = await Promise.all([
+      productStore.getSimilarProducts(product.value.id),
+      productStore.getShopProducts(product.value.id)
+    ]);
+    
+    similarProducts.value = mapRelated(similarData.data);
+    shopProducts.value = mapRelated(shopData.data);
+    loadedRelated.value = true;
+  } catch (err) {
+    console.error("Erreur lazy load produits:", err);
+  } finally {
+    loadingRelated.value = false;
+  }
+};
 
 // Lightbox state
 const lightbox = ref({ open: false, index: 0 });
@@ -435,14 +488,34 @@ const handleKeydown = (e) => {
   if (e.key === "ArrowRight") nextLightbox();
 };
 
+let observer;
 onMounted(() => {
   window.addEventListener("keydown", handleKeydown);
   fetchProductData();
+
+  observer = new IntersectionObserver((entries) => {
+    if (entries[0].isIntersecting) {
+      loadRelatedProducts();
+    }
+  }, { rootMargin: "300px" });
 });
 
-onUnmounted(() => window.removeEventListener("keydown", handleKeydown));
+onUnmounted(() => {
+  window.removeEventListener("keydown", handleKeydown);
+  if (observer) observer.disconnect();
+});
+
+watch(relatedContainer, (el) => {
+  if (el && observer && !loadedRelated.value) {
+    observer.observe(el);
+  }
+});
 
 watch(() => route.params.slug, () => {
+  loadedRelated.value = false;
+  loadingRelated.value = false;
+  shopProducts.value = [];
+  similarProducts.value = [];
   fetchProductData();
   // Scroll back to top smoothly
   window.scrollTo({ top: 0, behavior: 'smooth' });
@@ -520,14 +593,6 @@ const formatNumber = (num) => {
   return num.toString();
 };
 
-const getImageUrl = (photo) => {
-  if (typeof photo === "string") {
-    if (photo.startsWith("http")) return photo;
-    return `${CONFIG.STORAGE_URL}${photo}`;
-  }
-  return "/placeholder.png";
-};
-
 const fetchProductData = async () => {
   loading.value = true;
   selectedPhotoIndex.value = 0; // Reset gallery
@@ -536,7 +601,12 @@ const fetchProductData = async () => {
     if (!slug) throw new Error("Identifiant du produit manquant");
 
     const data = await productStore.getProductById(slug, true);
-    const { produit, similar_produits, shop_produits } = data;
+    const { produit, counts } = data;
+
+    // Injecter directement les compteurs sans appel réseau additionnel
+    if (counts && produit?.id) {
+      interactionStore.productCounts[produit.id] = counts;
+    }
 
     // Map all photos
     const allPhotos = (produit.photos?.length ? produit.photos : []).map(
@@ -583,23 +653,7 @@ const fetchProductData = async () => {
       ],
     };
 
-    // Map related products
-    const mapRelated = (list) => (list || []).map(p => ({
-      ...p,
-      id: p.id,
-      name: p.nom,
-      price: `${Number(p.prix).toLocaleString("fr-FR")} FCFA`,
-      old_price: p.ancien_prix ? `${Number(p.ancien_prix).toLocaleString("fr-FR")} FCFA` : null,
-      image: p.photos && p.photos.length > 0 ? getImageUrl(p.photos[0]) : '/placeholder.png',
-      slug: (p.slug && !p.slug.endsWith(`-${p.id}`)) ? `${p.slug}-${p.id}` : (p.slug || p.id),
-      category: p.category ? { nom: p.category.nom } : { nom: 'Produit' }
-    }));
-
-    similarProducts.value = mapRelated(similar_produits);
-    shopProducts.value = mapRelated(shop_produits);
-
-    interactionStore.recordView(produit.id);
-    interactionStore.fetchProductCounts(produit.id);
+    // Les vues et les compteurs sont maintenant gérés nativement par l'API principale.
   } catch (err) {
     error.value = err.message;
     console.error("Erreur lors du chargement du produit:", err);

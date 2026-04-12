@@ -32,19 +32,6 @@ export const useInteractionStore = defineStore('interactions', () => {
   };
 
   /**
-   * Enregistrer une vue (public)
-   */
-  async function recordView(productId) {
-    try {
-      await apiClient.post('/public-record-view', {
-        product_id: productId
-      });
-    } catch (err) {
-      console.error('Erreur lors de l\'enregistrement de la vue:', err);
-    }
-  }
-
-  /**
    * Enregistrer une interaction (authentifiée)
    */
   async function recordInteraction(productId, interactionType, metadata = {}) {
@@ -168,10 +155,8 @@ export const useInteractionStore = defineStore('interactions', () => {
     try {
       if (authStore.isAuthenticated) {
         await recordInteraction(productId, 'clic');
-      } else {
-        // Enregistrement public du clic
-        await recordView(productId);
       }
+      // Pour les visiteurs non connectés, la vue totale est déjà comptabilisée lors de l'ouverture du produit.
     } catch (err) {
       console.error('Erreur lors de l\'enregistrement du clic:', err);
     }
@@ -263,7 +248,6 @@ export const useInteractionStore = defineStore('interactions', () => {
     loading,
     isFavorited,
     getProductCounts,
-    recordView,
     recordInteraction,
     recordClick,
     recordContact,
