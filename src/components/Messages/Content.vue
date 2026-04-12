@@ -49,8 +49,7 @@
             <div
               class="relative shadow-sm break-words overflow-hidden transition-all"
               :class="[
-                message.type === 'text' ||
-                message.type === 'audio' ||
+                ['text', 'audio', 'info', 'alert', 'promo'].includes(message.type) ||
                 (message.attachment_url && message.content)
                   ? message.sender_id === authStore.user.id
                     ? 'rounded-2xl rounded-tr-none px-4 py-3 text-white'
@@ -58,8 +57,7 @@
                   : 'rounded-2xl p-0 bg-transparent shadow-none',
               ]"
               :style="
-                message.type === 'text' ||
-                message.type === 'audio' ||
+                ['text', 'audio', 'info', 'alert', 'promo'].includes(message.type) ||
                 (message.attachment_url && message.content)
                   ? message.sender_id === authStore.user.id
                     ? { backgroundColor: 'var(--color-primary)' }
@@ -137,15 +135,32 @@
               </audio>
 
               <!-- TEXT (Caption or Main Message) -->
-              <p
+              <div
                 v-if="
-                  message.type === 'text' ||
+                  ['text', 'info', 'alert', 'promo'].includes(message.type) ||
                   (message.attachment_url && message.content)
                 "
-                class="whitespace-pre-wrap text-[15px] leading-relaxed block"
               >
-                {{ message.content }}
-              </p>
+                <!-- Broadcast Badge/Indicator -->
+                <div v-if="['info', 'alert', 'promo'].includes(message.type)" 
+                  class="flex items-center gap-1.5 mb-1.5"
+                  :class="message.sender_id === authStore.user.id ? 'justify-end' : 'justify-start'"
+                  :style="{ 
+                    color: message.type === 'alert' ? '#f59e0b' : (message.type === 'promo' ? '#10b981' : (message.sender_id === authStore.user.id ? 'white' : 'var(--color-primary)'))
+                  }"
+                >
+                  <i v-if="message.type === 'info'" class="fas fa-info-circle text-[10px]"></i>
+                  <i v-else-if="message.type === 'alert'" class="fas fa-exclamation-triangle text-[10px]"></i>
+                  <i v-else-if="message.type === 'promo'" class="fas fa-bolt text-[10px]"></i>
+                  <span class="text-[9px] font-black uppercase tracking-widest">
+                    {{ message.type === 'alert' ? 'Alerte Importante' : (message.type === 'promo' ? 'Offre Spéciale' : 'Information Sasayee') }}
+                  </span>
+                </div>
+
+                <p class="whitespace-pre-wrap text-[15px] leading-relaxed block">
+                  {{ message.content }}
+                </p>
+              </div>
             </div>
 
             <!-- Timestamp & Status -->

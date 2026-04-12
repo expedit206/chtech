@@ -53,10 +53,7 @@
 
         </div>
 
-        <div v-if="error"
-          class="text-red-400 text-sm text-center bg-red-400/10 py-2 rounded-lg border border-red-400/20">
-          {{ error }}
-        </div>
+        <!-- L'erreur globale est désormais gérée par les messages flash -->
 
         <div>
           <button type="submit" :disabled="loading"
@@ -104,6 +101,8 @@ useSeo({
 });
 const auth = useAuthStore();
 const router = useRouter();
+import { useFlash } from "../composables/useFlash";
+const flash = useFlash();
 
 const form = reactive({
   nom: "",
@@ -112,21 +111,19 @@ const form = reactive({
 });
 
 const loading = ref(false);
-const error = ref(null);
 
 const handleRegister = async () => {
   loading.value = true;
-  error.value = null;
   try {
     await auth.register(form);
+    flash.success("Inscription complétée avec succès !");
     const redirectPath = router.currentRoute.value.query.redirect;
     router.push(redirectPath ? { path: redirectPath } : { name: "Home" });
   } catch (err) {
     if (err.response?.data?.errors) {
-      error.value = Object.values(err.response.data.errors).flat()[0];
+      flash.error(Object.values(err.response.data.errors).flat()[0]);
     } else {
-      error.value =
-        err.response?.data?.message || "Erreur lors de l'inscription";
+      flash.error(err.response?.data?.message || "Erreur lors de l'inscription");
     }
   } finally {
     loading.value = false;

@@ -108,7 +108,7 @@
 </template>
 
 <script setup>
-import { ref, computed } from 'vue';
+import { ref, computed, onMounted } from 'vue';
 import { Megaphone, AlertTriangle, Bell, Info, Loader2, Zap } from 'lucide-vue-next';
 
 import apiClient from '../../api/index.js';
@@ -126,12 +126,51 @@ const types = [
 
 const selectedType = computed(() => types.find(t => t.value === form.value.type) ?? types[0]);
 
+const fetchHistory = async () => {
+  try {
+    const response = await apiClient.get('/admin/chat/broadcast');
+    history.value = response.data.map(h => {
+      let title = '';
+      let message = h.content || '';
+      
+      // Tentative de récupération du titre entre crochets: [Mon Titre] Message...
+      if (message.startsWith('[')) {
+        const closingBracketIndex = message.indexOf(']');
+        if (closingBracketIndex !== -1) {
+          title = message.substring(1, closingBracketIndex);
+          message = message.substring(closingBracketIndex + 1).trim();
+        }
+      }
+
+      // Fallback si pas de titre trouvé ou parsing incomplet
+      if (!title) {
+        title = 'Diffusion Globale';
+      }
+
+      return {
+        id: h.id,
+        title: title,
+        message: message,
+        type: h.type || 'info',
+        sent_at: h.created_at
+      };
+    });
+  } catch (e) {
+    console.error("Erreur lors du chargement de l'historique", e);
+  }
+};
+
+onMounted(fetchHistory);
+
 const sendBroadcast = async () => {
   if (!confirm('Envoyer ce message à tous les utilisateurs ?')) return;
   sending.value = true;
   try {
     await apiClient.post('/admin/chat/broadcast', form.value);
-    history.value.unshift({ ...form.value, id: Date.now(), sent_at: new Date().toISOString() });
+    
+    // Raffraîchir l'historique pour inclure le nouveau message correctement formatté
+    await fetchHistory();
+    
     form.value = { title: '', message: '', type: 'info' };
     alert('✅ Message envoyé avec succès !');
   } catch (e) {

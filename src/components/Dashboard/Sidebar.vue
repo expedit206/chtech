@@ -138,37 +138,37 @@ const menuSections = computed(() => {
     ];
   }
 
-  // Navigation standard pour les utilisateurs normaux (utilisateurs simples)
-  if (!auth.isAdmin && !auth.isVendeur) {
-    sections.push({
-      title: "Navigation",
-      items: [
-        {
-          name: "Tableau de bord",
-          icon: LayoutDashboard,
-          route: { name: "Dashboard" },
-        },
-        { name: "Messages", icon: MessageCircle, route: { name: "messages" } },
-        {
-          name: "Mes Demandes",
-          icon: ShoppingBag,
-          route: { name: "my-orders" },
-        },
-        { name: "Mes Favoris", icon: Star, route: { name: "Wishlist" } },
-      ],
-    });
-  }
+  // Navigation personnelle (pour tout le monde)
+  sections.push({
+    title: "Mon Espace",
+    items: [
+      {
+        name: "Tableau de bord",
+        icon: LayoutDashboard,
+        route: { name: "Dashboard" },
+      },
+      { name: "Messages", icon: MessageCircle, route: { name: "messages" } },
+      {
+        name: "Mes Commandes",
+        icon: ShoppingBag,
+        route: { name: "Orders" },
+      },
+      { name: "Mes Favoris", icon: Star, route: { name: "Wishlist" } },
+    ],
+  });
 
   // Administration
   if (auth.isAdmin) {
     sections.push({
       title: "Administration",
       items: [
-        { name: "Tableau de bord", icon: ShieldCheck, route: { name: "admin-dashboard" } },
+        { name: "Gestion Globale", icon: ShieldCheck, route: { name: "admin-dashboard" } },
         { name: "Utilisateurs", icon: Users, route: { name: "admin-users" } },
         { name: "Vendeurs", icon: Store, route: { name: "admin-users", query: { role: 'vendeur' } } },
         { name: "Demandes Vendeurs", icon: PackageCheck, route: { name: "admin-seller-requests" } },
         { name: "Produits", icon: Package, route: { name: "admin-products" } },
+        { name: "Finance", icon: DollarSign, route: { name: "admin-finance" } },
+        { name: "Diffusion", icon: Megaphone, route: { name: "admin-broadcast" } },
         { name: "Catégories", icon: Tag, route: { name: "admin-categories" } },
         { name: "Blog", icon: FileText, route: { name: "admin-blog" } },
       ],
@@ -191,12 +191,7 @@ const menuSections = computed(() => {
       title: "Ma Boutique",
       items: [
         {
-          name: "Tableau de bord",
-          icon: LayoutDashboard,
-          route: { name: "Dashboard" },
-        },
-        {
-          name: "Statistiques",
+          name: "Finances",
           icon: BarChart2,
           route: { name: "seller-stats" },
         },
@@ -223,15 +218,6 @@ const menuSections = computed(() => {
       { name: "Aide & Support", icon: Headphones, route: { name: "Support" } },
     ],
   });
-
-  if (auth.isAdmin) {
-    sections.push({
-      title: "Raccourcis",
-      items: [
-        { name: "Retour au site", icon: House, route: { name: "Home" } }
-      ]
-    });
-  }
 
   return sections;
 });

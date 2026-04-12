@@ -1,22 +1,29 @@
 import { useAlertStore } from '../stores/alert';
+import { useFlash } from './useFlash';
 
 export function useAlert() {
   const alertStore = useAlertStore();
+  const flash = useFlash();
 
   const success = (options) => {
-    alertStore.showAlert({ ...options, type: 'success', title: options.title || 'Succès' });
+    // Si c'est juste un string, l'encapsuler (fallback)
+    const message = typeof options === 'string' ? options : options.message;
+    flash.success(message);
   };
 
   const error = (options) => {
-    alertStore.showAlert({ ...options, type: 'error', title: options.title || 'Erreur' });
+    const message = typeof options === 'string' ? options : options.message;
+    flash.error(message);
   };
 
   const warning = (options) => {
-    alertStore.showAlert({ ...options, type: 'warning', title: options.title || 'Attention' });
+    const message = typeof options === 'string' ? options : options.message;
+    flash.warning(message);
   };
 
   const info = (options) => {
-    alertStore.showAlert({ ...options, type: 'info', title: options.title || 'Info' });
+    const message = typeof options === 'string' ? options : options.message;
+    flash.info(message);
   };
 
   const confirm = (options) => {

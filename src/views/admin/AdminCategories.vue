@@ -23,7 +23,7 @@
                 :style="{ backgroundColor: 'var(--color-bg)', borderColor: 'var(--color-border)', color: 'var(--color-text-main)' }" />
             </div>
             <div>
-              <label class="block text-xs font-bold mb-1.5 opacity-60" :style="{ color: 'var(--color-text-sub)' }">Image (optionnel)</label>
+              <label class="block text-xs font-bold mb-1.5 opacity-60" :style="{ color: 'var(--color-text-sub)' }">Image (obligatoire pour un beau rendu)</label>
               <input type="file" @change="onFileChange" accept="image/*"
                 class="w-full text-sm file:mr-3 file:py-2 file:px-4 file:rounded-xl file:border-0 file:text-xs file:font-bold file:cursor-pointer"
                 :style="{ color: 'var(--color-text-sub)' }" style="file-background: var(--color-primary)" />
@@ -66,8 +66,8 @@
             <div class="h-28 bg-gradient-to-br overflow-hidden"
               :style="{ backgroundColor: 'var(--color-bg)' }">
               <img v-if="cat.image" :src="cat.image" class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500" />
-              <div v-else class="w-full h-full flex items-center justify-center opacity-20">
-                <Tag :size="32" :style="{ color: 'var(--color-text-main)' }" />
+              <div v-else class="w-full h-full flex items-center justify-center bg-black/5 opacity-30 font-black">
+                 {{ cat.nom?.charAt(0).toUpperCase() }}
               </div>
             </div>
             <div class="p-3">
@@ -122,12 +122,15 @@ const saveCategory = async () => {
     fd.append('type', 'product');
     if (fileInput.value) fd.append('image', fileInput.value);
 
+    const url = editingCategory.value 
+      ? `/admin/categories/${editingCategory.value.id}` 
+      : '/admin/categories';
+
     if (editingCategory.value) {
       fd.append('_method', 'PUT');
-      await apiClient.post(`/admin/categories/${editingCategory.value.id}`, fd, { headers: { 'Content-Type': 'multipart/form-data' } });
-    } else {
-      await apiClient.post('/admin/categories', fd, { headers: { 'Content-Type': 'multipart/form-data' } });
     }
+
+    await apiClient.post(url, fd, { headers: { 'Content-Type': 'multipart/form-data' } });
     await fetchCategories();
     resetForm();
   } catch (e) { console.error(e); } finally { saving.value = false; }
@@ -138,6 +141,7 @@ const editCategory = (cat) => {
   form.value.nom = cat.nom;
   previewUrl.value = null;
   fileInput.value = null;
+  window.scrollTo({ top: 0, behavior: 'smooth' });
 };
 
 const resetForm = () => {

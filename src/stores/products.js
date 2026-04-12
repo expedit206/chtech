@@ -65,7 +65,7 @@ export const useProductStore = defineStore('products', () => {
       const params = { 
         ...filters,
         page: currentPage.value,
-        per_page: 20
+        per_page: 15
       };
 
       if (searchQuery.value) {
@@ -83,12 +83,14 @@ export const useProductStore = defineStore('products', () => {
         const newProducts = Array.isArray(paginated) ? paginated : (paginated?.data || []);
 
         if (loadMore) {
-          products.value = [...products.value, ...newProducts];
+          const existingIds = products.value.map(p => p.id);
+          const uniqueNewProducts = newProducts.filter(p => !existingIds.includes(p.id));
+          products.value = [...products.value, ...uniqueNewProducts];
         } else {
           products.value = newProducts;
         }
 
-        hasMore.value = meta ? meta.has_more_pages : (newProducts.length >= 20);
+        hasMore.value = meta ? meta.has_more_pages : (newProducts.length >= 15);
 
         if (!loadMore && Object.keys(filters).length === 0) {
           lastFetched.value = Date.now();
@@ -143,10 +145,30 @@ export const useProductStore = defineStore('products', () => {
       const response = await apiClient.get(`/produits/${idOrSlug}`);
       // console.log(response.data.data);
       
-      return response.data.data; // Retourne l'objet complet (produit, similar_produits, etc.)
+      return response.data.data; // Retourne l'objet complet (produit, etc.)
     } catch (err) {
       console.error('Erreur lors du chargement du produit:', err);
       throw err;
+    }
+  }
+
+  async function getSimilarProducts(productId) {
+    try {
+      const response = await apiClient.get(`/produits/${productId}/similar`);
+      return response.data; 
+    } catch (err) {
+      console.error('Erreur lors du chargement des produits similaires:', err);
+      return { data: [] };
+    }
+  }
+
+  async function getShopProducts(productId) {
+    try {
+      const response = await apiClient.get(`/produits/${productId}/shop`);
+      return response.data; 
+    } catch (err) {
+      console.error('Erreur lors du chargement des produits de la boutique:', err);
+      return { data: [] };
     }
   }
 
@@ -162,6 +184,8 @@ export const useProductStore = defineStore('products', () => {
     error,
     fetchProducts,
     fetchCategories,
-    getProductById
+    getProductById,
+    getSimilarProducts,
+    getShopProducts
   };
 });

@@ -602,6 +602,11 @@ import {
 import { useProductStore } from "../../stores/products.js";
 import { useRoute, useRouter } from "vue-router";
 import apiClient from "../../api/index.js";
+import { useFlash } from "../../composables/useFlash.js";
+import { useAlert } from "../../composables/useAlert.js";
+
+const alertStore = useAlert();
+const flash = useFlash();
 
 const route = useRoute();
 const router = useRouter();
@@ -670,6 +675,7 @@ const fetchMyProducts = async () => {
     const res = await apiClient.get("/user/mesProduits");
     products.value = res.data.produits;
   } catch (err) {
+    flash.error("Erreur lors de la récupération de vos produits");
     console.error("Error fetching my products", err);
   } finally {
     loading.value = false;
@@ -771,13 +777,13 @@ const removePhoto = (index) => {
 const saveProduct = async () => {
   saving.value = true;
   if (!form.value.category_id) {
-    alert("Veuillez sélectionner une catégorie.");
+    flash.warning("Veuillez sélectionner une catégorie.");
     saving.value = false;
     return;
   }
 
   if (newPhotoFiles.value.length === 0 && !isEditing.value) {
-    alert("Veuillez ajouter au moins une photo pour ce produit.");
+    flash.warning("Veuillez ajouter au moins une photo pour ce produit.");
     saving.value = false;
     return;
   }
@@ -814,30 +820,38 @@ const saveProduct = async () => {
       headers: { "Content-Type": "multipart/form-data" },
     });
     await fetchMyProducts();
+    flash.success(isEditing.value ? "Produit mis à jour !" : "Produit ajouté avec succès !");
     closeModal();
   } catch (err) {
     console.error("Error saving product", err.response?.data || err);
     const erreurs = err.response?.data?.errors;
-    let msg = "Une erreur est survenue lors de l'enregistrement. Vérifiez les champs.";
+    let msg = "Erreur lors de l'enregistrement. Vérifiez les champs.";
     if (erreurs) {
-      msg += "\n" + JSON.stringify(erreurs, null, 2);
+      msg = Object.values(erreurs).flat().join(" ");
     }
-    alert(msg);
+    flash.error(msg);
   } finally {
     saving.value = false;
   }
 };
 
 const confirmDelete = async (product) => {
-  if (confirm(`Voulez-vous vraiment retirer "${product.nom}" du catalogue ?`)) {
-    try {
-      // API used POST for delete based on routes check
-      await apiClient.post(`/user/delete/produit/${product.id}`);
-      await fetchMyProducts();
-    } catch (err) {
-      console.error("Error deleting product", err);
+  alertStore.confirm({
+    title: "Supprimer le produit",
+    message: `Voulez-vous vraiment retirer "${product.nom}" du catalogue ?`,
+    confirmText: "Supprimer",
+    type: "error",
+    onConfirm: async () => {
+      try {
+        await apiClient.post(`/user/delete/produit/${product.id}`);
+        flash.success("Produit supprimé.");
+        await fetchMyProducts();
+      } catch (err) {
+        flash.error("Impossible de supprimer le produit.");
+        console.error("Error deleting product", err);
+      }
     }
-  }
+  });
 };
 
 

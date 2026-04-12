@@ -161,6 +161,8 @@ import { ref, onMounted } from 'vue';
 import { Plus, FileText, Trash2, Eye, EyeOff, Pencil } from 'lucide-vue-next';
 
 import apiClient from '../../api/index.js';
+import { useFlash } from '../../composables/useFlash';
+const flash = useFlash();
 
 const posts = ref([]);
 const loading = ref(true);
@@ -210,35 +212,42 @@ const savePost = async () => {
   saving.value = true;
   try {
     const fd = new FormData();
-    // Use title/content/excerpt keys
     fd.append('title', postForm.value.title || '');
     fd.append('content', postForm.value.content || '');
-    fd.append('excerpt', postForm.value.excerpt || '');
     
-    // image handling
-    if (fileInput.value) {
-      fd.append('image', fileInput.value);
-    } else if (postForm.value.image) {
-      fd.append('image', postForm.value.image);
+    if (postForm.value.excerpt) {
+      fd.append('excerpt', postForm.value.excerpt);
     }
     
-    // Explicit is_published handling
+    if (fileInput.value) {
+      fd.append('image', fileInput.value);
+    } else if (postForm.value.image && postForm.value.image.trim() !== '') {
+      fd.append('image', postForm.value.image.trim());
+    }
+    
     if (editingPost.value) {
       fd.append('is_published', editingPost.value.is_published ? '1' : '0');
     }
 
     if (editingPost.value) {
       await apiClient.post(`/admin/blog/posts/${editingPost.value.id}`, fd);
+      flash.success('Article mis à jour avec succès');
     } else {
       await apiClient.post('/admin/blog/posts', fd);
+      flash.success('Article créé avec succès');
     }
     await fetchPosts(currentPage.value);
     cancelForm();
   } catch (e) {
     if (e.response?.data?.errors) {
-      console.error('Validation errors:', e.response.data.errors);
+      const errors = e.response.data.errors;
+      const firstError = Object.values(errors)[0][0];
+      flash.error(firstError);
+      console.error('Validation errors:', errors);
+    } else {
+      flash.error(e.response?.data?.message || "Erreur lors de la sauvegarde");
+      console.error(e);
     }
-    console.error(e);
   } finally {
     saving.value = false;
   }

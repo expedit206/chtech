@@ -2,9 +2,11 @@ import { defineStore } from 'pinia';
 import { ref, computed } from 'vue';
 import apiClient from '../api/index.js';
 import { useAuthStore } from './auth.js';
+import { useFlash } from '../composables/useFlash.js';
 
 export const useInteractionStore = defineStore('interactions', () => {
   const authStore = useAuthStore();
+  const flash = useFlash();
   const favorited = ref(new Set()); // Set des IDs favorisés
   const favorites = ref([]); // Liste complète des objets produits favoris
   const productCounts = ref({}); // Compte des interactions par produit
@@ -32,24 +34,11 @@ export const useInteractionStore = defineStore('interactions', () => {
   };
 
   /**
-   * Enregistrer une vue (public)
-   */
-  async function recordView(productId) {
-    try {
-      await apiClient.post('/public-record-view', {
-        product_id: productId
-      });
-    } catch (err) {
-      console.error('Erreur lors de l\'enregistrement de la vue:', err);
-    }
-  }
-
-  /**
    * Enregistrer une interaction (authentifiée)
    */
   async function recordInteraction(productId, interactionType, metadata = {}) {
     if (!authStore.isAuthenticated) {
-      console.warn('L\'utilisateur n\'est pas authentifié');
+      // Pas de flash d'erreur ici pour pas spammer (vues etc) -> dépend du type.
       return;
     }
 
@@ -78,7 +67,7 @@ export const useInteractionStore = defineStore('interactions', () => {
    */
   async function toggleFavorite(productId) {
     if (!authStore.isAuthenticated) {
-      console.warn("Vous devez vous connecter pour ajouter en favori");
+      flash.warning("Vous devez vous connecter pour ajouter en favori");
       return false;
     }
 
@@ -116,17 +105,17 @@ export const useInteractionStore = defineStore('interactions', () => {
       const response = await apiClient.post(`/produits/${productId}/favorite`);
       
       if (response.data.success) {
-        // Optionnel : synchroniser avec les données exactes de la réponse
         if (response.data.data && response.data.data.counts) {
           productCounts.value[productId] = response.data.data.counts;
         }
+        flash.success(wasFavorited ? "Retiré des favoris" : "Ajouté aux favoris");
         return response.data;
       } else {
         throw new Error("Action non confirmée");
       }
     } catch (err) {
       // ROLLBACK en cas d'échec
-      console.error("Erreur lors du basculement du favori:", err);
+      flash.error("Impossible de modifier les favoris");
       if (wasFavorited) {
         favorited.value.add(productId);
       } else {
@@ -149,14 +138,15 @@ export const useInteractionStore = defineStore('interactions', () => {
       });
 
       // Copier le lien dans le presse-papiers si l'API native le supporte
-      const productUrl = `${window.location.origin}/produit/${productId}`;
+      const productUrl = `${window.location.origin}/produits/${productId}`;
       if (navigator.clipboard) {
         await navigator.clipboard.writeText(productUrl);
+        flash.success("Lien copié dans le presse-papiers !");
       }
 
       return response;
     } catch (err) {
-      console.error('Erreur lors du partage:', err);
+      flash.error("Erreur lors du partage");
       throw err;
     }
   }
@@ -168,10 +158,8 @@ export const useInteractionStore = defineStore('interactions', () => {
     try {
       if (authStore.isAuthenticated) {
         await recordInteraction(productId, 'clic');
-      } else {
-        // Enregistrement public du clic
-        await recordView(productId);
       }
+      // Pour les visiteurs non connectés, la vue totale est déjà comptabilisée lors de l'ouverture du produit.
     } catch (err) {
       console.error('Erreur lors de l\'enregistrement du clic:', err);
     }
@@ -182,7 +170,7 @@ export const useInteractionStore = defineStore('interactions', () => {
    */
   async function recordContact(productId) {
     if (!authStore.isAuthenticated) {
-      console.warn('Vous devez vous connecter pour contacter');
+      flash.warning("Vous devez vous connecter pour contacter le vendeur");
       return false;
     }
 
@@ -263,7 +251,6 @@ export const useInteractionStore = defineStore('interactions', () => {
     loading,
     isFavorited,
     getProductCounts,
-    recordView,
     recordInteraction,
     recordClick,
     recordContact,

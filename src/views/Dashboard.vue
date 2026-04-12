@@ -165,32 +165,7 @@
         </div>
       </div>
 
-      <!-- Loyalty card -->
-      <div
-        class="bg-[var(--color-primary)] rounded-3xl p-6 text-white relative overflow-hidden shadow-lg shadow-indigo-500/20"
-      >
-        <i
-          class="fa-solid fa-crown absolute -right-4 -top-4 text-white/10 text-8xl rotate-12"
-        ></i>
-        <h3 class="text-white/80 font-medium mb-1">Votre Fidélité</h3>
-        <p class="text-4xl font-black mb-4">
-          {{ stats.points.toLocaleString() }}
-          <span class="text-sm font-normal">pts</span>
-        </p>
-        <div class="bg-white/20 backdrop-blur-md rounded-xl p-3 inline-block">
-          <p class="text-xs font-medium">
-            Équivalent :
-            <span class="font-bold"
-              >{{ (stats.points / 100).toLocaleString() }} FCFA</span
-            >
-          </p>
-        </div>
-        <button
-          class="w-full mt-6 py-2 bg-[var(--color-pure)] text-[var(--color-primary)] rounded-xl font-bold text-sm hover:bg-opacity-90 transition-all"
-        >
-          Convertir mes points
-        </button>
-      </div>
+      <!-- Space for other widgets if needed -->
     </div>
     </template>
     <!-- === END BUYER VIEW === -->
@@ -403,12 +378,6 @@ const quickStats = computed(() => [
     value: stats.value.products,
     color: "#10b981",
   },
-  {
-    icon: "fas fa-star",
-    label: "Points fidélité",
-    value: stats.value.points,
-    color: "#f59e0b",
-  },
 ]);
 
 const recentFavorites = ref([]);
@@ -463,7 +432,7 @@ onMounted(async () => {
       orders: ordersData.length,
       favorites: favList.length,
       products: authStore.user?.produits_count || 0,
-      points: authStore.user?.jetons || 0,
+      points: 0,
     };
 
     // Load seller stats

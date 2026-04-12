@@ -247,6 +247,7 @@ ChartJS.register(
 const { theme } = useTheme();
 const loading = ref(true);
 const stats = ref(null);
+const finance = ref({});
 
 const kpiCards = computed(() =>
   !stats.value

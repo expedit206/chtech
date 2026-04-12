@@ -2,8 +2,10 @@ import { defineStore } from 'pinia';
 import { ref, computed } from 'vue';
 import apiClient from '../api/index.js';
 import router from '../router/index.js';
+import { useFlash } from '../composables/useFlash.js';
 
 export const useAuthStore = defineStore('auth', () => {
+  const flash = useFlash();
   const user = ref(JSON.parse(localStorage.getItem('auth_user')) || null);
   const token = ref(localStorage.getItem('auth_token') || null);
 
@@ -63,6 +65,7 @@ export const useAuthStore = defineStore('auth', () => {
   const logout = async () => {
     try {
       await apiClient.post('/logout');
+      flash.info("À bientôt !");
     } catch (error) {
       console.error('Logout error:', error);
     } finally {

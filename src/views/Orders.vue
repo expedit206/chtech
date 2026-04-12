@@ -65,7 +65,7 @@
               getStatusClass(order.status),
             ]"
           >
-            {{ order.status }}
+            {{ translateStatus(order.status) }}
           </span>
         </div>
 
@@ -225,12 +225,24 @@ onMounted(async () => {
   }
 });
 
+const STATUS_FR = {
+  pending:   'En attente',
+  shipped:   'Expédié',
+  delivered: 'Livré',
+  cancelled: 'Annulé',
+};
+
+const translateStatus = (status) => STATUS_FR[status] || status;
+
 const getStatusClass = (status) => {
-  const s = (status || "").toLowerCase();
-  if (s.includes("livr")) return "bg-green-500/20 text-green-500";
-  if (s.includes("cours") || s.includes("prép"))
-    return "bg-blue-500/20 text-blue-500";
-  if (s.includes("annul")) return "bg-red-500/20 text-red-500";
-  return "bg-[var(--color-border)] text-[var(--color-text-sub)]";
+  if (status === 'delivered') return 'bg-green-500/20 text-green-500';
+  if (status === 'pending' || status === 'shipped') return 'bg-blue-500/20 text-blue-500';
+  if (status === 'cancelled') return 'bg-red-500/20 text-red-500';
+  // Fallback for legacy French strings
+  const s = (status || '').toLowerCase();
+  if (s.includes('livr')) return 'bg-green-500/20 text-green-500';
+  if (s.includes('cours') || s.includes('exp')) return 'bg-blue-500/20 text-blue-500';
+  if (s.includes('annul')) return 'bg-red-500/20 text-red-500';
+  return 'bg-[var(--color-border)] text-[var(--color-text-sub)]';
 };
 </script>

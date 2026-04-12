@@ -56,7 +56,13 @@
               </p>
               
               <div class="flex flex-wrap items-center gap-4">
-                <button class="flex items-center gap-2 text-[var(--color-text-sub)] hover:text-[var(--color-primary)] text-xs font-bold transition-colors">
+                <button 
+                  @click="downloadInvoice(order.id)"
+                  :disabled="invoiceLoading === order.id"
+                  class="flex items-center gap-2 text-[var(--color-text-sub)] hover:text-[var(--color-primary)] text-xs font-bold transition-colors disabled:opacity-50"
+                >
+                   <i v-if="invoiceLoading === order.id" class="fas fa-spinner fa-spin"></i>
+                   <i v-else class="fas fa-file-pdf"></i>
                    Facture PDF
                 </button>
                 <button class="flex items-center gap-2 text-[var(--color-text-sub)] hover:text-blue-500 text-xs font-bold transition-colors">
@@ -100,6 +106,7 @@ import apiClient from "../../api/index.js";
 import { Truck, Package, MessageCircle } from "lucide-vue-next";
 
 const isLoading = ref(true);
+const invoiceLoading = ref(null);
 const orders = ref([]);
 
 onMounted(async () => {
@@ -132,6 +139,29 @@ onMounted(async () => {
     isLoading.value = false;
   }
 });
+
+const downloadInvoice = async (orderId) => {
+  if (invoiceLoading.value) return;
+  invoiceLoading.value = orderId;
+  try {
+    // We use a blob to handle the PDF download from the API
+    const response = await apiClient.get(`/orders/${orderId}/facture`, {
+      responseType: 'blob'
+    });
+    
+    const url = window.URL.createObjectURL(new Blob([response.data]));
+    const link = document.createElement('a');
+    link.href = url;
+    link.setAttribute('download', `facture-sasayee-${orderId}.pdf`);
+    document.body.appendChild(link);
+    link.click();
+    link.remove();
+  } catch (err) {
+    console.error("Erreur téléchargement facture:", err);
+  } finally {
+    invoiceLoading.value = null;
+  }
+};
 
 const getStatusClass = (status) => {
   const s = (status || "").toLowerCase();
