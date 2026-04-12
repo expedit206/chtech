@@ -23,7 +23,7 @@
         <div v-else class="flex overflow-hidden">
           <div class="scroll-track flex items-center py-4">
             <!-- First set of categories -->
-            <CategoryCard v-for="category in categories" :key="category.id" :icon="getCategoryIcon(category.name)"
+            <CategoryCard v-for="category in categories" :key="category.id" :icon="category.icon"
               :name="category.name" :active="category.active" />
           </div>
         </div>
@@ -117,37 +117,11 @@ const isLoading = computed(
   () => productStore.loading && productStore.products.length === 0,
 );
 
-const getCategoryIcon = (name) => {
-  const n = name?.toLowerCase() || "";
-  if (
-    n.includes("informatique") ||
-    n.includes("ordinateur") ||
-    n.includes("laptop")
-  )
-    return "fas fa-laptop";
-  if (n.includes("téléphone") || n.includes("mobile") || n.includes("phone"))
-    return "fas fa-mobile-alt";
-  if (n.includes("électro") || n.includes("electricite")) return "fas fa-plug";
-  if (n.includes("vêtement") || n.includes("habit") || n.includes("mode"))
-    return "fas fa-tshirt";
-  if (n.includes("chaussure")) return "fas fa-shoe-prints";
-  if (n.includes("cuisine") || n.includes("maison") || n.includes("home"))
-    return "fas fa-home";
-  if (n.includes("beauté") || n.includes("soin") || n.includes("santé"))
-    return "fas fa-flask";
-  if (n.includes("jeu") || n.includes("jouet") || n.includes("game"))
-    return "fas fa-gamepad";
-  if (n.includes("watch") || n.includes("montre") || n.includes("accessoire"))
-    return "fas fa-clock";
-  if (n.includes("tv") || n.includes("télévision") || n.includes("écran"))
-    return "fas fa-tv";
-  return "fas fa-box";
-};
-
 const categories = computed(() =>
   productStore.categories.map((cat) => ({
     id: cat.id,
     name: cat.nom,
+    image: cat.image,
     active: false,
   })),
 );
@@ -157,6 +131,7 @@ const productsPart1 = computed(() => {
 });
 
 onMounted(() => {
+  productStore.fetchCategories();
   productStore.fetchProducts();
   window.addEventListener('scroll', handleScroll);
 });

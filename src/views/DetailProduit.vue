@@ -261,13 +261,11 @@
             {{ isFavorited ? 'Dans vos favoris' : 'Ajouter aux favoris' }}
           </button>
 
-          <button @click="handleShare"
-            class="px-5 py-3.5 rounded-xl font-bold border-2 transition-all active:scale-95 hover:scale-105" :style="{
-              borderColor: 'var(--color-border)',
-              color: 'var(--color-text-sub)',
-            }" title="Partager">
-            <Forward :size="20" :stroke-width="3" />
-          </button>
+          <SocialShare 
+            v-if="product.id"
+            :title="product.name"
+            :url="configUrl + route.fullPath"
+          />
         </div>
 
         <!-- Seller Info -->
@@ -382,10 +380,13 @@ import { useInteractionStore } from "../stores/interactions.js";
 import { useAuthStore } from "../stores/auth.js";
 import { useMessageStore } from "../stores/messages.js";
 import ProductCard from "../components/ProductCard.vue";
+import SocialShare from "../components/SocialShare.vue";
 import { ArrowLeft, Heart, Star, Forward, Eye } from "lucide-vue-next";
 import { useAlert } from "../composables/useAlert.js";
 import { useSeo } from "../composables/useSeo.js";
 import { useFlash } from "../composables/useFlash";
+
+const configUrl = window.location.origin;
 
 const alert = useAlert();
 const flash = useFlash();

@@ -219,15 +219,6 @@ const menuSections = computed(() => {
     ],
   });
 
-  if (auth.isAdmin) {
-    sections.push({
-      title: "Raccourcis",
-      items: [
-        { name: "Retour au site", icon: House, route: { name: "Home" } }
-      ]
-    });
-  }
-
   return sections;
 });
 </script>

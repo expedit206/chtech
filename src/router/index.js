@@ -18,6 +18,7 @@ const routes = [
     path: "/produit/:slug",
     name: "DetailProduit",
     component: DetailProduit,
+    meta: { title: 'Chargement produit...' }
   },
   {
     path: "/messages/:receiverId?",
@@ -269,8 +270,18 @@ router.beforeEach((to, from, next) => {
   next()
 })
 
-router.afterEach(() => {
+router.afterEach((to) => {
   clearTimeout(timer)
   NProgress.done()
+
+  // Dynamic Title logic
+  const baseTitle = 'SASAYEE';
+  const pageTitle = to.meta.title || to.name;
+  
+  if (pageTitle) {
+    document.title = `${pageTitle} | ${baseTitle}`;
+  } else {
+    document.title = `${baseTitle} - La marketplace numéro 1 au Cameroun`;
+  }
 })
 export default router;
