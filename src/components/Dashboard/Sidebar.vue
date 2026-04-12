@@ -191,7 +191,7 @@ const menuSections = computed(() => {
       title: "Ma Boutique",
       items: [
         {
-          name: "Statistiques",
+          name: "Finances",
           icon: BarChart2,
           route: { name: "seller-stats" },
         },
