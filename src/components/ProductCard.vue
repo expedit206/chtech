@@ -255,10 +255,8 @@ const filteredInteractions = computed(() => {
 });
 
 onMounted(() => {
-  // Pré-charger les comptes si l'utilisateur est authentifié
-  if (authStore.isAuthenticated) {
-    interactionStore.fetchProductCounts(props.product.id);
-  }
+  // Charger les comptes publics pour tous les visiteurs
+  interactionStore.fetchProductCounts(props.product.id);
 });
 </script>
 

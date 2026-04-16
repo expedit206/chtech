@@ -184,12 +184,10 @@ export const useInteractionStore = defineStore('interactions', () => {
   }
 
   /**
-   * Récupérer les comptes d'un produit
+   * Récupérer les comptes d'un produit (public)
    */
   async function fetchProductCounts(productId) {
     try {
-      if (!authStore.isAuthenticated) return;
-
       const response = await apiClient.get(`/produits/${productId}/counts`);
       
       if (response.data.success) {
@@ -198,7 +196,7 @@ export const useInteractionStore = defineStore('interactions', () => {
 
       return response.data;
     } catch (err) {
-      console.error('Erreur lors de la récupération des comptes:', err);
+      // Silencieux : les comptes sont optionnels pour l'affichage
     }
   }
 
