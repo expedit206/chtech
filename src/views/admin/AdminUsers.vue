@@ -6,7 +6,7 @@
         class="text-2xl font-black"
         :style="{ color: 'var(--color-text-main)' }"
       >
-        Utilisateurs
+        {{ roleFilter === 'vendeur' ? 'Vendeurs' : 'Utilisateurs' }}
       </h1>
       <p class="text-sm mt-1" :style="{ color: 'var(--color-text-sub)' }">
         {{ totalUsers }} utilisateurs enregistrés
@@ -239,16 +239,18 @@
 </template>
 
 <script setup>
-import { ref, onMounted } from "vue";
+import { ref, onMounted, watch } from "vue";
+import { useRoute } from "vue-router";
 import { Search, Users, Trash2 } from "lucide-vue-next";
 
 import apiClient from "../../api/index.js";
 import { CONFIG } from "../../config/index.js";
 
+const route = useRoute();
 const users = ref([]);
 const loading = ref(true);
 const search = ref("");
-const roleFilter = ref("");
+const roleFilter = ref(route.query.role || "");
 const currentPage = ref(1);
 const lastPage = ref(1);
 const totalUsers = ref(0);
@@ -276,6 +278,12 @@ const fetchUsers = async (page = 1) => {
     loading.value = false;
   }
 };
+
+// Re-charger si le paramètre de role change dans l'URL
+watch(() => route.query.role, (newRole) => {
+  roleFilter.value = newRole || "";
+  fetchUsers(1);
+});
 
 const goPage = (p) => {
   if (p >= 1 && p <= lastPage.value) fetchUsers(p);

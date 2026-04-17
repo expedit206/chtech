@@ -698,16 +698,22 @@ const handleShare = async () => {
   }
 };
 
-const handleContactSeller = () => {
+const handleContactSeller = async () => {
   if (!authStore.isAuthenticated) {
     alert.promptLogin(router, route.fullPath);
     return;
   }
 
-  // BUSINESS LOGIC: All product chats go to the Administrator
-  const adminId = (CONFIG.ADMIN_UUID && CONFIG.ADMIN_UUID !== "CHANGE_ME_TO_REAL_ADMIN_UUID")
-    ? CONFIG.ADMIN_UUID
-    : product.value.user?.id;
+  // BUSINESS LOGIC: All product chats go to the Administrator by default
+  let adminId = product.value.user?.id;
+  try {
+     const res = await apiClient.get('/chat/support-admin');
+     if (res.data.success && res.data.admin_id) {
+         adminId = res.data.admin_id;
+     }
+  } catch (e) {
+     console.error("Impossible de récupérer l'admin", e);
+  }
 
   if (adminId) {
     interactionStore.recordContact?.(product.value.id);

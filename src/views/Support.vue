@@ -98,13 +98,13 @@
             Réponse moyenne en moins de 2 minutes. Idéal pour les questions
             techniques rapides.
           </p>
-          <RouterLink
-            :to="{ name: 'messages' }"
+          <button
+            @click="openLiveChat"
             class="w-full py-3 bg-white text-[var(--color-primary)] rounded-xl font-bold flex items-center justify-center gap-2 hover:shadow-lg transition-all active:scale-95 relative z-10"
           >
             <MessageSquareText :size="18" />
             Lancer le Chat
-          </RouterLink>
+          </button>
         </div>
 
         <div
@@ -144,9 +144,38 @@ import {
   MessageSquareText,
   Ticket,
 } from "lucide-vue-next";
-import { RouterLink } from "vue-router";
+import { RouterLink, useRouter } from "vue-router";
+import apiClient from "../api/index.js";
+import { useAuthStore } from "../stores/auth.js";
+import { useAlert } from "../composables/useAlert.js";
+
+const router = useRouter();
+const authStore = useAuthStore();
+const alert = useAlert();
 
 const searchQuery = ref("");
+
+const openLiveChat = async () => {
+  if (!authStore.isAuthenticated) {
+    alert.promptLogin(router, '/support');
+    return;
+  }
+
+  try {
+     const res = await apiClient.get('/chat/support-admin');
+     if (res.data.success && res.data.admin_id) {
+         router.push({
+            name: "messages",
+            params: { receiverId: res.data.admin_id }
+         });
+     } else {
+         router.push({ name: 'messages' });
+     }
+  } catch (e) {
+     console.error("Impossible de récupérer l'admin", e);
+     router.push({ name: 'messages' });
+  }
+};
 
 const faqs = ref([
   {
