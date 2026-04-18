@@ -21,9 +21,9 @@
           {{ product.category?.nom || "Autre" }}</span>
       </div>
 
-      <div v-if="showActions" class="absolute right-2 top-2 flex flex-col gap-3" @click.stop>
+      <div v-if="showActions" class="absolute right-2 top-2 flex flex-col gap-3" @click.stop.prevent>
         <div v-for="item in filteredInteractions" :key="item.key" class="flex flex-col items-center">
-          <button @click.stop="item.action" class="flex flex-col items-center transition-all active:scale-75">
+          <button type="button" @click.stop.prevent="item.action" class="flex flex-col items-center transition-all active:scale-75">
             <component :is="item.icon" :size="16" stroke-width="3" :style="{
               color: item.active?.() ? '#ff4757' : '#ffffff',
               fill: item.active?.() ? '#ff4757' : 'none',

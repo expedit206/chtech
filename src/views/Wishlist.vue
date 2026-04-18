@@ -32,7 +32,6 @@
         :product="product"
         :show-views="false"
         :show-share="false"
-        @click="goToProduct(product.slug || product.id)"
       />
     </div>
     <!-- Empty state -->
@@ -94,10 +93,6 @@ useSeo({
 const interactionStore = useInteractionStore();
 const router = useRouter();
 const isLoading = ref(true);
-
-const goToProduct = (slugOrId) => {
-  router.push({ name: "DetailProduit", params: { slug: slugOrId } });
-};
 
 const favorites = computed(() => {
   return (interactionStore.favorites || []).map((p) => ({

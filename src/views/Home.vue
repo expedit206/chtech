@@ -68,8 +68,7 @@
         </button>
       </div>
 
-      <ProductCard v-else v-for="product in productsPart1" :key="product.id" :product="product"
-        @click="goToProduct(product.slug || product.id)" />
+      <ProductCard v-else v-for="product in productsPart1" :key="product.id" :product="product" />
     </div>
 
     <!-- Infinite scroll indicator -->
