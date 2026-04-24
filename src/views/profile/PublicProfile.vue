@@ -82,8 +82,7 @@
             <!-- Products Grid -->
             <div v-else-if="activeTab === 'products'"
                 class="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 gap-6">
-                <ProductCard v-for="product in products" :key="product.id" :product="product"
-                    @click="router.push({ name: 'DetailProduit', params: { slug: product.slug || product.id } })" />
+                <ProductCard v-for="product in products" :key="product.id" :product="product" />
                 <div v-if="products.length === 0" class="col-span-full py-20 text-center opacity-40">
                     <i class="fas fa-box-open text-6xl mb-4"></i>
                     <p class="font-bold">Aucun produit en vente pour le moment.</p>
