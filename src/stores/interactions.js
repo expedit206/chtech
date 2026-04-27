@@ -108,7 +108,6 @@ export const useInteractionStore = defineStore('interactions', () => {
         if (response.data.data && response.data.data.counts) {
           productCounts.value[productId] = response.data.data.counts;
         }
-        flash.success(wasFavorited ? "Retiré des favoris" : "Ajouté aux favoris");
         return response.data;
       } else {
         throw new Error("Action non confirmée");
@@ -137,16 +136,10 @@ export const useInteractionStore = defineStore('interactions', () => {
         shared_at: new Date().toISOString()
       });
 
-      // Copier le lien dans le presse-papiers si l'API native le supporte
-      const productUrl = `${window.location.origin}/produits/${productId}`;
-      if (navigator.clipboard) {
-        await navigator.clipboard.writeText(productUrl);
-        flash.success("Lien copié dans le presse-papiers !");
-      }
-
       return response;
     } catch (err) {
-      flash.error("Erreur lors du partage");
+      // Silencieux pour le partage ou log discret
+      console.error("Erreur lors de l'enregistrement du partage:", err);
       throw err;
     }
   }

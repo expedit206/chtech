@@ -206,12 +206,8 @@ const handleShare = async () => {
         await interactionStore.shareProduct(props.product.id);
       } else {
         // Fallback: copier l'URL et enregistrer
-        await interactionStore.shareProduct(props.product.id);
         navigator.clipboard.writeText(productUrl);
-        alert.success({
-          title: "Lien copié",
-          message: "Le lien du produit a été copié dans votre presse-papiers."
-        });
+        await interactionStore.shareProduct(props.product.id);
       }
   } catch (err) {
     if (err.name !== "AbortError") {
