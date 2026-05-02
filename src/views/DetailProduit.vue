@@ -989,9 +989,9 @@ const shareProfile = async (user) => {
   // Préparation des données
   // Préparation des données - ON UTILISE .nom ICI AUSSI
   const shareData = {
-    title: `Profil de ${user.nom || "Vendeur"}`, // Correction ici
+    title: `Profil de ${user.nom || "Vendeur"}`, 
     text: `Découvrez le profil de ${user.nom || "Vendeur"} sur Sasayee`, // Et ici
-    url: `${window.location.origin}/profile/${user.id}`,
+    url: `${window.location.origin}/profile/${user.id}/public`,
   };
 
   // 1. Tentative de partage natif (Mobile)

@@ -1,5 +1,7 @@
 <script setup lang="ts">
 import { CONFIG } from "../config/index.js";
+import router from "../router/index.js";
+// import router from "vue-router";
 import FooterActions from "./FooterActions.vue";
 import { Facebook, Twitter, Instagram, Linkedin, Send } from "lucide-vue-next";
 import { RouterLink } from "vue-router";
@@ -7,25 +9,25 @@ import { RouterLink } from "vue-router";
 
 <template>
   <footer
-    class="mt-20 border-t"
+    class="mt-10 border-t"
     :style="{
       backgroundColor: 'var(--color-surface)',
       borderColor: 'var(--color-border)',
       color: 'var(--color-text-main)',
     }"
   >
-  
-
     <div
-      class="max-w-7xl mx-auto px-4 py-16 grid grid-cols-2 md:grid-cols-4 gap-12"
+      class="max-w-7xl mx-auto px-4 py-4 grid grid-cols-2 md:grid-cols-4 gap-12"
     >
       <div class="col-span-2 md:col-span-1">
         <div class="mb-6">
+          <router-link :to="{ name: 'home' }" class="inline-block">
           <img
             :src="CONFIG.LOGO_URL"
             alt="SASAYEE Logo"
             class="h-16 md:h-20 w-auto object-contain"
           />
+          </router-link>
         </div>
         <p class="text-sm leading-relaxed opacity-70 mb-6">
           La marketplace de référence au Cameroun pour acheter et vendre en
@@ -56,7 +58,6 @@ import { RouterLink } from "vue-router";
       <div>
         <h4 class="font-bold mb-6">Acheter</h4>
         <ul class="space-y-4 text-sm opacity-70">
-         
           <li>
             <RouterLink
               :to="{ name: 'Support' }"
@@ -73,8 +74,6 @@ import { RouterLink } from "vue-router";
           </li>
         </ul>
       </div>
-
-    
 
       <div>
         <h4 class="font-bold mb-6">Paiement sécurisé</h4>
@@ -138,7 +137,7 @@ import { RouterLink } from "vue-router";
       }"
     >
       <div
-        class="max-w-7xl mx-auto px-4 flex flex-col md:row justify-between items-center gap-4 text-[10px] uppercase tracking-widest opacity-60"
+        class="max-w-7xl mx-auto px-4 flex flex-col md:row justify-between items-center gap-4 text-[10px]  tracking-widest opacity-60"
       >
         <p>© {{ new Date().getFullYear() }} SASAYEE. TOUS DROITS RÉSERVÉS.</p>
         <div class="flex gap-6">

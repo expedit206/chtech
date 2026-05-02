@@ -102,13 +102,7 @@
         Laisser un message
       </span>
     </button>
-
-    <!-- <button
-      @click="scrollToTop"
-      class="w-10 h-10 rounded-2xl flex items-center justify-center shadow-lg transition-all hover:-translate-y-1 active:scale-90 bg-[var(--color-primary)] text-white shadow-[var(--color-primary)]/20"
-    >
-      <ArrowUp :stroke-width="3" :size="20" />
-    </button> -->
+    <!-- voici les ansition du code... -->
 
     <Transition name="fade-slide">
       <button
