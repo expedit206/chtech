@@ -49,8 +49,8 @@ const routes = [
       },
       {
         path: "orders", // Correspond à /profile/orders
-        name: "Orders",
-        component: () => import("../views/Orders.vue"),
+        name: "my-orders",
+        component: () => import("../views/profile/MyOrders.vue"),
       },
       {
         path: "wishlist", // Correspond à /profile/wishlist
@@ -66,11 +66,6 @@ const routes = [
         path: "support",
         name: "Support",
         component: () => import("../views/Support.vue"),
-      },
-      {
-        path: "my-orders",
-        name: "my-orders",
-        component: () => import("../views/profile/MyOrders.vue"),
       },
       {
         path: "vendeur-orders",
@@ -148,6 +143,11 @@ const routes = [
       path: "finance",
       name: "admin-finance",
       component: () => import("../views/admin/AdminFinance.vue"),
+    },
+    {
+      path: "orders",
+      name: "admin-orders",
+      component: () => import("../views/admin/AdminOrders.vue"),
     },
     {
       path: "broadcast",

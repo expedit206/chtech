@@ -77,6 +77,21 @@
             <span class="tooltip-text">Favoris</span>
           </router-link>
 
+          <!-- Cart Button -->
+          <button
+            @click="cartStore.isDrawerOpen = true"
+            class="w-8 h-8 rounded-full flex items-center justify-center transition-all hover:bg-black/5 relative group"
+            :style="{ color: 'var(--color-text-main)' }"
+          >
+            <ShoppingCart :size="20" :stroke-width="3" />
+            <span v-if="cartStore.totalItems > 0" 
+              class="absolute -top-1 -right-1 min-w-[16px] h-[16px] bg-red-500 text-white text-[9px] font-black rounded-full flex items-center justify-center px-0.5 border border-white"
+            >
+              {{ cartStore.totalItems > 99 ? '99+' : cartStore.totalItems }}
+            </span>
+            <span class="tooltip-text">Panier</span>
+          </button>
+
           <button
             @click="toggleTheme"
             class="w-8 h-8 rounded-full flex items-center justify-center transition-colors hover:bg-black/5 relative group"
@@ -543,7 +558,9 @@ import {
   History,
   ArrowRight,
   Briefcase,
+  ShoppingCart,
 } from "lucide-vue-next";
+import { useCartStore } from "../stores/cart.js";
 import apiClient from "../api/index.js";
 
 const isMobileSearchOpen = ref(false);
@@ -560,6 +577,7 @@ const alertStore = useAlertStore();
 const route = useRoute();
 const router = useRouter();
 const { theme, toggleTheme } = useTheme();
+const cartStore = useCartStore();
 
 const handleAddProductClick = () => {
   if (auth.isVendeur || auth.isAdmin) {

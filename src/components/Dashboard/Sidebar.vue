@@ -151,7 +151,7 @@ const menuSections = computed(() => {
       {
         name: "Mes Commandes",
         icon: ShoppingBag,
-        route: { name: "Orders" },
+        route: { name: "my-orders" },
       },
       { name: "Mes Favoris", icon: Star, route: { name: "Wishlist" } },
     ],
@@ -164,6 +164,7 @@ const menuSections = computed(() => {
       items: [
         { name: "Gestion Globale", icon: ShieldCheck, route: { name: "admin-dashboard" } },
         { name: "Utilisateurs", icon: Users, route: { name: "admin-users" } },
+        { name: "Commandes", icon: ShoppingBag, route: { name: "admin-orders" } },
         { name: "Vendeurs", icon: Store, route: { name: "admin-users", query: { role: 'vendeur' } } },
         { name: "Demandes Vendeurs", icon: PackageCheck, route: { name: "admin-seller-requests" } },
         { name: "Produits", icon: Package, route: { name: "admin-products" } },

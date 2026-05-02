@@ -10,7 +10,7 @@ export function useSeo(options = {}) {
   });
 
   const description = computed(() => unref(options.description));
-  const image = computed(() => unref(options.image) || 'https://SASAYEE.com/og-image.jpg');
+  const image = computed(() => unref(options.image) || 'https://sasayee.com/logo.png');
   const url = computed(() => unref(options.url) || (typeof window !== 'undefined' ? window.location.href : ''));
   const type = computed(() => unref(options.type) || 'website');
 
