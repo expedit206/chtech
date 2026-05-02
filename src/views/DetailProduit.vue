@@ -20,7 +20,7 @@
           @click="closeLightbox"
           class="absolute top-4 right-4 z-10 w-10 h-10 rounded-full flex items-center justify-center text-white transition-all hover:scale-110 hover:bg-white/20"
         >
-          <i class="fas fa-times text-lg"></i>
+          <X :size="18" />
         </button>
 
         <!-- Counter -->
@@ -36,7 +36,8 @@
           @click="prevLightbox"
           class="absolute left-3 md:left-6 z-10 w-11 h-11 rounded-full flex items-center justify-center text-white border border-white/20 transition-all hover:bg-white/20 hover:scale-110"
         >
-          <i class="fas fa-chevron-left"></i>
+          <!-- <i class="fas fa-chevron-left"></i> -->
+          <ChevronLeft :size="18" />
         </button>
 
         <!-- Main image -->
@@ -56,7 +57,7 @@
           @click="nextLightbox"
           class="absolute right-3 md:right-6 z-10 w-11 h-11 rounded-full flex items-center justify-center text-white border border-white/20 transition-all hover:bg-white/20 hover:scale-110"
         >
-          <i class="fas fa-chevron-right"></i>
+          <ChevronRight :size="18" />
         </button>
 
         <!-- Thumbnail strip (lightbox bottom) -->
@@ -209,7 +210,7 @@
                   backdrop-filter: blur(6px);
                 "
               >
-                <i class="fas fa-search-plus"></i>
+                <Search :size="18" />
                 Voir en grand
               </div>
             </div>
@@ -224,7 +225,8 @@
                 backdrop-filter: blur(4px);
               "
             >
-              <i class="fas fa-chevron-left text-xs"></i>
+              <!-- <i class="fas fa-chevron-left text-xs"></i> -->
+              <ChevronLeft :size="14" />
             </button>
             <button
               v-if="product.photos.length > 1"
@@ -235,7 +237,8 @@
                 backdrop-filter: blur(4px);
               "
             >
-              <i class="fas fa-chevron-right text-xs"></i>
+              <!-- <i class="fas fa-chevron-right text-xs"></i> -->
+              <ChevronRight :size="14" />
             </button>
 
             <!-- Photo count badge -->
@@ -405,11 +408,12 @@
         </div>
 
         <!-- Actions -->
-        <div class="flex gap-3 pt-1">
+        <div class="flex gap-3 pt-1 items-center">
           <!-- Favorite -->
+
           <button
             @click="handleToggleFavorite"
-            class="py-2 px-2 rounded-full font-bold border-2 transition-all active:scale-95 flex items-center justify-center gap-2 text-xs shadow-md hover:shadow-lg hover:-translate-y-0.5"
+            class="w-9 h-9 rounded-full border-2 transition-all active:scale-95 flex items-center justify-center shadow-md hover:shadow-lg hover:-translate-y-0.5"
             :class="isFavorited ? 'bg-red-500/10' : ''"
             :style="{
               borderColor: isFavorited ? '#ef4444' : 'var(--color-border)',
@@ -513,7 +517,6 @@
                   title="Partager le profil du vendeur"
                   class="w-6 h-6 rounded-full flex items-center justify-center transition"
                 >
-                  <!-- <i class="fas fa-share-alt"></i> -->
                   <Share2 :size="16" :stroke-width="3" class="text-bold" />
                 </button>
               </div>
@@ -521,7 +524,6 @@
                 class="text-xs flex items-center gap-1"
                 :style="{ color: 'var(--color-text-sub)' }"
               >
-                <!-- <i class="fas fa-map-marker-alt text-[10px]"></i> -->
                 <MapPin size="14" class="text-bold text-xs" />
 
                 {{ product.ville || "Cameroun" }}
@@ -540,7 +542,6 @@
               color: 'var(--color-primary)',
             }"
           >
-            <!-- <i class="fas fa-shopping-bag"></i> -->
             <ShoppingCart :size="20" :stroke-width="3" />
             Acheter ce produit
           </button>
@@ -658,6 +659,10 @@ import {
   ShoppingCart,
   ShoppingBag,
   Share2,
+  X,
+  ChevronLeft,
+  Search,
+  ChevronRight,
   MapPin,
 } from "lucide-vue-next";
 import { useAlert } from "../composables/useAlert.js";

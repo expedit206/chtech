@@ -74,7 +74,7 @@
     <!-- Infinite scroll indicator -->
     <div v-if="productStore.loadingMore" class="flex justify-center pb-12">
       <div class="flex items-center gap-2 px-6 py-3 rounded-2xl bg-[var(--color-surface)] border border-[var(--color-border)] shadow-xl">
-        <div class="w-5 h-5 border-2 border-[var(--color-primary)]/30 border-t-[var(--color-primary)] rounded animate-spin"></div>
+        <div class="w-5 h-5 border-2 border-[var(--color-primary)]/30 border-t-[var(--color-primary)] rounded-full animate-spin"></div>
         <span class="text-sm font-bold text-[var(--color-text-main)]">Chargement des pépites...</span>
       </div>
     </div>
