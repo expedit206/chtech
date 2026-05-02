@@ -643,7 +643,8 @@ import { CONFIG } from "../config/index.js";
 import { ref, computed, onMounted, onUnmounted, nextTick, watch } from "vue";
 import { useRoute, useRouter, RouterLink } from "vue-router";
 import { useProductStore } from "../stores/products.js";
-
+// importtation d eapiclent
+import apiClient from "../api/index.js";
 import { useInteractionStore } from "../stores/interactions.js";
 import { useAuthStore } from "../stores/auth.js";
 import { useMessageStore } from "../stores/messages.js";
