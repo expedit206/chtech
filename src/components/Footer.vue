@@ -1,11 +1,6 @@
 <script setup lang="ts">
+// import { CONFIG } from "../config/index.js";
 import { CONFIG } from "../config/index.js";
-<<<<<<< HEAD
-import router from "../router/index.js";
-// import router from "vue-router";
-import FooterActions from "./FooterActions.vue";
-=======
->>>>>>> c88e66dc700df50000beeb186da75fc39d003723
 import { Facebook, Twitter, Instagram, Linkedin, Send } from "lucide-vue-next";
 import { RouterLink } from "vue-router";
 </script>
@@ -24,12 +19,12 @@ import { RouterLink } from "vue-router";
     >
       <div class="col-span-2 md:col-span-1">
         <div class="mb-6">
-          <router-link :to="{ name: 'home' }" class="inline-block">
-          <img
-            :src="CONFIG.LOGO_URL"
-            alt="SASAYEE Logo"
-            class="h-16 md:h-20 w-auto object-contain"
-          />
+          <router-link :to="{ name: 'Home' }" class="inline-block">
+            <img
+              :src="CONFIG.LOGO_URL"
+              alt="SASAYEE Logo"
+              class="h-16 md:h-20 w-auto object-contain"
+            />
           </router-link>
         </div>
         <p class="text-sm leading-relaxed opacity-70 mb-6">
@@ -140,7 +135,7 @@ import { RouterLink } from "vue-router";
       }"
     >
       <div
-        class="max-w-7xl mx-auto px-4 flex flex-col md:row justify-between items-center gap-4 text-[10px]  tracking-widest opacity-60"
+        class="max-w-7xl mx-auto px-4 flex flex-col md:row justify-between items-center gap-4 text-[10px] tracking-widest opacity-60"
       >
         <p>© {{ new Date().getFullYear() }} SASAYEE. TOUS DROITS RÉSERVÉS.</p>
         <div class="flex gap-6">

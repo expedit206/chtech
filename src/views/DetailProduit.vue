@@ -348,7 +348,7 @@
               <Eye :size="14" :stroke-width="3" />
               <span>{{ formatNumber(displayCounts.clics) }} vues</span>
             </div>
-            <div class="flex items-center gap-1.5">
+            <div class="flex items-center gap-1.5 rounded-full">
               <Heart :size="14" :stroke-width="3" />
               <span>{{ formatNumber(displayCounts.favorites) }} favoris</span>
             </div>
@@ -409,17 +409,25 @@
           <!-- Favorite -->
           <button
             @click="handleToggleFavorite"
-            class="py-3 px-4 rounded-xl font-bold border-2 transition-all active:scale-95 flex items-center justify-center gap-2 text-xs shadow-md hover:shadow-lg hover:-translate-y-0.5"
+            class="py-2 px-2 rounded-full font-bold border-2 transition-all active:scale-95 flex items-center justify-center gap-2 text-xs shadow-md hover:shadow-lg hover:-translate-y-0.5"
             :class="isFavorited ? 'bg-red-500/10' : ''"
             :style="{
               borderColor: isFavorited ? '#ef4444' : 'var(--color-border)',
               color: isFavorited ? '#ef4444' : 'var(--color-text-sub)',
             }"
           >
-            <Heart :size="18" :stroke-width="3" :class="{ 'fill-current': isFavorited }" />
+            <Heart
+              :size="18"
+              :stroke-width="3"
+              :class="{ 'fill-current': isFavorited }"
+            />
           </button>
 
-          <SocialShare v-if="product.id" :title="product.name" :url="configUrl + route.fullPath" />
+          <SocialShare
+            v-if="product.id"
+            :title="product.name"
+            :url="configUrl + route.fullPath"
+          />
 
           <!-- Add to cart -->
           <button
@@ -428,15 +436,21 @@
             class="flex-1 py-3 rounded-xl font-bold border-2 transition-all active:scale-95 flex items-center justify-center gap-2 text-xs shadow-md hover:shadow-lg hover:-translate-y-0.5 relative overflow-hidden"
             :class="inCart ? 'bg-[var(--color-primary)]/10' : ''"
             :style="{
-              borderColor: product.quantity === 0 ? 'var(--color-border)' : 'var(--color-primary)',
-              color: product.quantity === 0 ? 'var(--color-text-sub)' : 'var(--color-primary)',
+              borderColor:
+                product.quantity === 0
+                  ? 'var(--color-border)'
+                  : 'var(--color-primary)',
+              color:
+                product.quantity === 0
+                  ? 'var(--color-text-sub)'
+                  : 'var(--color-primary)',
               opacity: product.quantity === 0 ? 0.5 : 1,
             }"
           >
             <ShoppingCart :size="16" :stroke-width="3" />
             <Transition name="btn-text" mode="out-in">
               <span :key="inCart ? 'in' : 'out'">
-                {{ inCart ? 'Dans le panier ✓' : 'Ajouter au panier' }}
+                {{ inCart ? "Dans le panier ✓" : "Ajouter au panier" }}
               </span>
             </Transition>
           </button>
@@ -445,8 +459,14 @@
           <button
             @click="handleContactSeller"
             :disabled="product.quantity === 0"
-            class="flex-1 py-3 rounded-xl font-bold text-white transition-all active:scale-95 flex items-center justify-center gap-2 text-xs shadow-md hover:shadow-lg hover:opacity-90 hover:-translate-y-0.5"
-            :style="{ backgroundColor: product.quantity === 0 ? 'var(--color-text-sub)' : 'var(--color-primary)', opacity: product.quantity === 0 ? 0.5 : 1 }"
+            class="flex-1 py-3 px-2 rounded-xl font-bold text-white transition-all active:scale-95 flex items-center justify-center gap-2 text-xs shadow-md hover:shadow-lg hover:opacity-90 hover:-translate-y-0.5"
+            :style="{
+              backgroundColor:
+                product.quantity === 0
+                  ? 'var(--color-text-sub)'
+                  : 'var(--color-primary)',
+              opacity: product.quantity === 0 ? 0.5 : 1,
+            }"
           >
             <ShoppingBag :size="16" :stroke-width="3" />
             Acheter maintenant
@@ -493,14 +513,17 @@
                   title="Partager le profil du vendeur"
                   class="w-6 h-6 rounded-full flex items-center justify-center transition"
                 >
-                  <i class="fas fa-share-alt"></i>
+                  <!-- <i class="fas fa-share-alt"></i> -->
+                  <Share2 :size="16" :stroke-width="3" class="text-bold" />
                 </button>
               </div>
               <p
                 class="text-xs flex items-center gap-1"
                 :style="{ color: 'var(--color-text-sub)' }"
               >
-                <i class="fas fa-map-marker-alt text-[10px]"></i>
+                <!-- <i class="fas fa-map-marker-alt text-[10px]"></i> -->
+                <MapPin size="14" class="text-bold text-xs" />
+
                 {{ product.ville || "Cameroun" }}
                 <span class="ml-1 text-yellow-500"
                   >⭐ {{ product.rating.toFixed(1) || "4.8" }}</span
@@ -517,7 +540,8 @@
               color: 'var(--color-primary)',
             }"
           >
-            <i class="fas fa-shopping-bag"></i>
+            <!-- <i class="fas fa-shopping-bag"></i> -->
+            <ShoppingCart :size="20" :stroke-width="3" />
             Acheter ce produit
           </button>
           <div
@@ -621,11 +645,21 @@ import { useProductStore } from "../stores/products.js";
 
 import { useInteractionStore } from "../stores/interactions.js";
 import { useAuthStore } from "../stores/auth.js";
-import { useMessageStore } from '../stores/messages.js';
-import { useCartStore } from '../stores/cart.js';
-import ProductCard from '../components/ProductCard.vue';
+import { useMessageStore } from "../stores/messages.js";
+import { useCartStore } from "../stores/cart.js";
+import ProductCard from "../components/ProductCard.vue";
 import SocialShare from "../components/SocialShare.vue";
-import { ArrowLeft, Heart, Star, Forward, Eye, ShoppingCart, ShoppingBag } from 'lucide-vue-next';
+import {
+  ArrowLeft,
+  Heart,
+  Star,
+  Forward,
+  Eye,
+  ShoppingCart,
+  ShoppingBag,
+  Share2,
+  MapPin,
+} from "lucide-vue-next";
 import { useAlert } from "../composables/useAlert.js";
 import { useSeo } from "../composables/useSeo.js";
 import { useFlash } from "../composables/useFlash";
@@ -643,11 +677,13 @@ const interactionStore = useInteractionStore();
 const authStore = useAuthStore();
 const messageStore = useMessageStore();
 
-const loading          = ref(true);
-const cartStore        = useCartStore();
+const loading = ref(true);
+const cartStore = useCartStore();
 
 // Computed: is this product already in cart?
-const inCart       = computed(() => product.value.id ? cartStore.isInCart(product.value.id) : false);
+const inCart = computed(() =>
+  product.value.id ? cartStore.isInCart(product.value.id) : false,
+);
 const selectedPhotoIndex = ref(0);
 const lightboxEl = ref(null);
 const shopProducts = ref([]);
@@ -946,13 +982,13 @@ const handleAddToCart = () => {
 
   // Build the raw product shape expected by cartStore.addItem()
   cartStore.addItem({
-    id:       product.value.id,
-    nom:      product.value.name,
-    slug:     route.params.slug,
-    prix:     product.value.price_raw,
-    photos:   product.value.photos,
+    id: product.value.id,
+    nom: product.value.name,
+    slug: route.params.slug,
+    prix: product.value.price_raw,
+    photos: product.value.photos,
     quantite: product.value.quantity,
-    user_id:  product.value.user?.id ?? null,
+    user_id: product.value.user?.id ?? null,
   });
 
   // Open the drawer so user sees the cart
@@ -1034,7 +1070,7 @@ const shareProfile = async (user) => {
   // Préparation des données
   // Préparation des données - ON UTILISE .nom ICI AUSSI
   const shareData = {
-    title: `Profil de ${user.nom || "Vendeur"}`, 
+    title: `Profil de ${user.nom || "Vendeur"}`,
     text: `Découvrez le profil de ${user.nom || "Vendeur"} sur Sasayee`, // Et ici
     url: `${window.location.origin}/profile/${user.id}/public`,
   };
