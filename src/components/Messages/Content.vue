@@ -49,26 +49,83 @@
             <div
               class="relative shadow-sm break-words overflow-hidden transition-all"
               :class="[
-                ['text', 'audio', 'info', 'alert', 'promo'].includes(message.type) ||
-                (message.attachment_url && message.content)
-                  ? message.sender_id === authStore.user.id
-                    ? 'rounded-2xl rounded-tr-none px-4 py-3 text-white'
-                    : 'rounded-2xl rounded-tl-none px-4 py-3 border'
-                  : 'rounded-2xl p-0 bg-transparent shadow-none',
+                message.type === 'cart'
+                  ? 'rounded-2xl p-0 bg-transparent shadow-none w-full'
+                  : ['text', 'audio', 'info', 'alert', 'promo'].includes(message.type) ||
+                    (message.attachment_url && message.content)
+                    ? message.sender_id === authStore.user.id
+                      ? 'rounded-2xl rounded-tr-none px-4 py-3 text-white'
+                      : 'rounded-2xl rounded-tl-none px-4 py-3 border'
+                    : 'rounded-2xl p-0 bg-transparent shadow-none',
               ]"
               :style="
-                ['text', 'audio', 'info', 'alert', 'promo'].includes(message.type) ||
-                (message.attachment_url && message.content)
-                  ? message.sender_id === authStore.user.id
-                    ? { backgroundColor: 'var(--color-primary)' }
-                    : {
-                        backgroundColor: 'var(--color-surface)',
-                        borderColor: 'var(--color-border)',
-                        color: 'var(--color-text-main)',
-                      }
-                  : {}
+                message.type === 'cart'
+                  ? {}
+                  : ['text', 'audio', 'info', 'alert', 'promo'].includes(message.type) ||
+                    (message.attachment_url && message.content)
+                    ? message.sender_id === authStore.user.id
+                      ? { backgroundColor: 'var(--color-primary)' }
+                      : {
+                          backgroundColor: 'var(--color-surface)',
+                          borderColor: 'var(--color-border)',
+                          color: 'var(--color-text-main)',
+                        }
+                    : {}
               "
             >
+              <!-- CART message -->
+              <div
+                v-if="message.type === 'cart'"
+                class="w-full rounded-2xl overflow-hidden border shadow-md"
+                :style="{ backgroundColor: 'var(--color-surface)', borderColor: 'var(--color-primary)', minWidth: '220px' }"
+              >
+                <!-- Additional Cart Content (Default Message / Address) - MOVED TO TOP -->
+                <div 
+                  v-if="message.content && !message.content.includes('🛒 Récapitulatif')" 
+                  class="px-4 py-3 border-b bg-[var(--color-bg)] text-sm leading-relaxed whitespace-pre-wrap flex items-start gap-2" 
+                  :style="{ borderColor: 'var(--color-border)', color: 'var(--color-text-main)' }"
+                >
+                  <p class="font-medium">"{{ message.content }}"</p>
+                </div>
+
+                <div class="px-4 py-3 flex items-center gap-2" :style="{ backgroundColor: 'var(--color-primary)' }">
+                  <i class="fas fa-shopping-cart text-white text-sm"></i>
+                  <span class="text-white font-black text-sm">
+                    Panier — {{ (message.cart_data || []).length }} article{{ (message.cart_data || []).length > 1 ? 's' : '' }}
+                  </span>
+                </div>
+
+                <ul class="divide-y" :style="{ borderColor: 'var(--color-border)' }">
+                  <li
+                    v-for="item in (message.cart_data || [])"
+                    :key="item.productId"
+                    class="flex items-center gap-3 px-4 py-3"
+                  >
+                    <img
+                      v-if="item.image"
+                      :src="item.image"
+                      class="w-10 h-10 rounded-lg object-cover border shrink-0"
+                      :style="{ borderColor: 'var(--color-border)' }"
+                    />
+                    <div class="flex-1 min-w-0">
+                      <p class="text-xs font-bold truncate" :style="{ color: 'var(--color-text-main)' }">{{ item.name }}</p>
+                      <p class="text-[10px] font-medium" :style="{ color: 'var(--color-text-sub)' }">
+                        {{ item.quantity }} × {{ Number(item.priceRaw).toLocaleString('fr-FR') }} FCFA
+                      </p>
+                    </div>
+                    <span class="text-xs font-black shrink-0" :style="{ color: 'var(--color-primary)' }">
+                      {{ (item.quantity * item.priceRaw).toLocaleString('fr-FR') }}
+                    </span>
+                  </li>
+                </ul>
+                <div class="px-4 py-3 flex justify-between items-center border-t" :style="{ borderColor: 'var(--color-border)' }">
+                  <span class="text-xs font-bold" :style="{ color: 'var(--color-text-sub)' }">Total estimé</span>
+                  <span class="text-sm font-black" :style="{ color: 'var(--color-primary)' }">
+                    {{ (message.cart_data || []).reduce((s, i) => s + i.priceRaw * i.quantity, 0).toLocaleString('fr-FR') }} FCFA
+                  </span>
+                </div>
+              </div>
+
               <!-- Product Link -->
               <router-link
                 v-if="message.product?.id"

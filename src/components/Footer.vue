@@ -1,8 +1,11 @@
 <script setup lang="ts">
 import { CONFIG } from "../config/index.js";
+<<<<<<< HEAD
 import router from "../router/index.js";
 // import router from "vue-router";
 import FooterActions from "./FooterActions.vue";
+=======
+>>>>>>> c88e66dc700df50000beeb186da75fc39d003723
 import { Facebook, Twitter, Instagram, Linkedin, Send } from "lucide-vue-next";
 import { RouterLink } from "vue-router";
 </script>
@@ -153,6 +156,5 @@ import { RouterLink } from "vue-router";
         </div>
       </div>
     </div>
-    <FooterActions />
   </footer>
 </template>

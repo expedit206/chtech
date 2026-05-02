@@ -62,12 +62,25 @@
       </div>
       <!-- Actions -->
       <!-- <div class="mt-auto flex flex-col gap-2"> -->
-      <div v-if="showFooter" class="flex flex-col gap-1 mt-auto overflow-hidden">
+      <div v-if="showFooter" class="flex items-center gap-2 mt-auto overflow-hidden">
+     
         <button
-          class="w-full flex items-center justify-center gap-2 md:py-2 py-1 px-1 rounded-xl font-bold text-[11px] text-white transition active:scale-95 shadow-sm hover:opacity-90 h-8 mt-2"
+          class="flex-1 flex items-center justify-center gap-2 md:py-2 py-1 px-1 rounded-lg font-bold text-[11px] text-white transition active:scale-95 shadow-sm hover:opacity-90 h-8 mt-2"
            style="background: var(--color-primary)">
           <Eye :size="16" stroke-width="2.5" class="hidden xs:flex" />
           Voir plus
+        </button>
+           <button
+          @click.stop.prevent="handleAddToCart"
+          :disabled="product.quantity === 0"
+          class="flex-shrink-0 flex items-center justify-center w-10 h-8 rounded-xl border-2 transition active:scale-95 shadow-sm mt-2 disabled:opacity-50"
+          :style="{
+            borderColor: 'var(--color-primary)',
+            color: 'var(--color-primary)',
+          }"
+          title="Ajouter au panier"
+        >
+          <ShoppingCart :size="16" stroke-width="2.5" />
         </button>
       </div>
     </div>
@@ -84,7 +97,9 @@ import {
   Heart,
   Forward,
   ArrowRight,
+  ShoppingCart,
 } from "lucide-vue-next";
+import { useCartStore } from "../stores/cart.js";
 import { useAlert } from "../composables/useAlert.js";
 
 const alert = useAlert();
@@ -93,6 +108,7 @@ const route = useRoute();
 
 const interactionStore = useInteractionStore();
 const authStore = useAuthStore();
+const cartStore = useCartStore();
 // localViews
 const localViews = ref(null);
 const localCounts = ref({
@@ -206,18 +222,30 @@ const handleShare = async () => {
         await interactionStore.shareProduct(props.product.id);
       } else {
         // Fallback: copier l'URL et enregistrer
-        await interactionStore.shareProduct(props.product.id);
         navigator.clipboard.writeText(productUrl);
-        alert.success({
-          title: "Lien copié",
-          message: "Le lien du produit a été copié dans votre presse-papiers."
-        });
+        await interactionStore.shareProduct(props.product.id);
       }
   } catch (err) {
     if (err.name !== "AbortError") {
       console.error("Erreur partage:", err);
     }
   }
+};
+
+const handleAddToCart = () => {
+  if (!props.product.id || props.product.quantity === 0) return;
+
+  cartStore.addItem({
+    id: props.product.id,
+    nom: props.product.name,
+    slug: props.product.slug || props.product.id,
+    prix: props.product.price_raw || props.product.prix,
+    photos: [props.product.image],
+    quantite: props.product.quantity || 99,
+    user_id: props.product.user_id,
+  });
+
+  // cartStore.isDrawerOpen = true;
 };
 
 const interactions = computed(() => [

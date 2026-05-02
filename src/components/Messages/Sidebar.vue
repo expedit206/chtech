@@ -39,7 +39,7 @@
         <div class="flex items-center gap-2">
           <!-- Command Link -->
           <router-link
-            :to="{ name: 'Orders' }"
+            :to="{ name: 'my-orders' }"
             class="w-9 h-9 rounded-xl flex items-center justify-center hover:bg-(--color-primary)/10 transition-all group relative mr-1"
             title="Mes Commandes"
           >

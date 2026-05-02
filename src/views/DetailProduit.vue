@@ -406,29 +406,51 @@
 
         <!-- Actions -->
         <div class="flex gap-3 pt-1">
+          <!-- Favorite -->
           <button
             @click="handleToggleFavorite"
-            class="flex-1 py-3 rounded-xl font-bold border-2 transition-all active:scale-95 flex items-center justify-center gap-2 text-xs shadow-md hover:shadow-lg hover:-translate-y-0.5"
+            class="py-3 px-4 rounded-xl font-bold border-2 transition-all active:scale-95 flex items-center justify-center gap-2 text-xs shadow-md hover:shadow-lg hover:-translate-y-0.5"
             :class="isFavorited ? 'bg-red-500/10' : ''"
             :style="{
               borderColor: isFavorited ? '#ef4444' : 'var(--color-border)',
               color: isFavorited ? '#ef4444' : 'var(--color-text-sub)',
             }"
-            :title="isFavorited ? 'Retirer des favoris' : 'Ajouter aux favoris'"
           >
-            <Heart
-              :size="18"
-              :stroke-width="3"
-              :class="{ 'fill-current': isFavorited }"
-            />
-            {{ isFavorited ? "Dans vos favoris" : "Ajouter aux favoris" }}
+            <Heart :size="18" :stroke-width="3" :class="{ 'fill-current': isFavorited }" />
           </button>
 
-          <SocialShare
-            v-if="product.id"
-            :title="product.name"
-            :url="configUrl + route.fullPath"
-          />
+          <SocialShare v-if="product.id" :title="product.name" :url="configUrl + route.fullPath" />
+
+          <!-- Add to cart -->
+          <button
+            @click="handleAddToCart"
+            :disabled="product.quantity === 0"
+            class="flex-1 py-3 rounded-xl font-bold border-2 transition-all active:scale-95 flex items-center justify-center gap-2 text-xs shadow-md hover:shadow-lg hover:-translate-y-0.5 relative overflow-hidden"
+            :class="inCart ? 'bg-[var(--color-primary)]/10' : ''"
+            :style="{
+              borderColor: product.quantity === 0 ? 'var(--color-border)' : 'var(--color-primary)',
+              color: product.quantity === 0 ? 'var(--color-text-sub)' : 'var(--color-primary)',
+              opacity: product.quantity === 0 ? 0.5 : 1,
+            }"
+          >
+            <ShoppingCart :size="16" :stroke-width="3" />
+            <Transition name="btn-text" mode="out-in">
+              <span :key="inCart ? 'in' : 'out'">
+                {{ inCart ? 'Dans le panier ✓' : 'Ajouter au panier' }}
+              </span>
+            </Transition>
+          </button>
+
+          <!-- Buy now -->
+          <button
+            @click="handleContactSeller"
+            :disabled="product.quantity === 0"
+            class="flex-1 py-3 rounded-xl font-bold text-white transition-all active:scale-95 flex items-center justify-center gap-2 text-xs shadow-md hover:shadow-lg hover:opacity-90 hover:-translate-y-0.5"
+            :style="{ backgroundColor: product.quantity === 0 ? 'var(--color-text-sub)' : 'var(--color-primary)', opacity: product.quantity === 0 ? 0.5 : 1 }"
+          >
+            <ShoppingBag :size="16" :stroke-width="3" />
+            Acheter maintenant
+          </button>
         </div>
 
         <!-- Seller Info -->
@@ -599,10 +621,11 @@ import { useProductStore } from "../stores/products.js";
 
 import { useInteractionStore } from "../stores/interactions.js";
 import { useAuthStore } from "../stores/auth.js";
-import { useMessageStore } from "../stores/messages.js";
-import ProductCard from "../components/ProductCard.vue";
+import { useMessageStore } from '../stores/messages.js';
+import { useCartStore } from '../stores/cart.js';
+import ProductCard from '../components/ProductCard.vue';
 import SocialShare from "../components/SocialShare.vue";
-import { ArrowLeft, Heart, Star, Forward, Eye } from "lucide-vue-next";
+import { ArrowLeft, Heart, Star, Forward, Eye, ShoppingCart, ShoppingBag } from 'lucide-vue-next';
 import { useAlert } from "../composables/useAlert.js";
 import { useSeo } from "../composables/useSeo.js";
 import { useFlash } from "../composables/useFlash";
@@ -620,7 +643,11 @@ const interactionStore = useInteractionStore();
 const authStore = useAuthStore();
 const messageStore = useMessageStore();
 
-const loading = ref(true);
+const loading          = ref(true);
+const cartStore        = useCartStore();
+
+// Computed: is this product already in cart?
+const inCart       = computed(() => product.value.id ? cartStore.isInCart(product.value.id) : false);
 const selectedPhotoIndex = ref(0);
 const lightboxEl = ref(null);
 const shopProducts = ref([]);
@@ -912,6 +939,24 @@ const fetchProductData = async () => {
   } finally {
     loading.value = false;
   }
+};
+
+const handleAddToCart = () => {
+  if (!product.value.id || product.value.quantity === 0) return;
+
+  // Build the raw product shape expected by cartStore.addItem()
+  cartStore.addItem({
+    id:       product.value.id,
+    nom:      product.value.name,
+    slug:     route.params.slug,
+    prix:     product.value.price_raw,
+    photos:   product.value.photos,
+    quantite: product.value.quantity,
+    user_id:  product.value.user?.id ?? null,
+  });
+
+  // Open the drawer so user sees the cart
+  cartStore.isDrawerOpen = true;
 };
 
 const handleToggleFavorite = async () => {

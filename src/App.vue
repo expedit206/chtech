@@ -27,8 +27,14 @@
       </main>
 
       <Footer v-if="shouldShowFooter" />
+      <FooterActions />
       <CustomAlertDialog />
     </div>
+
+    <!-- Cart: floating button + drawer (non-admin, authenticated users) -->
+    <template v-if="authStore.isAuthenticated">
+      <CartDrawer />
+    </template>
   </div>
 </template>
 
@@ -37,13 +43,15 @@
 import { onMounted, watch, ref, computed } from "vue";
 import { useRoute } from "vue-router";
 import Footer from "./components/Footer.vue";
+import FooterActions from "./components/FooterActions.vue";
 import Header from "./components/Header.vue";
 import Sidebar from "./components/Dashboard/Sidebar.vue";
 import CustomAlertDialog from "./components/CustomAlertDialog.vue";
-import { useAuthStore } from "./stores/auth.js";
-import { useInteractionStore } from "./stores/interactions.js";
-import { useProductStore } from "./stores/products.js";
-import { useSeo } from "./composables/useSeo.js";
+import { useAuthStore } from './stores/auth.js';
+import { useInteractionStore } from './stores/interactions.js';
+import { useProductStore } from './stores/products.js';
+import { useSeo } from './composables/useSeo.js';
+import CartDrawer from './components/Cart/CartDrawer.vue';
 import NProgress from 'nprogress'
 const authStore = useAuthStore();
 const interactionStore = useInteractionStore();

@@ -1,6 +1,6 @@
 import { CONFIG } from '../config/index.js';
 import { defineStore } from "pinia";
-import { ref, computed, onUnmounted } from "vue";
+import { ref, computed, onUnmounted, watch } from "vue";
 import { useFlash } from '../composables/useFlash.js';
 import { useRouter } from "vue-router";
 import apiClient from "../api/index.js";
@@ -12,17 +12,20 @@ export const useMessageStore = defineStore("message", () => {
   const flash = useFlash();
 
   // State
-  const conversations = ref([]);
-  const messages = ref([]);
+  const conversations  = ref([]);
+  const messages        = ref([]);
   const selectedConversation = ref(null);
-  const isLoading = ref(false);
-  const hasMore = ref(false);
+  const isLoading       = ref(false);
+  const hasMore         = ref(false);
   const hasMoreConversations = ref(false);
   const isLoadingMoreConversations = ref(false);
-  const offset = ref(0);
-  const isSidebarOpen = ref(true);
-  const isMobile = ref(window.innerWidth < 768);
-  const product = ref(null);
+  const offset          = ref(0);
+  const isSidebarOpen   = ref(true);
+  const isMobile        = ref(window.innerWidth < 768);
+  const product         = ref(null);
+  // Cart items to send as a 'cart' message on next chat session
+  const cartItems       = ref(null);  // null = no pending cart
+  const cartMeta        = ref(null);  // { message, deliveryAddress }
   
   // Polling management
   let pollingInterval = null;
@@ -106,6 +109,11 @@ export const useMessageStore = defineStore("message", () => {
          } else {
             const fetched = response.data.conversations;
             fetched.forEach(conv => {
+              const isCurrentlyOpen = selectedConversation.value && String(selectedConversation.value.user_id) === String(conv.user_id) && String(selectedConversation.value.product_id || '') === String(conv.product_id || '');
+              if (isCurrentlyOpen) {
+                 conv.unread_count = 0; // Force to 0 if we are literally looking at it right now
+              }
+
               const idx = conversations.value.findIndex(c => c.user_id === conv.user_id && String(c.product_id || '') === String(conv.product_id || ''));
               if (idx !== -1) {
                  conversations.value[idx] = { ...conversations.value[idx], ...conv };
@@ -119,10 +127,6 @@ export const useMessageStore = defineStore("message", () => {
 
       hasMoreConversations.value = response.data.hasMore || false;
       lastFetchedConversations.value = Date.now();
-
-      if (badgeStore.badgeCounts) {
-        badgeStore.badgeCounts.messages = unreadCount.value;
-      }
     } catch (error) {
       console.error("Erreur fetch conversations", error);
       if (!silent && !loadMore) flash.error("Erreur lors du chargement des conversations");
@@ -219,7 +223,11 @@ export const useMessageStore = defineStore("message", () => {
 
       const convIndex = conversations.value.findIndex(c => String(c.user_id) === String(receiverId) && String(c.product_id || '') === String(productId || ''));
       if (convIndex !== -1) {
-        conversations.value[convIndex].unread_count = 0;
+        if (conversations.value[convIndex].unread_count > 0) {
+           conversations.value[convIndex].unread_count = 0;
+           // If we just entered and there were unread messages, let the server know so they're marked as read
+           markAllMessagesAsRead(receiverId, productId);
+        }
       }
 
     } catch (error) {
@@ -263,36 +271,50 @@ export const useMessageStore = defineStore("message", () => {
     }
   };
 
-  const sendMessage = async (content, type = "text", file = null) => {
+  const sendMessage = async (content, type = 'text', file = null, cartData = null) => {
     if (!selectedConversation.value) return;
 
     const receiverId = selectedConversation.value.user_id;
-    const tempId = -Date.now();
+    const tempId     = -Date.now();
     
-    newMessage.value = "";
+    newMessage.value = '';
     const tempMessage = {
-      id: tempId,
-      sender_id: authStore.user?.id,
+      id:         tempId,
+      sender_id:  authStore.user?.id,
       receiver_id: receiverId,
       product_id: selectedConversation.value.product_id || null,
       content,
       type,
-      is_read: false,
+      cart_data:  cartData || null,
+      is_read:    false,
       created_at: new Date().toISOString(),
       isTemporary: true,
-      product: product.value
+      product:    product.value
     };
 
     messages.value.push(tempMessage);
 
     try {
       const formData = new FormData();
-      formData.append("type", type);
-      if (content) formData.append("content", content);
+      formData.append('type', type);
+      if (content) formData.append('content', content);
       if (selectedConversation.value.product_id) {
-          formData.append("product_id", selectedConversation.value.product_id);
+        formData.append('product_id', selectedConversation.value.product_id);
       }
-      if (product.value) formData.append("product_id", product.value.id);
+      if (product.value) formData.append('product_id', product.value.id);
+      // Append cart_items as JSON string for type='cart'
+      if (cartData && type === 'cart') {
+        formData.append('cart_items', JSON.stringify(
+          cartData.map(i => ({ 
+            productId: i.productId, 
+            quantity: i.quantity,
+            name: i.name,
+            priceRaw: Number(i.priceRaw),
+            image: i.image,
+            slug: i.slug
+          }))
+        ));
+      }
       
       if (file) {
         formData.append(type, file);
@@ -375,16 +397,17 @@ export const useMessageStore = defineStore("message", () => {
     }
   };
 
-  const markAllMessagesAsRead = async (receiverId) => {
+  const markAllMessagesAsRead = async (receiverId, productId = null) => {
     try {
-      await apiClient.put("/messages/mark-all-as-read");
+      await apiClient.put("/messages/mark-all-as-read", {
+        sender_id: receiverId,
+        product_id: productId
+      });
       
-      const convIndex = conversations.value.findIndex(c => String(c.user_id) === String(receiverId));
+      const convIndex = conversations.value.findIndex(c => String(c.user_id) === String(receiverId) && String(c.product_id || '') === String(productId || ''));
       if (convIndex !== -1) {
         conversations.value[convIndex].unread_count = 0;
       }
-      
-      if(badgeStore.decrementLocalCount) badgeStore.decrementLocalCount("messages");
     } catch (error) {
       console.error("Erreur markAllRead", error);
     }
@@ -425,12 +448,73 @@ export const useMessageStore = defineStore("message", () => {
 
   const setProductTag = (productData) => {
     product.value = productData;
-    localStorage.setItem("chatProduct", JSON.stringify(productData));
+    localStorage.setItem('chatProduct', JSON.stringify(productData));
   };
 
   const clearProductTag = () => {
     product.value = null;
-    localStorage.removeItem("chatProduct");
+    localStorage.removeItem('chatProduct');
+  };
+
+  /** Store cart items + optional metadata to be sent as a 'cart' message when chat opens */
+  const setCartItems = (items, meta = {}) => {
+    cartItems.value = items && items.length > 0 ? items : null;
+    cartMeta.value  = meta || null;
+    if (cartItems.value) {
+      sessionStorage.setItem('pendingCart', JSON.stringify(cartItems.value));
+      if (cartMeta.value) {
+        sessionStorage.setItem('pendingCartMeta', JSON.stringify(cartMeta.value));
+      }
+    }
+  };
+
+  const clearCartItems = () => {
+    cartItems.value = null;
+    cartMeta.value  = null;
+    sessionStorage.removeItem('pendingCart');
+    sessionStorage.removeItem('pendingCartMeta');
+  };
+
+  /**
+   * Called by Messages.vue after conversation loads — sends the pending cart
+   * as a 'cart' type message if one is set.
+   */
+  const sendPendingCartIfAny = async () => {
+    // Try restoring from sessionStorage (survives page reload)
+    if (!cartItems.value) {
+      const stored = sessionStorage.getItem('pendingCart');
+      if (stored) {
+        try { cartItems.value = JSON.parse(stored); } catch { /* ignore */ }
+      }
+    }
+    if (!cartMeta.value) {
+      const storedMeta = sessionStorage.getItem('pendingCartMeta');
+      if (storedMeta) {
+        try { cartMeta.value = JSON.parse(storedMeta); } catch { /* ignore */ }
+      }
+    }
+    if (!cartItems.value || cartItems.value.length === 0) return;
+
+    const items = cartItems.value;
+    const meta  = cartMeta.value || {};
+    clearCartItems();
+
+    // Set a clean message content just for the address and default question
+    let content = "Ces articles sont-ils toujours disponibles ?";
+
+    if (meta.deliveryAddress) {
+      // Add a line break and the delivery address
+      content += `\n\n📍 Adresse de livraison : ${meta.deliveryAddress}`;
+    }
+
+    // Attach deliveryAddress to each cart item so the backend/admin can see it
+    const itemsWithMeta = items.map(i => ({ ...i, deliveryAddress: meta.deliveryAddress || null }));
+
+    try {
+      await sendMessage(content, 'cart', null, itemsWithMeta);
+    } catch (err) {
+      console.error("Erreur lors de l'envoi automatique du panier:", err);
+    }
   };
 
   const toggleSidebar = () => {
@@ -534,11 +618,23 @@ export const useMessageStore = defineStore("message", () => {
     window.removeEventListener("resize", handleResize);
   };
 
+  // Keep badgeStore automatically synchronized with unreadCount in real-time
+  watch(unreadCount, (newVal) => {
+    if (badgeStore.badgeCounts) {
+      badgeStore.badgeCounts.messages = newVal;
+    }
+  });
+
   return {
-    conversations, messages, selectedConversation, isLoading, hasMore, hasMoreConversations, isLoadingMoreConversations, isSidebarOpen, isMobile, product, typingState, recordingState, newMessage,
+    conversations, messages, selectedConversation, isLoading, hasMore, hasMoreConversations,
+    isLoadingMoreConversations, isSidebarOpen, isMobile, product, cartItems,
+    typingState, recordingState, newMessage,
     groupedMessages, unreadCount,
-    fetchConversations, fetchMessages, sendMessage, startRecording, stopRecording, toggleRecordingPause, cancelRecording,
-    markAllMessagesAsRead, editMessage, deleteMessage, setProductTag, clearProductTag, toggleSidebar, selectConversation,
+    fetchConversations, fetchMessages, sendMessage, sendPendingCartIfAny,
+    startRecording, stopRecording, toggleRecordingPause, cancelRecording,
+    markAllMessagesAsRead, editMessage, deleteMessage,
+    setProductTag, clearProductTag, setCartItems, clearCartItems,
+    toggleSidebar, selectConversation,
     initialize, cleanup, subscribeToChannel, unsubscribeFromChannel
   };
 });
