@@ -463,7 +463,7 @@
           <button
             @click="handleContactSeller"
             :disabled="product.quantity === 0"
-            class="flex-1 py-3 px-2 rounded-xl font-bold text-white transition-all active:scale-95 flex items-center justify-center gap-2 text-xs shadow-md hover:shadow-lg hover:opacity-90 hover:-translate-y-0.5"
+            class="flex-1 py-4 px-3 rounded-xl font-bold text-white transition-all active:scale-95 flex items-center justify-center gap-2 text-xs shadow-md hover:shadow-lg hover:opacity-90 hover:-translate-y-0.5"
             :style="{
               backgroundColor:
                 product.quantity === 0
