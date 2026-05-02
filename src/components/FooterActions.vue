@@ -24,6 +24,7 @@
               color: isMenuOpen
                 ? 'var(--color-primary)'
                 : 'var(--color-text-main)',
+                
             }"
           >
             <X :size="16" />
