@@ -93,7 +93,7 @@
             >
               <!-- Image -->
               <div
-                class="w-16 h-16 rounded-xl overflow-hidden border border-[var(--color-border)] shrink-0 bg-[var(--color-surface)]"
+                class="w-16 h-16  overflow-hidden border-none shrink-0 "
               >
                 <img
                   v-if="item.image"
