@@ -215,7 +215,7 @@ const proceedToChat = async () => {
   isProceedingToChat.value = true;
 
   try {
-    const response = await apiClient.get('/chat/support-admin');
+        const response = await apiClient.get('/chat/support-admin');
     const adminId  = response.data.admin_id;
 
     if (!adminId) {
