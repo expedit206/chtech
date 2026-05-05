@@ -1,16 +1,16 @@
 <template>
   <div class="flex items-center gap-3">
-    <span
+    <!-- <span
       class="text-xs font-bold opacity-60 uppercase tracking-widest"
       :style="{ color: 'var(--color-text-sub)' }"
-      >Partager :</span
-    >
+      ></span
+    > -->
     <div class="flex items-center gap-2">
       <!-- WhatsApp -->
       <a
         :href="whatsappUrl"
         target="_blank"
-        class="w-8 h-8 rounded-lg flex items-center justify-center transition-all hover:scale-110 active:scale-95 text-white bg-[#25D366] shadow-sm"
+        class="w-8 h-8 rounded-full flex items-center justify-center transition-all hover:scale-110 active:scale-95 text-white bg-[#25D366] shadow-sm"
         title="Partager sur WhatsApp"
       >
         <i class="fab fa-whatsapp"></i>
@@ -20,7 +20,7 @@
       <a
         :href="facebookUrl"
         target="_blank"
-        class="w-8 h-8 rounded-lg flex items-center justify-center transition-all hover:scale-110 active:scale-95 text-white bg-[#1877F2] shadow-sm"
+        class="w-8 h-8 rounded-full flex items-center justify-center transition-all hover:scale-110 active:scale-95 text-white bg-[#1877F2] shadow-sm"
         title="Partager sur Facebook"
       >
         <i class="fab fa-facebook-f text-xs"></i>
@@ -29,7 +29,7 @@
       <!-- Copier le lien -->
       <button
         @click="copyLink"
-        class="w-8 h-8 rounded-lg flex items-center justify-center transition-all hover:scale-110 active:scale-95 border"
+        class="w-8 h-8 rounded-full flex items-center justify-center transition-all hover:scale-110 active:scale-95 border"
         :style="{
           backgroundColor: 'var(--color-surface)',
           borderColor: 'var(--color-border)',
@@ -37,7 +37,8 @@
         }"
         title="Copier le lien"
       >
-        <i class="fas fa-link text-xs"></i>
+        <!-- <i class="fas fa-link text-xs"></i> -->
+        <Link class="w-4 h-4" />
       </button>
     </div>
   </div>
@@ -46,7 +47,7 @@
 <script setup>
 import { computed } from "vue";
 import { useToast } from "vue-toastification";
-
+import { Link } from "lucide-vue-next";
 const props = defineProps({
   title: String,
   url: String,

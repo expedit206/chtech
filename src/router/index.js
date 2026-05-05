@@ -2,7 +2,7 @@ import { createRouter, createWebHistory } from "vue-router";
 import Home from "../views/Home.vue";
 import Blogs from "../views/Blogs.vue";
 import DetailProduit from "../views/DetailProduit.vue";
-import NProgress from 'nprogress'
+import NProgress from "nprogress";
 const routes = [
   {
     path: "/",
@@ -15,10 +15,15 @@ const routes = [
     component: Blogs,
   },
   {
+    path: "/detailblogs",
+    name: "ShowBlog",
+    component: ShowBlog,
+  },
+  {
     path: "/produit/:slug",
     name: "DetailProduit",
     component: DetailProduit,
-    meta: { title: 'Chargement produit...' }
+    meta: { title: "Chargement produit..." },
   },
   {
     path: "/messages/:receiverId?",
@@ -84,17 +89,17 @@ const routes = [
         name: "PublicProfile",
         component: () => import("../views/profile/PublicProfile.vue"),
       },
-    {
-      path: "devenir-vendeur",
-      name: "become-vendeur",
-      component: () => import("../views/profile/BecomeSupplier.vue"),
-    },
-    {
-      path: "seller/stats",
-      name: "seller-stats",
-      component: () => import("../views/seller/SellerStats.vue"),
-      meta: { requiresVendeur: true },
-    },
+      {
+        path: "devenir-vendeur",
+        name: "become-vendeur",
+        component: () => import("../views/profile/BecomeSupplier.vue"),
+      },
+      {
+        path: "seller/stats",
+        name: "seller-stats",
+        component: () => import("../views/seller/SellerStats.vue"),
+        meta: { requiresVendeur: true },
+      },
       {
         path: "seller/shop",
         name: "seller-shop",
@@ -108,59 +113,59 @@ const routes = [
       },
     ],
   },
-// Admin routes with dedicated layout
-{
-  path: "/admin",
-  component: () => import("../Layouts/AdminLayout.vue"),
-  meta: { requiresAuth: true, requiresAdmin: true },
-  children: [
-    {
-      path: "",
-      name: "admin-dashboard",
-      component: () => import("../views/admin/AdminDashboard.vue"),
-    },
-    {
-      path: "users",
-      name: "admin-users",
-      component: () => import("../views/admin/AdminUsers.vue"),
-    },
-    {
-      path: "produits",
-      name: "admin-products",
-      component: () => import("../views/admin/AdminProducts.vue"),
-    },
-    {
-      path: "categories",
-      name: "admin-categories",
-      component: () => import("../views/admin/AdminCategories.vue"),
-    },
-    {
-      path: "blog",
-      name: "admin-blog",
-      component: () => import("../views/admin/AdminBlog.vue"),
-    },
-    {
-      path: "finance",
-      name: "admin-finance",
-      component: () => import("../views/admin/AdminFinance.vue"),
-    },
-    {
-      path: "orders",
-      name: "admin-orders",
-      component: () => import("../views/admin/AdminOrders.vue"),
-    },
-    {
-      path: "broadcast",
-      name: "admin-broadcast",
-      component: () => import("../views/admin/AdminBroadcast.vue"),
-    },
-    {
-      path: "demandes-vendeurs",
-      name: "admin-seller-requests",
-      component: () => import("../views/admin/AdminSupplierRequests.vue"),
-    },
-  ],
-},
+  // Admin routes with dedicated layout
+  {
+    path: "/admin",
+    component: () => import("../Layouts/AdminLayout.vue"),
+    meta: { requiresAuth: true, requiresAdmin: true },
+    children: [
+      {
+        path: "",
+        name: "admin-dashboard",
+        component: () => import("../views/admin/AdminDashboard.vue"),
+      },
+      {
+        path: "users",
+        name: "admin-users",
+        component: () => import("../views/admin/AdminUsers.vue"),
+      },
+      {
+        path: "produits",
+        name: "admin-products",
+        component: () => import("../views/admin/AdminProducts.vue"),
+      },
+      {
+        path: "categories",
+        name: "admin-categories",
+        component: () => import("../views/admin/AdminCategories.vue"),
+      },
+      {
+        path: "blog",
+        name: "admin-blog",
+        component: () => import("../views/admin/AdminBlog.vue"),
+      },
+      {
+        path: "finance",
+        name: "admin-finance",
+        component: () => import("../views/admin/AdminFinance.vue"),
+      },
+      {
+        path: "orders",
+        name: "admin-orders",
+        component: () => import("../views/admin/AdminOrders.vue"),
+      },
+      {
+        path: "broadcast",
+        name: "admin-broadcast",
+        component: () => import("../views/admin/AdminBroadcast.vue"),
+      },
+      {
+        path: "demandes-vendeurs",
+        name: "admin-seller-requests",
+        component: () => import("../views/admin/AdminSupplierRequests.vue"),
+      },
+    ],
+  },
   {
     path: "/ressources",
     children: [
@@ -190,14 +195,17 @@ const router = createRouter({
 
 import { useAlertStore } from "../stores/alert.js";
 import { useAuthStore } from "../stores/auth.js";
+import ShowBlog from "../views/ShowBlog.vue";
 
 router.beforeEach((to, from, next) => {
   const authStore = useAuthStore();
   const alertStore = useAlertStore();
-  
-  const requiresAuth = to.matched.some(record => record.meta.requiresAuth);
-  const requiresAdmin = to.matched.some(record => record.meta.requiresAdmin);
-  const requiresVendeur = to.matched.some(record => record.meta.requiresVendeur);
+
+  const requiresAuth = to.matched.some((record) => record.meta.requiresAuth);
+  const requiresAdmin = to.matched.some((record) => record.meta.requiresAdmin);
+  const requiresVendeur = to.matched.some(
+    (record) => record.meta.requiresVendeur,
+  );
   const loggedIn = authStore.isAuthenticated;
 
   if (requiresAuth && !loggedIn) {
@@ -216,7 +224,7 @@ router.beforeEach((to, from, next) => {
       },
       onCancel: () => {
         next(false);
-      }
+      },
     });
     return;
   }
@@ -224,8 +232,9 @@ router.beforeEach((to, from, next) => {
   // Admin guard
   if (requiresAdmin) {
     // Check store first, then fallback to localStorage to prevent flickering during hydration
-    const userData = authStore.user || JSON.parse(localStorage.getItem('auth_user') || '{}');
-    const userIsAdmin = userData.role === 'admin';
+    const userData =
+      authStore.user || JSON.parse(localStorage.getItem("auth_user") || "{}");
+    const userIsAdmin = userData.role === "admin";
 
     if (!loggedIn || !userIsAdmin) {
       return next({ name: "Home" });
@@ -234,9 +243,11 @@ router.beforeEach((to, from, next) => {
 
   // Vendeur guard
   if (requiresVendeur) {
-    const userData = authStore.user || JSON.parse(localStorage.getItem('auth_user') || '{}');
-    const userIsVendeur = userData.role === 'vendeur' || userData.role === 'vendeur';
-    const userIsAdmin = userData.role === 'admin';
+    const userData =
+      authStore.user || JSON.parse(localStorage.getItem("auth_user") || "{}");
+    const userIsVendeur =
+      userData.role === "vendeur" || userData.role === "vendeur";
+    const userIsAdmin = userData.role === "admin";
 
     if (!loggedIn || (!userIsVendeur && !userIsAdmin)) {
       return next({ name: "Dashboard" });
@@ -245,43 +256,40 @@ router.beforeEach((to, from, next) => {
 
   // Empêcher les utilisateurs connectés de visiter login/register
   if (loggedIn && (to.name === "Login" || to.name === "Register")) {
-    return next({ name: "Home" });  
+    return next({ name: "Home" });
   }
 
   next();
 });
 
-
-
-
 router.beforeEach((to, from, next) => {
-  NProgress.start()
-  next()
-})
+  NProgress.start();
+  next();
+});
 
 router.afterEach(() => {
-  NProgress.done()
-})
+  NProgress.done();
+});
 
-let timer
+let timer;
 
 router.beforeEach((to, from, next) => {
-  timer = setTimeout(() => NProgress.start(), 200)
-  next()
-})
+  timer = setTimeout(() => NProgress.start(), 200);
+  next();
+});
 
 router.afterEach((to) => {
-  clearTimeout(timer)
-  NProgress.done()
+  clearTimeout(timer);
+  NProgress.done();
 
   // Dynamic Title logic
-  const baseTitle = 'SASAYEE';
+  const baseTitle = "SASAYEE";
   const pageTitle = to.meta.title || to.name;
-  
+
   if (pageTitle) {
     document.title = `${pageTitle} | ${baseTitle}`;
   } else {
     document.title = `${baseTitle} - La marketplace numéro 1 au Cameroun`;
   }
-})
+});
 export default router;

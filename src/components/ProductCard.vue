@@ -73,7 +73,7 @@
            <button
           @click.stop.prevent="handleAddToCart"
           :disabled="product.quantity === 0"
-          class="flex-shrink-0 flex items-center justify-center w-10 h-8 rounded-xl border-2 transition active:scale-95 shadow-sm mt-2 disabled:opacity-50"
+          class="flex-shrink-0 flex items-center justify-center w-8 h-8 rounded-full border-2 transition active:scale-95 shadow-sm mt-2 disabled:opacity-50"
           :style="{
             borderColor: 'var(--color-primary)',
             color: 'var(--color-primary)',

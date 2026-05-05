@@ -73,13 +73,14 @@
       >
         <div class="flex items-center gap-1.5">
           <span
-            class="w-4 h-4 rounded-full flex items-center justify-center text-[7px]"
+            class="w-4 h-4 rounded-full flex items-center justify-center p-1"
             :style="{
               backgroundColor: 'var(--color-primary)',
               color: 'var(--color-pure)',
             }"
           >
-            <i class="fas fa-thumbs-up"></i>
+            <!-- <i class="fas fa-thumbs-up"></i> -->
+            <ThumbsUp :size="16" />
           </span>
           <span
             class="text-[10px] font-medium"
@@ -107,7 +108,7 @@
         class="py-3 text-[11px] font-bold flex items-center justify-center gap-1.5 hover:opacity-70 transition-opacity"
         :style="{ color: 'var(--color-text-sub)' }"
       >
-        <i class="far fa-thumbs-up"></i> Like
+        <ThumbsUp :size="20" /> Like
       </button>
       <button
         @click="handleInteraction"
@@ -117,13 +118,14 @@
           borderColor: 'var(--color-border)',
         }"
       >
-        <i class="far fa-comment"></i> Note
+        <MessageCircle :size="16" /> Note
       </button>
       <button
         class="py-3 text-[11px] font-bold flex items-center justify-center gap-1.5 hover:opacity-70 transition-opacity"
         :style="{ color: 'var(--color-text-sub)' }"
       >
-        <i class="fas fa-share"></i>
+        <!-- <Share :size="20" /> -->
+        <Forward :size="16" />
       </button>
     </div>
   </article>
@@ -132,6 +134,7 @@
 <script setup>
 import { useRouter, useRoute } from "vue-router";
 import { useAuthStore } from "../stores/auth.js";
+import { ThumbsUp, Share, MessageCircle, Forward } from "lucide-vue-next";
 
 const router = useRouter();
 const route = useRoute();

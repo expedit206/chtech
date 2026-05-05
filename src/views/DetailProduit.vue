@@ -20,7 +20,7 @@
           @click="closeLightbox"
           class="absolute top-4 right-4 z-10 w-10 h-10 rounded-full flex items-center justify-center text-white transition-all hover:scale-110 hover:bg-white/20"
         >
-          <i class="fas fa-times text-lg"></i>
+          <X :size="18" />
         </button>
 
         <!-- Counter -->
@@ -36,7 +36,8 @@
           @click="prevLightbox"
           class="absolute left-3 md:left-6 z-10 w-11 h-11 rounded-full flex items-center justify-center text-white border border-white/20 transition-all hover:bg-white/20 hover:scale-110"
         >
-          <i class="fas fa-chevron-left"></i>
+          <!-- <i class="fas fa-chevron-left"></i> -->
+          <ChevronLeft :size="18" />
         </button>
 
         <!-- Main image -->
@@ -56,7 +57,7 @@
           @click="nextLightbox"
           class="absolute right-3 md:right-6 z-10 w-11 h-11 rounded-full flex items-center justify-center text-white border border-white/20 transition-all hover:bg-white/20 hover:scale-110"
         >
-          <i class="fas fa-chevron-right"></i>
+          <ChevronRight :size="18" />
         </button>
 
         <!-- Thumbnail strip (lightbox bottom) -->
@@ -209,7 +210,7 @@
                   backdrop-filter: blur(6px);
                 "
               >
-                <i class="fas fa-search-plus"></i>
+                <Search :size="18" />
                 Voir en grand
               </div>
             </div>
@@ -224,7 +225,8 @@
                 backdrop-filter: blur(4px);
               "
             >
-              <i class="fas fa-chevron-left text-xs"></i>
+              <!-- <i class="fas fa-chevron-left text-xs"></i> -->
+              <ChevronLeft :size="14" />
             </button>
             <button
               v-if="product.photos.length > 1"
@@ -235,7 +237,8 @@
                 backdrop-filter: blur(4px);
               "
             >
-              <i class="fas fa-chevron-right text-xs"></i>
+              <!-- <i class="fas fa-chevron-right text-xs"></i> -->
+              <ChevronRight :size="14" />
             </button>
 
             <!-- Photo count badge -->
@@ -348,7 +351,7 @@
               <Eye :size="14" :stroke-width="3" />
               <span>{{ formatNumber(displayCounts.clics) }} vues</span>
             </div>
-            <div class="flex items-center gap-1.5">
+            <div class="flex items-center gap-1.5 rounded-full">
               <Heart :size="14" :stroke-width="3" />
               <span>{{ formatNumber(displayCounts.favorites) }} favoris</span>
             </div>
@@ -405,21 +408,30 @@
         </div>
 
         <!-- Actions -->
-        <div class="flex gap-3 pt-1">
+        <div class="flex gap-3 pt-1 items-center">
           <!-- Favorite -->
+
           <button
             @click="handleToggleFavorite"
-            class="py-3 px-4 rounded-xl font-bold border-2 transition-all active:scale-95 flex items-center justify-center gap-2 text-xs shadow-md hover:shadow-lg hover:-translate-y-0.5"
+            class="w-9 h-9 rounded-full border-2 transition-all active:scale-95 flex items-center justify-center shadow-md hover:shadow-lg hover:-translate-y-0.5"
             :class="isFavorited ? 'bg-red-500/10' : ''"
             :style="{
               borderColor: isFavorited ? '#ef4444' : 'var(--color-border)',
               color: isFavorited ? '#ef4444' : 'var(--color-text-sub)',
             }"
           >
-            <Heart :size="18" :stroke-width="3" :class="{ 'fill-current': isFavorited }" />
+            <Heart
+              :size="18"
+              :stroke-width="3"
+              :class="{ 'fill-current': isFavorited }"
+            />
           </button>
 
-          <SocialShare v-if="product.id" :title="product.name" :url="configUrl + route.fullPath" />
+          <SocialShare
+            v-if="product.id"
+            :title="product.name"
+            :url="configUrl + route.fullPath"
+          />
 
           <!-- Add to cart -->
           <button
@@ -428,15 +440,21 @@
             class="flex-1 py-3 rounded-xl font-bold border-2 transition-all active:scale-95 flex items-center justify-center gap-2 text-xs shadow-md hover:shadow-lg hover:-translate-y-0.5 relative overflow-hidden"
             :class="inCart ? 'bg-[var(--color-primary)]/10' : ''"
             :style="{
-              borderColor: product.quantity === 0 ? 'var(--color-border)' : 'var(--color-primary)',
-              color: product.quantity === 0 ? 'var(--color-text-sub)' : 'var(--color-primary)',
+              borderColor:
+                product.quantity === 0
+                  ? 'var(--color-border)'
+                  : 'var(--color-primary)',
+              color:
+                product.quantity === 0
+                  ? 'var(--color-text-sub)'
+                  : 'var(--color-primary)',
               opacity: product.quantity === 0 ? 0.5 : 1,
             }"
           >
             <ShoppingCart :size="16" :stroke-width="3" />
             <Transition name="btn-text" mode="out-in">
               <span :key="inCart ? 'in' : 'out'">
-                {{ inCart ? 'Dans le panier ✓' : 'Ajouter au panier' }}
+                {{ inCart ? "Dans le panier ✓" : "Ajouter au panier" }}
               </span>
             </Transition>
           </button>
@@ -445,8 +463,14 @@
           <button
             @click="handleContactSeller"
             :disabled="product.quantity === 0"
-            class="flex-1 py-3 rounded-xl font-bold text-white transition-all active:scale-95 flex items-center justify-center gap-2 text-xs shadow-md hover:shadow-lg hover:opacity-90 hover:-translate-y-0.5"
-            :style="{ backgroundColor: product.quantity === 0 ? 'var(--color-text-sub)' : 'var(--color-primary)', opacity: product.quantity === 0 ? 0.5 : 1 }"
+            class="flex-1 py-4 px-3 rounded-xl font-bold text-white transition-all active:scale-95 flex items-center justify-center gap-2 text-xs shadow-md hover:shadow-lg hover:opacity-90 hover:-translate-y-0.5"
+            :style="{
+              backgroundColor:
+                product.quantity === 0
+                  ? 'var(--color-text-sub)'
+                  : 'var(--color-primary)',
+              opacity: product.quantity === 0 ? 0.5 : 1,
+            }"
           >
             <ShoppingBag :size="16" :stroke-width="3" />
             Acheter maintenant
@@ -493,14 +517,15 @@
                   title="Partager le profil du vendeur"
                   class="w-6 h-6 rounded-full flex items-center justify-center transition"
                 >
-                  <i class="fas fa-share-alt"></i>
+                  <Share2 :size="16" :stroke-width="3" class="text-bold" />
                 </button>
               </div>
               <p
                 class="text-xs flex items-center gap-1"
                 :style="{ color: 'var(--color-text-sub)' }"
               >
-                <i class="fas fa-map-marker-alt text-[10px]"></i>
+                <MapPin size="14" class="text-bold text-xs" />
+
                 {{ product.ville || "Cameroun" }}
                 <span class="ml-1 text-yellow-500"
                   >⭐ {{ product.rating.toFixed(1) || "4.8" }}</span
@@ -517,7 +542,7 @@
               color: 'var(--color-primary)',
             }"
           >
-            <i class="fas fa-shopping-bag"></i>
+            <ShoppingCart :size="20" :stroke-width="3" />
             Acheter ce produit
           </button>
           <div
@@ -618,14 +643,29 @@ import { CONFIG } from "../config/index.js";
 import { ref, computed, onMounted, onUnmounted, nextTick, watch } from "vue";
 import { useRoute, useRouter, RouterLink } from "vue-router";
 import { useProductStore } from "../stores/products.js";
-
+// importtation d eapiclent
+import apiClient from "../api/index.js";
 import { useInteractionStore } from "../stores/interactions.js";
 import { useAuthStore } from "../stores/auth.js";
-import { useMessageStore } from '../stores/messages.js';
-import { useCartStore } from '../stores/cart.js';
-import ProductCard from '../components/ProductCard.vue';
+import { useMessageStore } from "../stores/messages.js";
+import { useCartStore } from "../stores/cart.js";
+import ProductCard from "../components/ProductCard.vue";
 import SocialShare from "../components/SocialShare.vue";
-import { ArrowLeft, Heart, Star, Forward, Eye, ShoppingCart, ShoppingBag } from 'lucide-vue-next';
+import {
+  ArrowLeft,
+  Heart,
+  Star,
+  Forward,
+  Eye,
+  ShoppingCart,
+  ShoppingBag,
+  Share2,
+  X,
+  ChevronLeft,
+  Search,
+  ChevronRight,
+  MapPin,
+} from "lucide-vue-next";
 import { useAlert } from "../composables/useAlert.js";
 import { useSeo } from "../composables/useSeo.js";
 import { useFlash } from "../composables/useFlash";
@@ -643,11 +683,13 @@ const interactionStore = useInteractionStore();
 const authStore = useAuthStore();
 const messageStore = useMessageStore();
 
-const loading          = ref(true);
-const cartStore        = useCartStore();
+const loading = ref(true);
+const cartStore = useCartStore();
 
 // Computed: is this product already in cart?
-const inCart       = computed(() => product.value.id ? cartStore.isInCart(product.value.id) : false);
+const inCart = computed(() =>
+  product.value.id ? cartStore.isInCart(product.value.id) : false,
+);
 const selectedPhotoIndex = ref(0);
 const lightboxEl = ref(null);
 const shopProducts = ref([]);
@@ -946,13 +988,13 @@ const handleAddToCart = () => {
 
   // Build the raw product shape expected by cartStore.addItem()
   cartStore.addItem({
-    id:       product.value.id,
-    nom:      product.value.name,
-    slug:     route.params.slug,
-    prix:     product.value.price_raw,
-    photos:   product.value.photos,
+    id: product.value.id,
+    nom: product.value.name,
+    slug: route.params.slug,
+    prix: product.value.price_raw,
+    photos: product.value.photos,
     quantite: product.value.quantity,
-    user_id:  product.value.user?.id ?? null,
+    user_id: product.value.user?.id ?? null,
   });
 
   // Open the drawer so user sees the cart
@@ -1034,9 +1076,9 @@ const shareProfile = async (user) => {
   // Préparation des données
   // Préparation des données - ON UTILISE .nom ICI AUSSI
   const shareData = {
-    title: `Profil de ${user.nom || "Vendeur"}`, // Correction ici
+    title: `Profil de ${user.nom || "Vendeur"}`,
     text: `Découvrez le profil de ${user.nom || "Vendeur"} sur Sasayee`, // Et ici
-    url: `${window.location.origin}/profile/${user.id}`,
+    url: `${window.location.origin}/profile/${user.id}/public`,
   };
 
   // 1. Tentative de partage natif (Mobile)

@@ -10,7 +10,7 @@ export async function shareProfile(user) {
   const shareData = {
     title: `Profil de ${user.nom || "Vendeur"}`,
     text: `Découvrez le profil de ${user.nom} sur Sasayee`,
-    url: `${window.location.origin}/profile/${user.id}`,
+    url: `${window.location.origin}/profile/${user.id}/public`,
   };
 
   if (navigator.share) {

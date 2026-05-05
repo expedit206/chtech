@@ -100,7 +100,7 @@
       </div>
       
       <div class="flex justify-center gap-4 mt-8">
-        <router-link :to="{ name: 'marketplace' }" class="inline-flex items-center gap-3 px-8 py-3 rounded-2xl font-black text-white text-sm hover:scale-105 transition-all active:scale-95 shadow-lg shadow-[var(--color-primary)]/20" :style="{ backgroundColor: 'var(--color-primary)' }">
+        <router-link :to="{ name: 'Home' }" class="inline-flex items-center gap-3 px-8 py-3 rounded-2xl font-black text-white text-sm hover:scale-105 transition-all active:scale-95 shadow-lg shadow-[var(--color-primary)]/20" :style="{ backgroundColor: 'var(--color-primary)' }">
            Découvrir la marketplace
         </router-link>
       </div>
