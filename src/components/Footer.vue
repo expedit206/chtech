@@ -43,7 +43,7 @@ import { RouterLink } from "vue-router";
             <Twitter :stroke-width="3" />
           </a>
           <a href="#" class="hover:opacity-70 transition-opacity">
-            <Instagram :stroke-width="3" />
+            <Instagram :stroke-width="3"  class="font-medium"/>
           </a>
           <a href="#" class="hover:opacity-70 transition-opacity">
             <!-- <i class="fab fa-linkedin-in"></i
