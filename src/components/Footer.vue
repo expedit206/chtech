@@ -1,7 +1,16 @@
 <script setup lang="ts">
 // import { CONFIG } from "../config/index.js";
 import { CONFIG } from "../config/index.js";
-import { Facebook, Twitter, Instagram, Linkedin, Send } from "lucide-vue-next";
+import {
+  Facebook,
+  Twitter,
+  Instagram,
+  Linkedin,
+  Smartphone,
+  QrCode,
+  ShieldCheck,
+  Lock,
+} from "lucide-vue-next";
 import { RouterLink } from "vue-router";
 </script>
 
@@ -15,114 +24,160 @@ import { RouterLink } from "vue-router";
     }"
   >
     <div
-      class="max-w-7xl mx-auto px-4 py-4 grid grid-cols-2 md:grid-cols-4 gap-12"
+      class="max-w-7xl mx-auto px-6 py-16 grid grid-cols-1 md:grid-cols-3 gap-16"
     >
-      <div class="col-span-2 md:col-span-1">
-        <div class="mb-6">
-          <router-link :to="{ name: 'Home' }" class="inline-block">
-            <img
-              :src="CONFIG.LOGO_URL"
-              alt="SASAYEE Logo"
-              class="h-16 md:h-20 w-auto object-contain"
-            />
-          </router-link>
-        </div>
-        <p class="text-sm leading-relaxed opacity-70 mb-6">
-          La marketplace de référence au Cameroun pour acheter et vendre en
-          toute confiance. Découvrez une sélection de produits de qualité, des
-          offres exclusives et un service client dédié pour une expérience
-          e-commerce inégalée.
+      <!-- LOGO + DESCRIPTION -->
+      <div class="space-y-6">
+        <router-link :to="{ name: 'Home' }" class="inline-block">
+          <img
+            :src="CONFIG.LOGO_URL"
+            alt="SASAYEE Logo"
+            class="h-16 md:h-20 w-auto object-contain"
+          />
+        </router-link>
+
+        <p
+          class="text-sm leading-7 max-w-sm"
+          :style="{ color: 'var(--color-text-sub)' }"
+        >
+          La marketplace moderne au Cameroun pour acheter et vendre en toute
+          confiance.
         </p>
-        <div class="flex gap-4">
+
+        <div class="flex items-center gap-4">
           <a href="#" class="hover:opacity-70 transition-opacity">
-            <!-- <i class="fab fa-facebook-f"></i
-          > -->
-            <Facebook :stroke-width="3" />
+            <Facebook :stroke-width="2" :size="18" />
           </a>
+
           <a href="#" class="hover:opacity-70 transition-opacity">
-            <Twitter :stroke-width="3" />
+            <Twitter :stroke-width="2" :size="18" />
           </a>
+
           <a href="#" class="hover:opacity-70 transition-opacity">
-            <Instagram :stroke-width="3"  class="font-medium"/>
+            <Instagram :stroke-width="2" :size="18" />
           </a>
+
           <a href="#" class="hover:opacity-70 transition-opacity">
-            <!-- <i class="fab fa-linkedin-in"></i
-          > -->
-            <Linkedin :stroke-width="3" />
+            <Linkedin :stroke-width="2" :size="18" />
           </a>
         </div>
       </div>
 
-      <div>
-        <h4 class="font-bold mb-6">Acheter</h4>
-        <ul class="space-y-4 text-sm opacity-70">
+      <!-- NAVIGATION -->
+      <div class="space-y-6">
+        <h4 class="font-semibold text-sm uppercase tracking-wider">Acheter</h4>
+
+        <ul
+          class="space-y-3 text-sm"
+          :style="{ color: 'var(--color-text-sub)' }"
+        >
           <li>
             <RouterLink
               :to="{ name: 'Support' }"
-              class="hover:text-[var(--color-primary)]"
-              >Aide & SAV</RouterLink
+              class="hover:text-[var(--color-primary)] transition-colors"
             >
+              Aide & SAV
+            </RouterLink>
           </li>
+
           <li>
             <RouterLink
               :to="{ name: 'become-vendeur' }"
-              class="hover:text-[var(--color-primary)]"
-              >Devenir vendeur
+              class="hover:text-[var(--color-primary)] transition-colors"
+            >
+              Devenir vendeur
+            </RouterLink>
+          </li>
+
+          <li>
+            <RouterLink
+              to="#"
+              class="hover:text-[var(--color-primary)] transition-colors"
+            >
+              Livraison
+            </RouterLink>
+          </li>
+
+          <li>
+            <RouterLink
+              to="#"
+              class="hover:text-[var(--color-primary)] transition-colors"
+            >
+              Promotions
             </RouterLink>
           </li>
         </ul>
       </div>
 
-      <div>
-        <h4 class="font-bold mb-6">Paiement sécurisé</h4>
-        <div class="flex flex-wrap gap-3 mb-6 items-center">
-          <i class="fab fa-cc-visa text-3xl"></i>
-          <i class="fab fa-cc-mastercard text-3xl"></i>
-          <i class="fab fa-cc-paypal text-3xl"></i>
+      <!-- PAIEMENT -->
+      <div class="space-y-6">
+        <h4 class="font-semibold text-sm uppercase tracking-wider">
+          Paiement sécurisé
+        </h4>
 
-          <div
-            class="w-8 h-8 rounded-md flex items-center justify-center p-1 shadow-sm transition-transform hover:scale-110"
-            style="background-color: #ffcc00"
-            title="MTN Mobile Money"
-          >
-            <svg viewBox="0 0 100 100" class="w-full h-full">
-              <circle
-                cx="50"
-                cy="50"
-                r="48"
-                fill="none"
-                stroke="#004F9F"
-                stroke-width="4"
-              />
-              <text
-                x="50"
-                y="65"
-                font-family="Arial, sans-serif"
-                font-weight="bold"
-                font-size="40"
-                fill="#004F9F"
-                text-anchor="middle"
-              >
-                MTN
-              </text>
-            </svg>
+        <div class="flex items-center gap-3 flex-wrap">
+          <!-- Orange -->
+          <div class="flex flex-col items-center gap-1">
+            <div class="p-2 rounded-xl bg-[#ff6600]/10 text-[#ff6600]">
+              <Smartphone :stroke-width="2" :size="20" />
+            </div>
+            <span class="text-[10px] font-medium">Orange</span>
           </div>
 
-          <div
-            class="w-8 h-8 rounded-md flex items-center justify-center p-1 shadow-sm transition-transform hover:scale-110"
-            style="background-color: #ff6600"
-            title="Orange Money"
-          >
-            <svg viewBox="0 0 24 24" class="w-full h-full" fill="white">
-              <path d="M3 3h18v18H3V3zm13 13h3v3h-3v-3z" />
-            </svg>
+          <!-- MTN -->
+          <div class="flex flex-col items-center gap-1">
+            <div class="p-2 rounded-xl bg-[#ffcc00]/20 text-[#004F9F]">
+              <Smartphone :stroke-width="2" :size="20" />
+            </div>
+            <span class="text-[10px] font-medium">MTN</span>
           </div>
 
-          <i class="fab fa-cc-apple-pay text-3xl"></i>
+          <!-- Code -->
+          <div class="flex flex-col items-center gap-1">
+            <div
+              class="p-2 rounded-xl"
+              :style="{
+                backgroundColor: 'var(--color-bg)',
+                color: 'var(--color-text-sub)',
+              }"
+            >
+              <QrCode :stroke-width="2" :size="20" />
+            </div>
+
+            <span class="text-[10px] font-medium"> Code Marchand </span>
+          </div>
         </div>
 
-        <p class="text-xs opacity-60 italic">
-          Transactions sécurisées par cryptage SSL de bout en bout.
+        <!-- BOX -->
+        <div
+          class="p-4 rounded-2xl border"
+          :style="{
+            backgroundColor: 'rgba(99,102,241,0.05)',
+            borderColor: 'rgba(99,102,241,0.10)',
+          }"
+        >
+          <div class="flex items-start gap-3">
+            <ShieldCheck
+              :size="18"
+              class="mt-0.5 text-[var(--color-primary)]"
+            />
+
+            <p
+              class="text-xs leading-6"
+              :style="{ color: 'var(--color-text-sub)' }"
+            >
+              Mobile Money et paiement par code pour des transactions rapides,
+              sécurisées et accessibles sans carte bancaire.
+            </p>
+          </div>
+        </div>
+
+        <p
+          class="text-[11px] italic flex items-center gap-2"
+          :style="{ color: 'var(--color-text-sub)' }"
+        >
+          <Lock :size="12" />
+          SSL 256 bits — Transactions sécurisées.
         </p>
       </div>
     </div>
@@ -135,7 +190,7 @@ import { RouterLink } from "vue-router";
       }"
     >
       <div
-        class="max-w-7xl mx-auto px-4 flex flex-col md:row justify-between items-center gap-4 text-[10px] tracking-widest opacity-60"
+        class="max-w-7xl mx-auto px-4 flex flex-col md:flex-row justify-between items-center gap-4 text-[10px] tracking-widest opacity-60"
       >
         <p>© {{ new Date().getFullYear() }} SASAYEE. TOUS DROITS RÉSERVÉS.</p>
         <div class="flex gap-6">

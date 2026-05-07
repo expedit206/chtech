@@ -92,9 +92,7 @@
               class="flex gap-4 items-center bg-[var(--color-bg)] rounded-2xl p-3 border border-[var(--color-border)] transition-all hover:border-[var(--color-primary)]/30"
             >
               <!-- Image -->
-              <div
-                class="w-16 h-16  overflow-hidden border-none shrink-0 "
-              >
+              <div class="w-16 h-16 overflow-hidden border-none shrink-0">
                 <img
                   v-if="item.image"
                   :src="item.image"
@@ -250,9 +248,9 @@
             class="w-full py-2 rounded-xl text-xs font-bold transition-colors hover:bg-red-500/10 hover:text-red-500"
             :style="{ color: 'var(--color-text-sub)' }"
           >
-          <span class="flex items-center justify-center gap-2">
-            <X :size="20" class="dark:hover:bg-red-500" /> Vider le panier
-          </span>
+            <span class="flex items-center justify-center gap-2">
+              <X :size="20" class="dark:hover:bg-red-500" /> Vider le panier
+            </span>
           </button>
         </div>
       </div>
@@ -311,8 +309,8 @@ const proceedToChat = async () => {
   isProceedingToChat.value = true;
 
   try {
-    const response = await apiClient.get('/chat/support-admin');
-    const adminId  = response.data.admin_id;
+    const response = await apiClient.get("/chat/support-admin");
+    const adminId = response.data.admin_id;
 
     if (!adminId) {
       alertStore.showAlert({
