@@ -27,7 +27,7 @@
           class="absolute inset-0 bg-black/50 flex flex-col items-center justify-center text-white backdrop-blur-sm"
         >
           <Loader2 class="animate-spin mb-2" :size="32" />
-          <span class="text-xs font-black uppercase tracking-widest"
+          <span class="text-xs font-black tracking-widest"
             >Envoi en cours...</span
           >
         </div>
@@ -142,13 +142,13 @@
         <div class="space-y-4 pt-2">
           <div>
             <label
-              class="block text-xs font-black uppercase tracking-widest mb-1.5 opacity-40"
+              class="block text-xs font-semi-bold tracking-widest mb-1.5 opacity-40"
               >Nom de la boutique / Marque</label
             >
             <input
               v-model="shopForm.nom"
               placeholder="Ex: Jean Boutique, Star Store..."
-              class="w-full px-4 py-3 rounded-xl border text-sm outline-none focus:border-[var(--color-primary)] transition-colors"
+              class="w-full px-4 py-3 rounded-xl border text-sm outline-none focus:border-[var(--color-primary)] transition-colors focus:ring-2 focus:ring-[var(--color-primary)] outline-none focus:ring-opacity-50"
               :style="{
                 backgroundColor: 'var(--color-bg)',
                 borderColor: 'var(--color-border)',
@@ -159,14 +159,14 @@
 
           <div>
             <label
-              class="block text-xs font-black uppercase tracking-widest mb-1.5 opacity-40"
+              class="block text-xs font-semi-bold tracking-widest mb-1.5 opacity-40"
               >Biographie / Description</label
             >
             <textarea
               v-model="shopForm.bio"
               rows="4"
               placeholder="Décrivez ce que vous vendez et votre expertise..."
-              class="w-full px-4 py-3 rounded-xl border text-sm outline-none resize-none focus:border-[var(--color-primary)] transition-colors"
+              class="w-full px-4 py-3 rounded-xl border text-sm  resize-none focus:ring-2 focus:ring-[var(--color-primary)] outline-none transition-colors"
               :style="{
                 backgroundColor: 'var(--color-bg)',
                 borderColor: 'var(--color-border)',
@@ -178,13 +178,13 @@
           <div class="grid grid-cols-2 gap-4">
             <div>
               <label
-                class="block text-xs font-black uppercase tracking-widest mb-1.5 opacity-40"
+                class="block text-xs font-semi-bold tracking-widest mb-1.5 opacity-40"
                 >Téléphone</label
               >
               <input
                 v-model="shopForm.telephone"
                 placeholder="6XX XXX XXX"
-                class="w-full px-4 py-3 rounded-xl border text-sm outline-none focus:border-[var(--color-primary)] transition-colors"
+                class="w-full px-4 py-3 rounded-xl border text-sm outline-none  transition-colors focus:ring-2 focus:ring-[var(--color-primary)] outline-none focus:ring-opacity-50"
                 :style="{
                   backgroundColor: 'var(--color-bg)',
                   borderColor: 'var(--color-border)',
@@ -195,13 +195,13 @@
 
             <div>
               <label
-                class="block text-xs font-black uppercase tracking-widest mb-1.5 opacity-40"
+                class="block text-xs font-semi-bold tracking-widest mb-1.5 opacity-40"
                 >Ville</label
               >
               <input
                 v-model="shopForm.ville"
                 placeholder="Ex: Douala"
-                class="w-full px-4 py-3 rounded-xl border text-sm outline-none focus:border-[var(--color-primary)] transition-colors"
+                class="w-full px-4 py-3 rounded-xl border text-sm  transition-colors focus:ring-2 focus:ring-[var(--color-primary)] outline-none focus:ring-opacity-50"
                 :style="{
                   backgroundColor: 'var(--color-bg)',
                   borderColor: 'var(--color-border)',
@@ -237,13 +237,13 @@
           <div class="space-y-4 pt-2">
             <div>
               <label
-                class="block text-xs font-black uppercase tracking-widest mb-1.5 opacity-40"
+                class="block text-xs font-semi-bold tracking-widest mb-1.5 opacity-40"
                 >Site Web (Optionnel)</label
               >
               <input
                 v-model="shopForm.website"
                 placeholder="https://votre-site.com"
-                class="w-full px-4 py-3 rounded-xl border text-sm outline-none focus:border-blue-500 transition-colors"
+                class="w-full px-4 py-3 rounded-xl border text-sm outline-none  transition-colors focus:ring-2 focus:ring-[var(--color-primary)] outline-none focus:ring-opacity-50"
                 :style="{
                   backgroundColor: 'var(--color-bg)',
                   borderColor: 'var(--color-border)',
@@ -254,13 +254,13 @@
 
             <div>
               <label
-                class="block text-xs font-black uppercase tracking-widest mb-1.5 opacity-40"
+                class="block text-xs font-semi-bold tracking-widest mb-1.5 opacity-40"
                 >Numéro WhatsApp Business</label
               >
               <input
                 v-model="shopForm.whatsapp"
                 placeholder="+237 6XXXXXXXX"
-                class="w-full px-4 py-3 rounded-xl border text-sm outline-none focus:border-green-500 transition-colors"
+                class="w-full px-4 py-3 rounded-xl border text-sm outline-none  transition-colors focus:ring-2 focus:ring-[var(--color-primary)] outline-none focus:ring-opacity-50"
                 :style="{
                   backgroundColor: 'var(--color-bg)',
                   borderColor: 'var(--color-border)',
@@ -271,7 +271,7 @@
 
             <div>
               <label
-                class="block text-xs font-black uppercase tracking-widest mb-1.5 opacity-40"
+                class="block text-xs font-semi-bold tracking-widest mb-1.5 opacity-40"
                 >Identifiant Instagram</label
               >
               <div class="relative">
@@ -282,7 +282,7 @@
                 <input
                   v-model="shopForm.instagram"
                   placeholder="Identifiant"
-                  class="w-full pl-8 pr-4 py-3 rounded-xl border text-sm outline-none focus:border-pink-500 transition-colors"
+                  class="w-full pl-8 pr-4 py-3 rounded-xl border text-sm outline-none  transition-colors focus:ring-2 focus:ring-[var(--color-primary)] outline-none focus:ring-opacity-50"
                   :style="{
                     backgroundColor: 'var(--color-bg)',
                     borderColor: 'var(--color-border)',
@@ -299,9 +299,7 @@
           class="rounded-2xl border p-6 space-y-3 shadow-sm bg-gradient-to-br from-[var(--color-surface)] to-[var(--color-bg)]"
           :style="{ borderColor: 'var(--color-border)' }"
         >
-          <h2
-            class="font-black text-xs uppercase tracking-[0.2em] opacity-40 mb-2"
-          >
+          <h2 class="font-semi-bold text-xs tracking-[0.2em] opacity-40 mb-2">
             Actions Rapides
           </h2>
 

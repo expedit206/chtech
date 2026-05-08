@@ -20,7 +20,7 @@
         <div class="flex items-center gap-3">
           <router-link
             :to="{ name: 'Home' }"
-            class="w-9 h-9 rounded-xl flex items-center justify-center hover:bg-(--color-primary)/10 transition-all group"
+            class="w-9 h-9 rounded-full flex items-center justify-center hover:bg-(--color-primary)/10 transition-all group"
             title="Retour à l'accueil"
           >
             <ChevronLeft
@@ -44,7 +44,7 @@
             title="Mes Commandes"
           >
             <ShoppingBag
-              class="text-sm"
+              class="text-xs"
               :style="{ color: 'var(--color-primary)' }"
             />
             <!-- Small indicator if needed in future -->

@@ -33,6 +33,15 @@
               alt="SASAYEE Logo"
               class="h-12 md:h-14 w-auto object-contain transition-transform hover:scale-105"
             />
+            <!-- <div
+              class="text-2xl md:text-3xl font-bold tracking-tighter transition-all hover:opacity-80"
+              :style="{
+                color: 'var(--color-primary)',
+                fontFamily: 'sans-serif',
+              }"
+            >
+              Sasayee
+            </div> -->
           </RouterLink>
         </div>
 
@@ -70,10 +79,10 @@
           </button>
 
           <router-link
-            :to="{ name:'Wishlist' }"
+            :to="{ name: 'Wishlist' }"
             class="w-8 h-8 rounded-full flex items-center justify-center transition-all hover:bg-black/5 relative group"
           >
-            <Heart :size="20" :stroke-width="3" />
+            <Heart :size="20" :stroke-width="2" />
             <span class="tooltip-text">Favoris</span>
           </router-link>
 
@@ -83,11 +92,12 @@
             class="w-8 h-8 rounded-full flex items-center justify-center transition-all hover:bg-black/5 relative group"
             :style="{ color: 'var(--color-text-main)' }"
           >
-            <ShoppingCart :size="20" :stroke-width="3" />
-            <span v-if="cartStore.totalItems > 0" 
+            <ShoppingCart :size="20" :stroke-width="2" />
+            <span
+              v-if="cartStore.totalItems > 0"
               class="absolute -top-1 -right-1 min-w-[16px] h-[16px] bg-red-500 text-white text-[9px] font-black rounded-full flex items-center justify-center px-0.5 border border-white"
             >
-              {{ cartStore.totalItems > 99 ? '99+' : cartStore.totalItems }}
+              {{ cartStore.totalItems > 99 ? "99+" : cartStore.totalItems }}
             </span>
             <span class="tooltip-text">Panier</span>
           </button>
@@ -100,7 +110,7 @@
             <component
               :is="themeIcon"
               :size="20"
-              :stroke-width="3"
+              :stroke-width="2"
               class="text-lg"
             />
             <span class="tooltip-text">Thème</span>
@@ -115,7 +125,7 @@
               color: 'var(--color-pure)',
             }"
           >
-            <Plus :size="16" :stroke-width="3" class="text-sm" />
+            <Plus :size="16" :stroke-width="2" class="text-sm" />
           </button>
 
           <div v-if="auth.isAuthenticated" class="relative" ref="userMenuRef">
@@ -471,8 +481,8 @@
           class="group relative flex-1 flex flex-col items-center justify-center border-b-4 transition-colors"
           :style="isActiveName('Home') ? activeStyle : inactiveStyle"
         >
-          <House :stroke-width="3" size="18" />
-          <span class="text-[9px] font-black mt-1">Accueil</span>
+          <House :stroke-width="2" size="18" />
+          <span class="text-[9px] font-medium mt-1">Accueil</span>
         </RouterLink>
 
         <RouterLink
@@ -480,8 +490,8 @@
           class="group relative flex-1 flex flex-col items-center justify-center border-b-4 transition-colors"
           :style="isActiveName('Blogs') ? activeStyle : inactiveStyle"
         >
-          <Newspaper :stroke-width="3" size="18" />
-          <span class="text-[9px] font-black mt-1">Blogs</span>
+          <Newspaper :stroke-width="2" size="18" />
+          <span class="text-[9px] font-medium mt-1">Blogs</span>
         </RouterLink>
 
         <RouterLink
@@ -490,13 +500,13 @@
           :style="isActiveName('Notifications') ? activeStyle : inactiveStyle"
         >
           <div class="relative">
-            <Bell size="18" :stroke-width="3" />
+            <Bell size="18" :stroke-width="2" />
             <span
               v-if="useNotificationStore().unreadCount > 0"
               class="nav-badge"
             ></span>
           </div>
-          <span class="text-[9px] font-black mt-1">Notifications</span>
+          <span class="text-[9px] font-medium mt-1">Notifications</span>
         </RouterLink>
 
         <RouterLink
@@ -504,8 +514,8 @@
           class="group relative flex-1 flex flex-col items-center justify-center border-b-4 transition-colors"
           :style="isActiveName('messages') ? activeStyle : inactiveStyle"
         >
-          <MessageCircle size="18" :stroke-width="3" />
-          <span class="text-[9px] font-black mt-1">Messages</span>
+          <MessageCircle size="18" :stroke-width="2" />
+          <span class="text-[9px] font-medium mt-1">Messages</span>
         </RouterLink>
 
         <RouterLink
@@ -513,8 +523,8 @@
           class="group relative flex-1 flex flex-col items-center justify-center border-b-4 transition-colors"
           :style="isActiveName('Dashboard') ? activeStyle : inactiveStyle"
         >
-          <LayoutDashboard size="18" :stroke-width="3" />
-          <span class="text-[9px] font-black mt-1">Dashboard</span>
+          <LayoutDashboard size="18" :stroke-width="2" />
+          <span class="text-[9px] font-medium mt-1">Dashboard</span>
         </RouterLink>
       </nav>
     </div>
