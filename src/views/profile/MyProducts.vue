@@ -109,158 +109,270 @@
         </button>
       </div>
 
-      <div v-else class="overflow-x-auto">
-        <table class="w-full text-left">
-          <thead
-            class="bg-[var(--color-bg)]/50 text-[var(--color-text-sub)] text-[10px] uppercase font-black tracking-widest border-b"
-            :style="{ borderColor: 'var(--color-border)' }"
-          >
-            <tr>
-              <th class="px-8 py-5">Produit</th>
-              <th class="px-8 py-5">Catégorie</th>
-              <th class="px-8 py-5">Prix / Stock</th>
-              <th class="px-8 py-5">Visibilité</th>
-              <th class="px-8 py-5">Performance</th>
-              <th class="px-8 py-5 text-right">Actions</th>
-            </tr>
-          </thead>
-          <tbody
-            class="divide-y"
-            :style="{ divideColor: 'var(--color-border)' }"
-          >
-            <tr
+      <div v-else>
+        <!-- ========================================== -->
+        <!-- 1. VUE MOBILE & TABLETTE (Grid 2 colonnes) -->
+        <!-- ========================================== -->
+        <div class="lg:hidden p-4">
+          <div class="grid grid-cols-2 gap-3 sm:gap-4">
+            <div
               v-for="product in products"
-              :key="product.id"
-              class="group hover:bg-[var(--color-primary)]/[0.02] transition-colors"
+              :key="'mob-' + product.id"
+              class="group bg-[var(--color-bg)] border rounded overflow-hidden flex flex-col shadow-sm relative"
+              :style="{ borderColor: 'var(--color-border)' }"
             >
-              <td class="px-8 py-6">
-                <div class="flex items-center gap-4">
+              <!-- Image & Statut -->
+              <div class="relative aspect-square">
+                <img
+                  :src="product.photos?.[0] || '/placeholder.png'"
+                  class="w-full h-full object-cover rounded-full"
+                />
+
+                <!-- Menu 3 points (Positionné en haut à droite de l'image) -->
+                <div class="absolute top-2 right-2">
+                  <button
+                    @click="toggleMenu(product.id)"
+                    class="p-1.5  backdrop-blur rounded-full shadow-sm text-[var(--color-text-main)]"
+                  >
+                    <MoreVertical :size="16" />
+                  </button>
+                  <!-- Dropdown Menu Mobile -->
                   <div
-                    class="relative w-14 h-14 shrink-0 rounded-2xl overflow-hidden border shadow-sm"
+                    v-if="activeMenuId === product.id"
+                    class="absolute right-0 mt-2 w-32 border shadow-xl z-20 overflow-hidden"
                     :style="{ borderColor: 'var(--color-border)' }"
                   >
-                    <img
-                      :src="product.photos?.[0] || '/placeholder.png'"
-                      class="w-full h-full object-cover group-hover:scale-110 transition-transform duration-500"
-                    />
-                    <div
-                      v-if="product.is_promoted"
-                      class="absolute top-0 left-0 bg-amber-400 p-0.5"
+                    <button
+                      @click="openModal(product)"
+                      class="w-full px-2 py-2 text-left text-xs font-bold hover:bg-[var(--color-primary)]/10 flex items-center gap-2"
                     >
-                      <Star :size="8" class="text-white fill-white" />
-                    </div>
-                  </div>
-                  <div class="flex flex-col min-w-0">
-                    <span
-                      class="font-bold text-[var(--color-text-main)] truncate max-w-[200px]"
-                      >{{ product.nom }}</span
+                      <Edit2 :size="12" /> Éditer
+                    </button>
+                    <button
+                      @click="confirmDelete(product)"
+                      class="w-full px-2 py-2 text-left text-xs font-bold text-red-500 hover:bg-red-500/10 flex items-center gap-2"
                     >
-                    <span
-                      class="text-[10px] text-[var(--color-text-sub)] truncate max-w-[200px]"
-                      >{{ product.description?.substring(0, 40) }}...</span
-                    >
+                      <Trash2 :size="12" /> Supprimer
+                    </button>
                   </div>
                 </div>
-              </td>
-              <td class="px-8 py-6">
-                <span
-                  class="text-[10px] font-black uppercase tracking-widest px-3 py-1.5 rounded-xl bg-[var(--color-bg)] border shadow-sm"
-                  :style="{ borderColor: 'var(--color-border)' }"
+
+                <div class="absolute top-2 left-2">
+                  <span
+                    :class="
+                      product.est_actif
+                        ? 'bg-[var(--color-success)]'
+                        : 'bg-slate-500'
+                    "
+                    class="text-[7px] font-black uppercase px-1.5 py-0.5 rounded text-white shadow-sm"
+                  >
+                    {{ product.est_actif ? "Public" : "Brouillon" }}
+                  </span>
+                </div>
+              </div>
+
+              <!-- Détails -->
+              <div class="p-3 flex-1 flex flex-col gap-2">
+                <div>
+                  <h3
+                    class="font-semi-bold text-[11px] text-[var(--color-text-main)] line-clamp-1"
+                  >
+                    {{ product.nom }}
+                  </h3>
+                  <p class="font-black text-[var(--color-primary)] text-xs">
+                    {{ Number(product.prix).toLocaleString() }}
+                    <small class="text-[8px]">FCFA</small>
+                  </p>
+                </div>
+
+                <!-- Performance Mobile -->
+                <div
+                  class="flex items-center gap-3 pt-2 border-t border-[var(--color-border)] opacity-60"
                 >
-                  {{ product.category?.nom || "Autre" }}
-                </span>
-              </td>
-              <td class="px-8 py-6">
-                <div class="flex flex-col">
-                  <div class="flex items-baseline gap-1.5">
+                  <div class="flex items-center gap-1">
+                    <Eye :size="10" />
+                    <span class="text-[9px] font-bold">{{
+                      product.clics_count || 0
+                    }}</span>
+                  </div>
+                  <div class="flex items-center gap-1">
+                    <Heart :size="10" />
+                    <span class="text-[9px] font-bold">{{
+                      product.favorites_count || 0
+                    }}</span>
+                  </div>
+                  <div class="absolute top-2 right-2">
+                    <button
+                      @click="toggleMenu(product.id)"
+                      class="p-1.5   backdrop-blur rounded-full shadow-sm text-[var(--color-text-main)]"
+                    >
+                      <MoreVertical :size="16" />
+                    </button>
+                    <!-- Dropdown Menu Mobile -->
+                    <div
+                      v-if="activeMenuId === product.id"
+                      class="absolute right-0 mt-2 w-32 bg-[var(--color-bg)] border rounded-xl shadow-xl z-20 overflow-hidden"
+                      :style="{ borderColor: 'var(--color-border)' }"
+                    >
+                      <button
+                        @click="openModal(product)"
+                        class="w-full px-2 py-2 text-left text-xs font-bold hover:bg-[var(--color-primary)]/10 flex items-center gap-2"
+                      >
+                        <Edit2 :size="12" /> Éditer
+                      </button>
+                      <button
+                        @click="confirmDelete(product)"
+                        class="w-full px-2 py-2 text-left text-xs font-bold text-red-500 hover:bg-red-500/10 flex items-center gap-2"
+                      >
+                        <Trash2 :size="12" /> Supprimer
+                      </button>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- ========================================== -->
+        <!-- 2. VUE DESKTOP (Tableau professionnel)     -->
+        <!-- ========================================== -->
+        <div class="hidden lg:block overflow-x-auto">
+          <table class="w-full text-left border-separate border-spacing-0">
+            <thead
+              class="bg-[var(--color-surface)] text-[var(--color-text-sub)] text-[10px] font-semi-blod tracking-widest border-b"
+            >
+              <tr>
+                <th class="px-8 py-5 border-b border-[var(--color-border)]">
+                  Produit
+                </th>
+                <th class="px-8 py-5 border-b border-[var(--color-border)]">
+                  Prix & Stock
+                </th>
+                <th class="px-8 py-5 border-b border-[var(--color-border)]">
+                  Statut
+                </th>
+                <th class="px-8 py-5 border-b border-[var(--color-border)]">
+                  Performance
+                </th>
+                <th
+                  class="px-8 py-5 border-b border-[var(--color-border)] text-right"
+                >
+                  Actions
+                </th>
+              </tr>
+            </thead>
+            <tbody class="divide-y divide-[var(--color-border)]">
+              <tr
+                v-for="product in products"
+                :key="'desk-' + product.id"
+                class="group hover:bg-[var(--color-primary)]/[0.01] transition-colors"
+              >
+                <!-- Produit -->
+                <td class="px-8 py-5">
+                  <div class="flex items-center gap-4">
+                    <img
+                      :src="product.photos?.[0] || '/placeholder.png'"
+                      class="w-12 h-12 rounded-xl object-cover border"
+                      :style="{ borderColor: 'var(--color-border)' }"
+                    />
+                    <div class="flex flex-col">
+                      <span class="font-bold text-[var(--color-text-main)]">{{
+                        product.nom
+                      }}</span>
+                      <span class="text-[10px] text-[var(--color-text-sub)]">{{
+                        product.category?.nom || "Général"
+                      }}</span>
+                    </div>
+                  </div>
+                </td>
+                <!-- Prix & Stock -->
+                <td class="px-8 py-5">
+                  <div class="flex flex-col">
                     <span class="font-black text-sm text-[var(--color-primary)]"
                       >{{ Number(product.prix).toLocaleString() }} FCFA</span
                     >
-                    <span
-                      v-if="product.ancien_prix"
-                      class="text-[9px] line-through opacity-50 text-[var(--color-text-sub)]"
-                    >
-                      {{ Number(product.ancien_prix).toLocaleString() }}
-                    </span>
-                  </div>
-                  <div class="flex items-center gap-1.5 mt-1">
-                    <div
-                      class="h-1.5 w-12 rounded-full bg-[var(--color-bg)] overflow-hidden"
-                    >
-                      <div
-                        class="h-full rounded-full"
-                        :class="
-                          product.quantite < 5 ? 'bg-red-500' : 'bg-green-500'
-                        "
-                        :style="{
-                          width:
-                            Math.min(100, (product.quantite / 20) * 100) + '%',
-                        }"
-                      ></div>
-                    </div>
                     <span
                       class="text-[10px] font-bold"
                       :class="
                         product.quantite < 5
                           ? 'text-red-500'
-                          : 'text-[var(--color-text-sub)]'
+                          : 'text-[var(--color-success)]'
                       "
-                      >{{ product.quantite }} en stock</span
                     >
+                      {{ product.quantite }} en stock
+                    </span>
                   </div>
-                </div>
-              </td>
-              <td class="px-8 py-6">
-                <span
-                  :class="
-                    product.est_actif
-                      ? 'bg-green-500/10 text-green-600 border-green-500/20'
-                      : 'bg-[var(--color-bg)] text-[var(--color-text-sub)] border-[var(--color-border)]'
-                  "
-                  class="text-[9px] font-black uppercase tracking-widest px-3 py-1.5 rounded-full border opacity-80"
-                >
-                  {{ product.est_actif ? "Public" : "Brouillon" }}
-                </span>
-              </td>
-              <td class="px-8 py-6">
-                <div
-                  class="flex items-center gap-4 text-[var(--color-text-sub)]"
-                >
-                  <div class="flex items-center gap-1.5">
-                    <Eye :size="14" />
-                    <span class="text-xs font-bold">{{
-                      product.clics_count || 0
-                    }}</span>
-                  </div>
-                  <div class="flex items-center gap-1.5">
-                    <Heart :size="14" />
-                    <span class="text-xs font-bold">{{
-                      product.favorites_count || 0
-                    }}</span>
-                  </div>
-                </div>
-              </td>
-              <td class="px-8 py-6 text-right">
-                <div
-                  class="flex items-center justify-end gap-1 opacity-100 group-hover:opacity-100 transition-opacity"
-                >
-                  <button
-                    @click="openModal(product)"
-                    class="p-3 hover:bg-[var(--color-primary)]/10 text-[var(--color-text-sub)] hover:text-[var(--color-primary)] rounded-2xl transition-all"
+                </td>
+                <!-- Statut -->
+                <td class="px-8 py-5">
+                  <span
+                    :class="
+                      product.est_actif
+                        ? 'text-green-600 bg-green-50'
+                        : 'text-slate-500 bg-slate-50'
+                    "
+                    class="text-[9px] font-black uppercase px-3 py-1 rounded-full border"
                   >
-                    <Edit2 :size="18" />
-                  </button>
-                  <button
-                    @click="confirmDelete(product)"
-                    class="p-3 hover:bg-red-500/10 text-[var(--color-text-sub)] hover:text-red-500 rounded-2xl transition-all"
+                    {{ product.est_actif ? "Public" : "Brouillon" }}
+                  </span>
+                </td>
+                <!-- Performance Desktop -->
+                <td class="px-8 py-5">
+                  <div
+                    class="flex items-center gap-4 text-[var(--color-text-sub)]"
                   >
-                    <Trash2 :size="18" />
+                    <div class="flex items-center gap-1.5">
+                      <Eye :size="14" />
+                      <span class="text-xs font-bold">{{
+                        product.clics_count || 0
+                      }}</span>
+                    </div>
+                    <div class="flex items-center gap-1.5">
+                      <Heart :size="14" />
+                      <span class="text-xs font-bold">{{
+                        product.favorites_count || 0
+                      }}</span>
+                    </div>
+                  </div>
+                </td>
+                <!-- Menu Actions Desktop -->
+                <td class="px-8 py-5 text-right relative">
+                  <button
+                    @click="toggleMenu(product.id)"
+                    class="p-2 hover:bg-[var(--color-surface)] rounded-xl transition-colors"
+                  >
+                    <MoreHorizontal
+                      :size="20"
+                      class="text-[var(--color-text-sub)]"
+                    />
                   </button>
-                </div>
-              </td>
-            </tr>
-          </tbody>
-        </table>
+
+                  <!-- Dropdown Desktop -->
+                  <div
+                    v-if="activeMenuId === product.id"
+                    class="absolute right-8 top-14 w-40 bg-[var(--color-bg)] border rounded-2xl shadow-xl z-30 overflow-hidden"
+                    :style="{ borderColor: 'var(--color-border)' }"
+                  >
+                    <button
+                      @click="openModal(product)"
+                      class="w-full px-4 py-3 text-left text-sm font-bold hover:bg-[var(--color-primary)]/5 flex items-center gap-3"
+                    >
+                      <Edit2 :size="16" class="text-[var(--color-primary)]" />
+                      Modifier
+                    </button>
+                    <button
+                      @click="confirmDelete(product)"
+                      class="w-full px-4 py-3 text-left text-sm font-bold text-red-500 hover:bg-red-500/5 flex items-center gap-3"
+                    >
+                      <Trash2 :size="16" /> Supprimer
+                    </button>
+                  </div>
+                </td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
       </div>
     </div>
 
@@ -468,7 +580,7 @@
             >
               <Loader2 v-if="saving" class="animate-spin" :size="20" />
               <span>{{
-                isEditing ? "Confirmer les modifications" : "Lancer la vente"
+                isEditing ? "Confirmer " : "Lancer la vente"
               }}</span>
             </button>
           </div>
@@ -490,6 +602,7 @@ import {
   DollarSign,
   Eye,
   MoreHorizontal,
+  MoreVertical,
   Heart,
   Info,
   Star,
@@ -767,6 +880,21 @@ onMounted(() => {
   if (route.query.add === "true") {
     openModal();
   }
+});
+
+const activeMenuId = ref(null);
+
+const toggleMenu = (id) => {
+  if (activeMenuId.value === id) {
+    activeMenuId.value = null; // Ferme si on reclique sur le même
+  } else {
+    activeMenuId.value = id; // Ouvre le menu cliqué
+  }
+};
+
+// Optionnel : Fermer le menu quand on clique ailleurs
+window.addEventListener("click", (e) => {
+  if (!e.target.closest("button")) activeMenuId.value = null;
 });
 </script>
 
