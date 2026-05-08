@@ -1,58 +1,76 @@
 <template>
   <div class="space-y-6">
-    <div class="flex items-center justify-between">
+    <div class="flex items-start justify-between mb-5">
       <div>
         <h1
-          class="text-2xl font-black tracking-tight text-[var(--color-text-main)]"
+          class="text-xl font-semibold tracking-tight text-[var(--color-text-main)]"
         >
-          Mes Produits
+          Mes produits
         </h1>
-        <p class="text-[var(--color-text-sub)] text-sm">
-          Gérez votre inventaire et vos ventes en direct.
+        <p class="text-[var(--color-text-sub)] text-xs mt-0.5">
+          Gestion de l'inventaire et des ventes
         </p>
       </div>
-      <button
-        @click="openModal()"
-        class="flex items-center gap-2 px-6 py-3 bg-[var(--color-primary)] text-white rounded-2xl font-bold hover:opacity-90 transition-all shadow-lg shadow-[var(--color-primary)]/20"
-      >
-        <Plus :size="20" />
-        Ajouter un produit
-      </button>
+
+      <div class="flex items-center gap-2">
+        <!-- Action principale : Plus discrète -->
+        <button
+          @click="openModal()"
+          class="flex items-center gap-2 px-4 py-2 bg-[var(--color-primary)] text-[var(--color-pure)] rounded-lg text-sm font-medium transition-all hover:shadow-md active:scale-95"
+        >
+          <Plus :size="16" :stroke-width="2.5" />
+          <span class="hidden sm:inline">Ajouter</span>
+        </button>
+
+        <!-- Menu d'options (Les trois points) -->
+      </div>
     </div>
 
     <!-- Stats summary -->
-    <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
+
+    <div class="grid grid-cols-2 lg:grid-cols-4 gap-3">
       <div
         v-for="stat in stats"
         :key="stat.label"
-        class="p-6 rounded-3xl border bg-[var(--color-surface)] shadow-sm"
+        class="p-3.5 rounded-lg border bg-[var(--color-bg)] transition-all"
         :style="{ borderColor: 'var(--color-border)' }"
       >
-        <div class="flex items-center justify-between mb-2">
-          <div
-            class="p-3 rounded-2xl"
-            :style="{ backgroundColor: stat.color + '10' }"
-          >
-            <component
-              :is="stat.icon"
-              :size="24"
-              :style="{ color: stat.color }"
-            />
-          </div>
+        <!-- Header : Icône et Tendance -->
+        <div class="flex items-center justify-between mb-3">
+          <component
+            :is="stat.icon"
+            :size="16"
+            :stroke-width="2"
+            class="text-[var(--color-text-sub)] opacity-70"
+          />
           <span
-            class="text-xs font-bold px-2 py-1 rounded-full bg-green-500/10 text-green-600"
-            >+{{ stat.trend }}% ce mois</span
+            class="text-[10px] font-bold"
+            :style="{ color: 'var(--color-success, var(--color-primary))' }"
           >
+            +{{ stat.trend }}%
+          </span>
         </div>
-        <p class="text-xs font-bold uppercase tracking-widest opacity-40 mb-1">
-          {{ stat.label }}
-        </p>
-        <p class="text-2xl font-black text-[var(--color-text-main)]">
-          {{ stat.value }}
-        </p>
+
+        <!-- Contenu : Label et Valeur <span 
+  class="text-[10px] font-bold" 
+  :style="{ color: 'var(--color-success, var(--color-primary))' }"
+>
+  +{{ stat.trend }}%
+</span> -->
+        <div>
+          <p
+            class="text-[11px] font-medium text-[var(--color-text-sub)] leading-none mb-1"
+          >
+            {{ stat.label }}
+          </p>
+          <h3
+            class="text-lg font-semibold text-[var(--color-text-main)] tracking-tight"
+          >
+            {{ stat.value }}
+          </h3>
+        </div>
       </div>
     </div>
-
     <!-- Products Table -->
     <div
       class="rounded-3xl border bg-[var(--color-surface)] overflow-hidden shadow-xl"
@@ -82,6 +100,8 @@
           SASAYEE dès maintenant.
         </p>
         <button
+          title="Ajouter un produit"
+          aria-label="Ajouter un produit"
           @click="openModal()"
           class="px-8 py-3 bg-[var(--color-primary)] text-white rounded-2xl font-bold hover:opacity-90 transition-all"
         >
@@ -246,7 +266,6 @@
 
     <!-- Product Modal -->
 
-    
     <transition name="modal">
       <div
         v-if="showModal"
@@ -470,6 +489,7 @@ import {
   X,
   DollarSign,
   Eye,
+  MoreHorizontal,
   Heart,
   Info,
   Star,
@@ -572,7 +592,7 @@ onMounted(() => {
   fetchMyProducts();
   fetchCategories();
 
-  if (route.query.add === 'true') {
+  if (route.query.add === "true") {
     openModal();
     // Remove the query parameter from the URL to prevent reopening on refresh
     const newQuery = { ...route.query };
@@ -695,7 +715,9 @@ const saveProduct = async () => {
       headers: { "Content-Type": "multipart/form-data" },
     });
     await fetchMyProducts();
-    flash.success(isEditing.value ? "Produit mis à jour !" : "Produit ajouté avec succès !");
+    flash.success(
+      isEditing.value ? "Produit mis à jour !" : "Produit ajouté avec succès !",
+    );
     closeModal();
   } catch (err) {
     console.error("Error saving product", err.response?.data || err);
@@ -725,11 +747,9 @@ const confirmDelete = async (product) => {
         flash.error("Impossible de supprimer le produit.");
         console.error("Error deleting product", err);
       }
-    }
+    },
   });
 };
-
-
 
 watch(
   () => route.query.add,

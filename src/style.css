@@ -11,6 +11,7 @@
     --color-accent: #ec4899;
     --color-pure: #ffffff;
     --color-rating: #f59e0b;
+    --color-success: #10b981; /* Un vert qui se marie bien avec ton #6366f1 */
   }
 
   /* Support both system preference AND manual toggle class */

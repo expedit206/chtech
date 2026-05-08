@@ -28,12 +28,12 @@
             @click="productStore.searchQuery = ''"
             class="flex items-center"
           >
-            <!-- <img
+            <img
               :src="CONFIG.LOGO_URL"
               alt="SASAYEE Logo"
               class="h-12 md:h-14 w-auto object-contain transition-transform hover:scale-105"
-            /> -->
-            <div
+            />
+            <!-- <div
               class="text-2xl md:text-3xl font-bold tracking-tighter transition-all hover:opacity-80"
               :style="{
                 color: 'var(--color-primary)',
@@ -41,7 +41,7 @@
               }"
             >
               Sasayee
-            </div>
+            </div> -->
           </RouterLink>
         </div>
 
