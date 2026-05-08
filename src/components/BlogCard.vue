@@ -79,7 +79,6 @@
               color: 'var(--color-pure)',
             }"
           >
-            <!-- <i class="fas fa-thumbs-up"></i> -->
             <ThumbsUp :size="16" />
           </span>
           <span

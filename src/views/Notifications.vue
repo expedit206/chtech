@@ -5,45 +5,59 @@
       <div
         class="flex flex-col md:flex-row md:items-center justify-between gap-6 mb-10"
       >
-    
-        <div class="flex items-center gap-3">
+        <div class="flex items-center gap-6">
+          <!-- Plus d'espace entre les deux actions -->
+
+          <!-- Tout marquer comme lu -->
           <button
             v-if="unreadCount > 0"
             @click="store.markAllAsRead"
-            class="text-sm font-black flex items-center gap-2 transition-all hover:opacity-80 active:scale-95"
-            :style="{ color: 'var(--color-primary)' }"
+            class="text-sm font-semibold flex items-center gap-2 text-[var(--color-primary)] hover:opacity-70 transition-all"
           >
-            <CheckCheck :size="18" />
+            <CheckCheck :size="16" />
             Tout marquer comme lu
           </button>
+
+          <!-- Supprimer (Version discrète) -->
           <button
             v-if="notifications.length > 0"
             @click="confirmClearAll"
-            class="p-3 bg-[var(--color-surface)] border border-[var(--color-border)] rounded-2xl text-[var(--color-text-sub)] hover:text-red-500 hover:border-red-500/30 transition-all active:scale-95"
+            class="text-sm font-medium flex items-center gap-2 text-[var(--color-text-sub)] hover:text-red-500 transition-all"
           >
-            <Trash2 :size="18" />
+            <Trash2 :size="16" />
+            Tout supprimer
           </button>
         </div>
       </div>
 
       <!-- Filtres -->
-      <div class="flex gap-2 mb-8 overflow-x-auto pb-4 no-scrollbar">
+
+      <div class="flex gap-3 mb-8 overflow-x-auto pb-2">
         <button
           v-for="filter in filters"
           :key="filter.value"
           @click="store.setFilter(filter.value)"
           :class="[
-            'flex-shrink-0 px-5 py-2.5 rounded-2xl text-sm font-black transition-all active:scale-95 border flex items-center gap-2',
+            'flex-shrink-0 px-4 py-2 rounded-full text-sm font-medium transition-all duration-200 active:scale-95 border flex items-center gap-2.5',
             store.activeFilter === filter.value
-              ? 'bg-[var(--color-primary)] text-white border-[var(--color-primary)] shadow-lg shadow-[var(--color-primary)]/20'
-              : 'bg-[var(--color-surface)] border-[var(--color-border)] text-[var(--color-text-sub)] opacity-70 hover:opacity-100 hover:border-[var(--color-primary)]',
+              ? 'bg-[var(--color-primary)] text-[var(--color-pure)] border-[var(--color-primary)] shadow-sm'
+              : 'bg-[var(--color-surface)] border-[var(--color-border)] text-[var(--color-text-sub)] hover:border-[var(--color-primary)] hover:text-[var(--color-primary)]',
           ]"
         >
-          <component :is="filter.icon" :size="16" />
+          <!-- Icône Lucide avec un stroke légèrement plus fin pour le côté Pro -->
+          <component :is="filter.icon" :size="14" :stroke-width="2" />
+
           {{ filter.label }}
+
+          <!-- Badge Unread -->
           <span
             v-if="filter.unreadCount > 0"
-            class="ml-1.5 px-2 py-0.5 bg-black/10 rounded-full text-[10px] font-black"
+            :class="[
+              'ml-1 px-2 py-0.5 rounded-full text-[10px] font-bold',
+              store.activeFilter === filter.value
+                ? 'bg-white/20 text-white'
+                : 'bg-[var(--color-border)] text-[var(--color-text-main)]',
+            ]"
           >
             {{ filter.unreadCount }}
           </span>
@@ -87,12 +101,12 @@
             >
               <!-- Icône -->
               <div
-                class="w-14 h-14 rounded-[24px] flex items-center justify-center flex-shrink-0 transition-transform group-hover:scale-110"
+                class="w-10 h-10 rounded-full flex items-center justify-center flex-shrink-0 transition-transform group-hover:scale-110"
                 :style="{ backgroundColor: getBgColor(notif.data.type) }"
               >
                 <component
                   :is="getIcon(notif.data.type)"
-                  :size="24"
+                  :size="16"
                   :style="{ color: getColor(notif.data.type) }"
                 />
               </div>
