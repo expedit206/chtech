@@ -68,6 +68,11 @@
 
           <!-- Actions -->
           <div v-if="req.status === 'pending'" class="flex md:flex-col gap-2 w-full md:w-auto flex-shrink-0">
+            <button @click="contactUser(req.user?.id)"
+              class="flex-1 flex items-center justify-center gap-2 px-5 py-2.5 rounded-xl text-sm font-bold transition-all border"
+              :style="{ backgroundColor: 'var(--color-bg)', color: 'var(--color-text-main)', borderColor: 'var(--color-border)' }">
+              <MessageCircle :size="16" /> Discuter
+            </button>
             <button @click="handleAction(req.id, 'approved')"
               class="flex-1 flex items-center justify-center gap-2 px-5 py-2.5 rounded-xl text-sm font-bold transition-all"
               style="background: rgba(34,197,94,0.15); color: #22c55e; border: 1px solid rgba(34,197,94,0.3)">
@@ -101,7 +106,8 @@
 
 <script setup>
 import { ref, computed, onMounted } from 'vue';
-import { Store, User as UserIcon, UserCircle, Mail, Calendar, Check, X } from 'lucide-vue-next';
+import { Store, User as UserIcon, UserCircle, Mail, Calendar, Check, X, MessageCircle } from 'lucide-vue-next';
+import { useRouter } from 'vue-router';
 
 import apiClient from '../../api/index.js';
 
@@ -111,6 +117,12 @@ const statusFilter = ref('all');
 const currentPage = ref(1);
 const lastPage = ref(1);
 const total = ref(0);
+const router = useRouter();
+
+const contactUser = (userId) => {
+  if (!userId) return;
+  router.push({ name: 'messages', params: { receiverId: userId } });
+};
 
 const filters = [
   { value: 'all', label: 'Toutes' },

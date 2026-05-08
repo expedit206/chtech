@@ -32,11 +32,15 @@
           >
             <Clock class="w-16 h-16 mx-auto mb-2" />
             <h3 class="text-xl font-bold">Demande en cours d'examen</h3>
-            <p class="text-sm text-[var(--color-text-sub)] mt-2">
+            <p class="text-sm text-[var(--color-text-sub)] mt-2 mb-6">
               Votre demande pour devenir vendeur est actuellement en cours
               d'évaluation par notre équipe. Vous recevrez une notification
               d'ici peu.
             </p>
+            <button @click="openLiveChat" class="px-6 py-2.5 rounded-xl bg-[var(--color-primary)] text-white font-bold flex items-center justify-center gap-2 hover:opacity-90 transition-all active:scale-95 shadow-lg">
+              <MessageCircle class="w-5 h-5" />
+              Discuter de ma demande
+            </button>   
           </div>
           <div
             v-else-if="existingRequest.status === 'approved'"
@@ -57,11 +61,15 @@
           >
             <XCircle class="w-16 h-16 mx-auto mb-2" />
             <h3 class="text-xl font-bold">Demande rejetée</h3>
-            <p class="text-sm text-[var(--color-text-sub)] mt-2">
+            <p class="text-sm text-[var(--color-text-sub)] mt-2 mb-6">
               Nous n'avons malheureusement pas pu valider votre demande pour
               devenir vendeur. Veuillez contacter le support pour plus
               d'informations.
             </p>
+            <button @click="openLiveChat" class="px-6 py-2.5 rounded-xl border-2 border-red-500 text-red-500 font-bold flex items-center justify-center gap-2 hover:bg-red-500 hover:text-white transition-all active:scale-95">
+              <MessageCircle class="w-5 h-5" />
+              Contacter le support
+            </button>
           </div>
         </div>
 
@@ -153,6 +161,7 @@
           </p>
           <router-link
             :to="{ name: 'messages' }"
+            @click.prevent="openLiveChat"
             class="text-[var(--color-primary)] font-bold hover:underline block truncate"
             >Contacter</router-link
           >
@@ -196,7 +205,9 @@ import {
   ArrowUp,
   CheckCircle,
   XCircle,
+  MessageCircle
 } from "lucide-vue-next";
+import { useRouter } from "vue-router";
 import apiClient from "../../api";
 import { useAlert } from "../../composables/useAlert.js";
 
@@ -208,6 +219,24 @@ useSeo({
 });
 
 const alert = useAlert();
+const router = useRouter();
+
+const openLiveChat = async () => {
+  try {
+     const res = await apiClient.get('/chat/support-admin');
+     if (res.data.success && res.data.admin_id) {
+         router.push({
+            name: "messages",
+            params: { receiverId: res.data.admin_id }
+         });
+     } else {
+         router.push({ name: 'messages' });
+     }
+  } catch (e) {
+     console.error("Impossible de récupérer l'admin", e);
+     router.push({ name: 'messages' });
+  }
+};
 
 const form = reactive({
   nom: "",

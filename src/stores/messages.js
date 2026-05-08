@@ -215,7 +215,9 @@ export const useMessageStore = defineStore("message", () => {
           product_id: productId,
           product_name: productData ? productData.nom : (convMatch ? convMatch.product_name : null),
           product_slug: productData ? productData.slug : (convMatch ? convMatch.product_slug : null),
+          product_owner_id: productData ? (productData.user_id || (productData.user ? productData.user.id : null)) : (convMatch ? convMatch.product_owner_id : null),
           product_image: productData && productData.photos ? productData.photos[0] : (convMatch ? convMatch.product_image : null),
+          product_min_price: productData ? productData.prix_minimum : (convMatch ? convMatch.product_min_price : null),
           order_status: convMatch ? convMatch.order_status : null,
           ...(convMatch || {})
         };

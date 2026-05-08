@@ -378,4 +378,4 @@ const proceedToChat = async () => {
 .custom-scrollbar::-webkit-scrollbar-thumb:hover {
   background: var(--color-text-sub);
 }
-</style>
+  </style>

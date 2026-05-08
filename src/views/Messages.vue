@@ -75,8 +75,11 @@
                   {{ messageStore.selectedConversation.name }}
                 </component>
                 <!-- Info secondaire optionnelle si admin -->
-                <span v-if="authStore.isAdmin && messageStore.selectedConversation.product_name" class="text-[10px] font-semibold opacity-60 truncate uppercase tracking-wider" :style="{ color: 'var(--color-text-sub)' }">
+                <span v-if="(authStore.isAdmin || isOwner) && messageStore.selectedConversation.product_name" class="text-[10px] font-semibold opacity-60 truncate uppercase tracking-wider flex items-center gap-2" :style="{ color: 'var(--color-text-sub)' }">
                   Conversation Produit
+                  <span v-if="messageStore.selectedConversation.product_min_price" class="text-orange-500 font-black">
+                    ({{ authStore.isAdmin ? 'PRIX MIN' : 'VOTRE PRIX MIN' }}: {{ Number(messageStore.selectedConversation.product_min_price).toLocaleString() }} CFA)
+                  </span>
                 </span>
              </div>
           </div>
@@ -270,7 +273,10 @@
 
           <div class="flex items-center gap-2 ml-auto">
             <template v-if="!messageStore.selectedConversation.order_status">
-              <div class="flex flex-col items-end gap-1 mr-2 px-3 border-r border-white/10">
+              <div class="flex flex-col items-end gap-0.5 mr-2 px-3 border-r border-white/10">
+                <div v-if="messageStore.selectedConversation.product_min_price" class="text-[9px] font-black text-orange-500 bg-orange-500/10 px-2 py-0.5 rounded-full border border-orange-500/20 mb-1">
+                  MIN: {{ formatMoney(messageStore.selectedConversation.product_min_price) }}
+                </div>
                 <span class="text-[9px] font-black opacity-50 uppercase tracking-tighter" :style="{ color: 'var(--color-text-sub)' }">Prix final négocié</span>
                 <div class="relative flex items-center">
                    <input 
@@ -372,6 +378,10 @@ const isCartPanelExpanded = ref(false);
 // Holds the last cart_order_id created via the cart panel (for status updates)
 const cartOrderId     = ref(null);
 const cartOrderStatus = ref(null);
+const isOwner = computed(() => {
+  if (!authStore.user || !messageStore.selectedConversation) return false;
+  return String(authStore.user.id) === String(messageStore.selectedConversation.product_owner_id);
+});
 
 // ---- Status helpers ----
 const ORDER_STATUS_FR = {

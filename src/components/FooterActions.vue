@@ -161,11 +161,11 @@
     } from "lucide-vue-next";
 import apiClient from "../api";
 import { useToast } from "vue-toastification";
+import { useAuthStore } from "../stores/auth";
+import { useRouter } from "vue-router";
 
     const isSubmitting = ref(false);
 
-const errorMessage = ref("");
-const successMessage = ref("");
 
     const scrollToTop = () => {
       window.scrollTo({
@@ -178,49 +178,59 @@ const successMessage = ref("");
     const menuRef = ref(null);
     const message = ref("");
     const rating = ref(0);
+    const authStore = useAuthStore();
+    const router = useRouter();
 
    const toast = useToast()
 const submitComment = async () => {
-  errorMessage.value = "";
-  successMessage.value = "";
+  if (isSubmitting.value) return;
 
-  // ✅ validation frontend
+  // 1. Vérification de la connexion
+  if (!authStore.isAuthenticated) {
+    toast.info("Veuillez vous connecter pour laisser un avis");
+    router.push({ name: 'Login' });
+    isMenuOpen.value = false;
+    return;
+  }
+
+  // 2. Validation locale
   if (!rating.value) {
-    errorMessage.value = "Veuillez donner une note";
+    toast.warning("N'oubliez pas de donner une note !");
+    return;
+  }
+
+  if (!message.value.trim()) {
+    toast.warning("Votre message est vide...");
     return;
   }
 
   try {
     isSubmitting.value = true;
-console.log(message.value );
-console.log(rating.value);
 
     const response = await apiClient.post("/reviews", {
       rating: rating.value,
       message: message.value,
     });
 
-    // ✅ succès
-    successMessage.value = response.data.message || "Avis envoyé";
-  toast.success(successMessage.value);
+    toast.success(response.data.message || "Merci pour votre avis ! ✨");
  
-    // reset
+    // Reset du formulaire
     message.value = "";
     rating.value = 0;
     isMenuOpen.value = false;
 
   } catch (error) {
-    console.log(error);
+    console.error('[Review Error]:', error);
 
-    // 🔥 gestion intelligente des erreurs backend
-    if (error.response) {
-      errorMessage.value =
-        error.response.data.message ||
-        "Erreur lors de l'envoi de l'avis";
-          toast.error(errorMessage.value);
+    const errorMessage = error.response?.data?.message 
+      || "Oups ! Une erreur est survenue lors de l'envoi de votre avis.";
+    
+    toast.error(errorMessage);
 
-    } else {
-      errorMessage.value = "Problème réseau";
+    // Gérer les erreurs de validation spécifiques du backend si présentes
+    if (error.response?.data?.errors) {
+      const fieldErrors = Object.values(error.response.data.errors).flat();
+      fieldErrors.forEach(err => toast.error(err));
     }
   } finally {
     isSubmitting.value = false;

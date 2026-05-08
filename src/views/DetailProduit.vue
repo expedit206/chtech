@@ -308,6 +308,14 @@
           >
             {{ product.name }}
           </h1>
+          
+          <!-- Owner or Admin: Minimum Price -->
+          <div v-if="isOwnerOrAdmin && product.prix_minimum" class="p-3 rounded-xl bg-orange-500/10 border border-orange-500/20 mb-4 inline-block">
+             <p class="text-[10px] font-black uppercase text-orange-600 mb-0.5">💸 {{ authStore.isAdmin ? 'Prix Minimum (Admin)' : 'Votre Prix Minimum (Vendeur)' }}</p>
+             <p class="text-xl font-black text-orange-600">{{ product.prix_minimum_formatted }}</p>
+             <p class="text-[9px] opacity-60 text-orange-500 italic">Prix plancher négocié.</p>
+          </div>
+
           <div class="flex items-baseline gap-3">
             <p
               class="text-2xl font-black"
@@ -459,22 +467,7 @@
             </Transition>
           </button>
 
-          <!-- Buy now -->
-          <button
-            @click="handleContactSeller"
-            :disabled="product.quantity === 0"
-            class="flex-1 py-4 px-3 rounded-xl font-bold text-white transition-all active:scale-95 flex items-center justify-center gap-2 text-xs shadow-md hover:shadow-lg hover:opacity-90 hover:-translate-y-0.5"
-            :style="{
-              backgroundColor:
-                product.quantity === 0
-                  ? 'var(--color-text-sub)'
-                  : 'var(--color-primary)',
-              opacity: product.quantity === 0 ? 0.5 : 1,
-            }"
-          >
-            <ShoppingBag :size="16" :stroke-width="3" />
-            Acheter maintenant
-          </button>
+          
         </div>
 
         <!-- Seller Info -->
@@ -846,6 +839,8 @@ const product = ref({
   user: null,
   ville: "",
   condition: "Neuf",
+  prix_minimum: null,
+  prix_minimum_formatted: null,
 });
 
 // Dynamic SEO
@@ -889,6 +884,11 @@ useSeo({
       },
     };
   }),
+});
+
+const isOwnerOrAdmin = computed(() => {
+  if (!authStore.user || !product.value.id) return false;
+  return authStore.isAdmin || String(authStore.user.id) === String(product.value.user?.id);
 });
 
 const isFavorited = computed(() =>
@@ -948,6 +948,10 @@ const fetchProductData = async () => {
       user: produit.user || null,
       condition: produit.condition || "Neuf",
       ville: produit.ville || "Cameroun",
+      prix_minimum: produit.prix_minimum,
+      prix_minimum_formatted: produit.prix_minimum 
+        ? `${Number(produit.prix_minimum).toLocaleString("fr-FR")} FCFA` 
+        : null,
       specs: [
         {
           icon: "fas fa-tag",

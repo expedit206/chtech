@@ -380,11 +380,11 @@
             </div>
 
             <!-- Pricing & Inventory -->
-            <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
               <div class="space-y-1">
                 <label
                   class="text-[9px] font-semibold uppercase opacity-50 ml-1"
-                  >Prix (FCFA)</label
+                  >Prix de vente (Public)</label
                 >
                 <div class="relative">
                   <input
@@ -399,10 +399,31 @@
                   >
                 </div>
               </div>
+              <div class="space-y-1">
+                <label
+                  class="text-[9px] font-semibold uppercase opacity-50 ml-1 text-[var(--color-primary)]"
+                  >Prix Minimum (Admin uniquement)</label
+                >
+                <div class="relative">
+                  <input
+                    v-model="form.prix_minimum"
+                    type="number"
+                    placeholder="Prix plancher pour l'admin"
+                    class="w-full pl-3 pr-10 py-2 rounded-lg bg-[var(--color-primary)]/5 border border-[var(--color-primary)]/20 focus:border-[var(--color-primary)] focus:ring-2 focus:ring-[var(--color-primary)]/20 font-medium text-[var(--color-text-main)]"
+                  />
+                  <span
+                    class="absolute right-3 top-1/2 -translate-y-1/2 text-[9px] font-semibold opacity-30"
+                    >CFA</span
+                  >
+                </div>
+              </div>
+            </div>
+
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
               <div v-if="isEditing" class="space-y-1">
                 <label
                   class="text-[9px] font-semibold uppercase opacity-50 ml-1"
-                  >Ancien prix</label
+                  >Ancien prix (Barré)</label
                 >
                 <div class="relative">
                   <input
@@ -419,7 +440,7 @@
               <div class="space-y-1">
                 <label
                   class="text-[9px] font-semibold uppercase opacity-50 ml-1"
-                  >Stock</label
+                  >Stock disponible</label
                 >
                 <input
                   v-model="form.stock"
@@ -499,6 +520,7 @@ const form = ref({
   nom: "",
   description: "",
   prix: 0,
+  prix_minimum: null,
   ancien_prix: null,
   category_id: "",
   stock: 0,
@@ -589,6 +611,7 @@ const openModal = (product = null) => {
       nom: product.nom,
       description: product.description,
       prix: product.prix,
+      prix_minimum: product.prix_minimum,
       ancien_prix: product.ancien_prix,
       category_id: product.category_id,
       stock: product.quantite,
@@ -603,6 +626,7 @@ const openModal = (product = null) => {
       nom: "",
       description: "",
       prix: 0,
+      prix_minimum: null,
       ancien_prix: null,
       category_id: "",
       stock: 0,
@@ -667,6 +691,9 @@ const saveProduct = async () => {
   formData.append("nom", form.value.nom);
   formData.append("description", form.value.description);
   formData.append("prix", form.value.prix);
+  if (form.value.prix_minimum) {
+    formData.append("prix_minimum", form.value.prix_minimum);
+  }
   if (form.value.ancien_prix) {
     formData.append("ancien_prix", form.value.ancien_prix);
   }

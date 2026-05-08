@@ -41,7 +41,8 @@
               :style="{ borderColor: 'var(--color-border)', color: 'var(--color-text-sub)' }">
               <th class="px-6 py-4">Produit</th>
               <th class="px-6 py-4 hidden md:table-cell">Vendeur</th>
-              <th class="px-6 py-4 hidden sm:table-cell">Prix</th>
+              <th class="px-6 py-4 hidden sm:table-cell">Prix Public</th>
+              <th class="px-6 py-4 hidden lg:table-cell text-orange-500">Prix Min (SAS)</th>
               <th class="px-6 py-4">Statut</th>
               <th class="px-6 py-4 text-right">Actions</th>
             </tr>
@@ -70,6 +71,9 @@
               <td class="px-6 py-4 hidden sm:table-cell text-sm font-bold"
                 :style="{ color: 'var(--color-primary)' }">
                 {{ Number(p.prix).toLocaleString() }} FCFA
+              </td>
+              <td class="px-6 py-4 hidden lg:table-cell text-sm font-black text-orange-500">
+                {{ p.prix_minimum ? Number(p.prix_minimum).toLocaleString() + ' FCFA' : '-' }}
               </td>
               <td class="px-6 py-4">
                 <span class="text-[11px] font-black px-2.5 py-1 rounded-full"
