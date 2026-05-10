@@ -29,12 +29,10 @@
       <Footer v-if="shouldShowFooter" />
       <FooterActions />
       <CustomAlertDialog />
-    </div>
-
-    <!-- Cart: floating button + drawer (non-admin, authenticated users) -->
-    <template v-if="authStore.isAuthenticated">
+      
+      <!-- Cart: floating button + drawer (available for all users) -->
       <CartDrawer />
-    </template>
+    </div>
   </div>
 </template>
 

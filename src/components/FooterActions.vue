@@ -164,7 +164,8 @@ import { useAuthStore } from "../stores/auth";
 import { useRouter } from "vue-router";
 
 const isSubmitting = ref(false);
-
+const errorMessage = ref("")
+const successMessage = ref("")
 
 const scrollToTop = () => {
   window.scrollTo({

@@ -164,6 +164,11 @@ const routes = [
         name: "admin-seller-requests",
         component: () => import("../views/admin/AdminSupplierRequests.vue"),
       },
+      {
+        path: "avis-plateforme",
+        name: "admin-platform-reviews",
+        component: () => import("../views/admin/AdminPlatformReviews.vue"),
+      },
     ],
   },
   {

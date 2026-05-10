@@ -486,12 +486,12 @@
         </RouterLink>
 
         <RouterLink
-          :to="{ name: 'Blogs' }"
+          :to="{ name: 'my-orders' }"
           class="group relative flex-1 flex flex-col items-center justify-center border-b-4 transition-colors"
-          :style="isActiveName('Blogs') ? activeStyle : inactiveStyle"
+          :style="isActiveName('my-orders') ? activeStyle : inactiveStyle"
         >
-          <Newspaper :stroke-width="2" size="18" />
-          <span class="text-[9px] font-medium mt-1">Blogs</span>
+          <ShoppingBag :stroke-width="2" size="18" />
+          <span class="text-[9px] font-medium mt-1">Commandes</span>
         </RouterLink>
 
         <RouterLink
@@ -548,7 +548,6 @@ import {
   Search,
   Store,
   House,
-  Newspaper,
   Bell,
   MessageCircle,
   LayoutDashboard,

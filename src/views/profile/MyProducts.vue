@@ -204,7 +204,7 @@
                   <div class="absolute top-2 right-2">
                     <button
                       @click="toggleMenu(product.id)"
-                      class="p-1.5 bg-white   backdrop-blur rounded-full shadow-sm text-[var(--color-text-main)]"
+                      class="p-1.5 bg-white   backdrop-blur rounded-full shadow-sm text-black"
                     >
                       <MoreVertical :size="16" />
                     </button>

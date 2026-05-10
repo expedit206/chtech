@@ -249,6 +249,11 @@ const menuSections = computed(() => {
         },
         { name: "Catégories", icon: Tag, route: { name: "admin-categories" } },
         { name: "Blog", icon: FileText, route: { name: "admin-blog" } },
+        {
+          name: "Avis Plateforme",
+          icon: Star,
+          route: { name: "admin-platform-reviews" },
+        },
       ],
     });
   }
