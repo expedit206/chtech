@@ -1,6 +1,6 @@
 <template>
   <div
-    class="px-4 py-3 border-t"
+    class="px-4 py-3 border-t sticky bottom-0"
     :style="{
       backgroundColor: 'var(--color-surface)',
       borderColor: 'var(--color-border)',

@@ -1,5 +1,6 @@
 <template>
   <div
+    v-if="!isChatRoute"
     class="fixed md:bottom-6 bottom-14 right-6 flex flex-col items-end gap-3 z-[60]"
   >
     <Transition name="fade-slide">
@@ -146,7 +147,7 @@
 </style>
 <script setup>
 // import { ref } from "vue";
-import { ref, onMounted, onBeforeUnmount } from "vue";
+import { ref, onMounted, onBeforeUnmount, computed } from "vue";
 // Exemple correct pour Vue Router
 import { RouterLink } from "vue-router";
 import {
@@ -274,4 +275,6 @@ onBeforeUnmount(() => {
   document.removeEventListener("click", handleClickOutside);
   window.removeEventListener("scroll", handleScroll);
 });
+
+const isChatRoute = computed(() => router.currentRoute.value.name === 'messages');
 </script>
