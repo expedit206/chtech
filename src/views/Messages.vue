@@ -71,7 +71,7 @@
                     : CONFIG.STORAGE_URL +
                       messageStore.selectedConversation.product_image
                 "
-                class="w-full h-full object-cover group-hover:scale-110 transition-transform"
+                class="w-full h-full object-cover  group-hover:scale-110 transition-transform"
               />
               <div
                 v-else
@@ -167,7 +167,7 @@
         <!-- A) CART MANAGEMENT PANEL -->
         <div
           v-if="authStore.isAdmin && latestCartMessage"
-          class="px-4 py-3 border-t animate-in slide-in-from-bottom-2 fade-in"
+          class="px-4 py-3 pb-16 md:pb-3 border-t animate-in slide-in-from-bottom-2 fade-in"
           :style="{
             backgroundColor: 'var(--color-surface)',
             borderColor: 'var(--color-border)',
@@ -282,7 +282,7 @@
               <img
                 v-if="item.image"
                 :src="item.image"
-                class="w-10 h-10 rounded-lg object-cover border shrink-0"
+                class="w-10 h-10 rounded-full object-cover border shrink-0"
                 :style="{ borderColor: 'var(--color-border)' }"
               />
               <!-- Info -->
@@ -420,7 +420,7 @@
           v-else-if="
             authStore.isAdmin && messageStore.selectedConversation?.product_id
           "
-          class="px-4 py-3 border-t flex flex-wrap items-center justify-between gap-3 transition-all animate-in slide-in-from-bottom-2 fade-in"
+          class="px-4 py-3 pb-16 md:pb-3 border-t flex flex-wrap items-center justify-between gap-3 transition-all animate-in slide-in-from-bottom-2 fade-in"
           :style="{
             backgroundColor: 'var(--color-surface)',
             borderColor: 'var(--color-border)',
@@ -466,7 +466,7 @@
 
               <button
                 @click="createAdminOrder"
-                class="px-5 py-3 rounded-xl bg-[var(--color-primary)] text-white hover:opacity-90 transition-all shadow-md font-black text-xs ring-offset-2 hover:ring-2 hover:ring-[var(--color-primary)]/20 active:scale-95 flex items-center gap-2"
+                class="px-3 py-3 rounded-xl bg-[var(--color-primary)] text-white hover:opacity-90 transition-all shadow-md font-bold text-xs ring-offset-2 hover:ring-2 hover:ring-[var(--color-primary)]/20 active:scale-95 flex items-center gap-2"
               >
                 <span>VALIDER &amp; CONFIRMER</span>
                 <i class="fas fa-check-double"></i>

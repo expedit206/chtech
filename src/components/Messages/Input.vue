@@ -1,9 +1,10 @@
 <template>
   <div
-    class="px-4 py-3 border-t sticky bottom-0"
+    class="px-4 py-3 border-t fixed bottom-0 left-0 right-0 z-40 md:sticky  md:left-auto md:right-auto md:z-auto"
     :style="{
       backgroundColor: 'var(--color-surface)',
       borderColor: 'var(--color-border)',
+      paddingBottom: 'max(0.30rem, env(safe-area-inset-bottom))',
     }"
   >
     <div class="max-w-4xl mx-auto flex items-end gap-2 relative">

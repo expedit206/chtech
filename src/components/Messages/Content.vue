@@ -1,6 +1,6 @@
 <template>
   <div class="h-full flex flex-col relative overflow-hidden" :style="{ backgroundColor: 'var(--color-bg)' }">
-    <div class="flex-1 overflow-y-auto p-4 space-y-6 z-0" ref="messagesContainer" style="scroll-behavior: smooth">
+    <div class="flex-1 overflow-y-auto p-4 pb-40 md:pb-4 space-y-6 z-0" ref="messagesContainer" style="scroll-behavior: smooth">
       <div v-if="isLoading" class="flex flex-col space-y-4 py-4">
         <MessageSkeleton v-for="i in 3" :key="i" />
       </div>

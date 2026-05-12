@@ -85,7 +85,6 @@
 import { ref, onMounted, computed, onUnmounted } from "vue";
 import { useRouter } from "vue-router";
 import { useProductStore } from "../stores/products.js";
-import { CONFIG } from "../config/index.js";
 import apiClient from "../api/index.js";
 import CategoryCard from "../components/CategoryCard.vue";
 import ProductCard from "../components/ProductCard.vue";
@@ -117,19 +116,11 @@ const isLoading = computed(
   () => productStore.loading && productStore.products.length === 0,
 );
 
-const getImageUrl = (photo) => {
-  if (typeof photo === 'string') {
-    if (photo.startsWith('http')) return photo;
-    return `${CONFIG.STORAGE_URL}${photo}`;
-  }
-  return '/placeholder.png';
-};
-
 const categories = computed(() =>
   productStore.categories.map((cat) => ({
     id: cat.id,
     name: cat.nom,
-    image: getImageUrl(cat.image),
+    image: cat.image,
     active: false,
   })),
 );
