@@ -138,10 +138,7 @@
                   : 'transparent',
               }"
             >
-              <img
-                :src="userPhotoUrl"
-                class="w-7 h-7 rounded-full object-cover"
-              />
+              <UserAvatar :user="auth.user" size="xs" />
             </div>
 
             <transition
@@ -543,6 +540,7 @@ import { useAuthStore } from "../stores/auth.js";
 import { useNotificationStore } from "../stores/notifications.js";
 import { useAlertStore } from "../stores/alert.js";
 import NotificationBell from "./NotificationBell.vue";
+import UserAvatar from "./UserAvatar.vue";
 // import {  } from "lucide-vue-next";
 import {
   Search,
@@ -606,14 +604,6 @@ const handleAddProductClick = () => {
     });
   }
 };
-
-const userPhotoUrl = computed(() => {
-  if (auth.user?.photo) {
-    if (auth.user.photo.startsWith("http")) return auth.user.photo;
-    return `${CONFIG.API_BASE_URL}/storage/${auth.user.photo}`;
-  }
-  return `https://ui-avatars.com/api/?name=${encodeURIComponent(auth.user?.nom || "U")}&background=6366f1&color=fff&size=64`;
-});
 
 defineProps({
   isSidebarCollapsed: Boolean,

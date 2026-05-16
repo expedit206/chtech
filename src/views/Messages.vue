@@ -383,27 +383,16 @@
           <div
             v-if="
               cartOrderStatus &&
-              ['pending', 'shipped'].includes(cartOrderStatus)
+              ['pending'].includes(cartOrderStatus)
             "
             class="flex gap-2 mt-2"
           >
             <button
-              @click="
-                updateOrderStatus(
-                  cartOrderStatus === 'pending' ? 'shipped' : 'delivered',
-                )
-              "
+              @click="updateOrderStatus('shipped')"
               class="px-4 py-2 rounded-xl bg-blue-500 text-white hover:bg-blue-600 transition-all font-bold text-[10px] flex items-center gap-2 shadow-sm active:scale-95"
             >
-              <i
-                class="fas"
-                :class="
-                  cartOrderStatus === 'pending'
-                    ? 'fa-truck'
-                    : 'fa-hand-holding-box'
-                "
-              ></i>
-              {{ cartOrderStatus === "pending" ? "Expédier" : "Livrer" }}
+              <i class="fas fa-truck"></i>
+              Expédier
             </button>
             <button
               @click="updateOrderStatus('cancelled')"
@@ -497,38 +486,20 @@
               </div>
 
               <div
+              <div
                 class="flex gap-2"
                 v-if="
-                  ['pending', 'shipped'].includes(
+                  ['pending'].includes(
                     messageStore.selectedConversation.order_status,
                   )
                 "
               >
                 <button
-                  @click="
-                    updateOrderStatus(
-                      messageStore.selectedConversation.order_status ===
-                        'pending'
-                        ? 'shipped'
-                        : 'delivered',
-                    )
-                  "
+                  @click="updateOrderStatus('shipped')"
                   class="px-4 py-2 rounded-xl bg-blue-500 text-white hover:bg-blue-600 transition-all font-bold text-[10px] flex items-center gap-2 shadow-sm active:scale-95"
                 >
-                  <i
-                    class="fas"
-                    :class="
-                      messageStore.selectedConversation.order_status ===
-                      'pending'
-                        ? 'fa-truck'
-                        : 'fa-hand-holding-box'
-                    "
-                  ></i>
-                  <span class="uppercase tracking-widest">{{
-                    messageStore.selectedConversation.order_status === "pending"
-                      ? "Expédier"
-                      : "Livrer"
-                  }}</span>
+                  <i class="fas fa-truck"></i>
+                  <span class="uppercase tracking-widest">Expédier</span>
                 </button>
 
                 <button

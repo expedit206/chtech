@@ -7,8 +7,9 @@
     }"
   >
     <!-- Image -->
-    <div
-      class="relative aspect-[16/10] overflow-hidden group border-b"
+    <router-link
+      :to="{ name: 'ShowBlog', params: { slug: blog.slug } }"
+      class="relative flex-shrink-0 aspect-[16/10] overflow-hidden group border-b block"
       :style="{ borderColor: 'var(--color-border)' }"
     >
       <img
@@ -29,34 +30,21 @@
       >
         {{ blog.category }}
       </span>
-    </div>
+    </router-link>
 
     <!-- Content -->
-    <div class="p-5 flex-1 flex flex-col">
-      <!-- Author -->
-      <div class="flex items-center gap-2 mb-3">
-        <img
-          src="https://ui-avatars.com/api/?name=Admin&background=6366f1&color=fff"
-          class="w-6 h-6 rounded-full"
-        />
-        <span
-          class="text-[11px] font-bold"
-          :style="{ color: 'var(--color-text-main)' }"
-        >
-          {{ blog.author }}
-        </span>
-        <span class="text-[11px]" :style="{ color: 'var(--color-text-sub)' }">
-          • {{ blog.time }}
-        </span>
-      </div>
+    <div class="py-5  px-2 flex-1 flex flex-col">
+   
 
       <!-- Title -->
-      <h3
-        class="text-md font-bold mb-3 leading-snug line-clamp-2"
-        :style="{ color: 'var(--color-text-main)' }"
-      >
-        {{ blog.title }}
-      </h3>
+      <router-link :to="{ name: 'ShowBlog', params: { slug: blog.slug || blog.id } }" class="mb-3 block">
+        <h3
+          class="text-md font-bold leading-snug line-clamp-2 hover:text-[var(--color-primary)] transition-colors"
+          :style="{ color: 'var(--color-text-main)' }"
+        >
+          {{ blog.title }}
+        </h3>
+      </router-link>
 
       <!-- Description -->
       <p
@@ -94,39 +82,6 @@
       </div>
     </div>
 
-    <!-- Actions -->
-    <div
-      class="grid grid-cols-3 border-t"
-      :style="{
-        borderColor: 'var(--color-border)',
-        backgroundColor: 'var(--color-bg)',
-      }"
-    >
-      <button
-        @click="handleInteraction"
-        class="py-3 text-[11px] font-bold flex items-center justify-center gap-1.5 hover:opacity-70 transition-opacity"
-        :style="{ color: 'var(--color-text-sub)' }"
-      >
-        <ThumbsUp :size="20" /> Like
-      </button>
-      <button
-        @click="handleInteraction"
-        class="py-3 text-[11px] font-bold flex items-center justify-center gap-1.5 hover:opacity-70 transition-opacity border-x"
-        :style="{
-          color: 'var(--color-text-sub)',
-          borderColor: 'var(--color-border)',
-        }"
-      >
-        <MessageCircle :size="16" /> Note
-      </button>
-      <button
-        class="py-3 text-[11px] font-bold flex items-center justify-center gap-1.5 hover:opacity-70 transition-opacity"
-        :style="{ color: 'var(--color-text-sub)' }"
-      >
-        <!-- <Share :size="20" /> -->
-        <Forward :size="16" />
-      </button>
-    </div>
   </article>
 </template>
 

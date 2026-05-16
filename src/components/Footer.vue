@@ -73,6 +73,13 @@ import { RouterLink } from "vue-router";
         >
           <li>
             <RouterLink
+              :to="{ name: 'Blogs' }"
+              class="hover:text-[var(--color-primary)] transition-colors"
+            >
+Blog            </RouterLink>
+          </li>
+          <li>
+            <RouterLink
               :to="{ name: 'Support' }"
               class="hover:text-[var(--color-primary)] transition-colors"
             >

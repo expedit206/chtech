@@ -30,14 +30,14 @@
           </div>
           <div>
             <label class="block text-xs font-bold mb-1.5 opacity-60" :style="{ color: 'var(--color-text-sub)' }">Image de couverture</label>
-            <input type="file" ref="imageUploader" accept="image/*" @change="onImageSelect" class="w-full mb-2 text-sm file:mr-3 file:py-2 file:px-4 file:rounded-xl file:border-0 file:text-xs file:font-bold file:cursor-pointer pb-2" :style="{ color: 'var(--color-text-sub)' }" />
-            
-            <input v-model="postForm.image" placeholder="Ou coller une URL d'image..."
+            <input   type="file" ref="imageUploader" accept="image/*" @change="onImageSelect" class="w-full mb-2 text-sm file:mr-3 file:py-2 file:px-4 file:rounded-xl file:border-0 file:text-xs file:font-bold file:cursor-pointer pb-2" :style="{ color: 'var(--color-text-sub)' }" />
+
+            <!-- <input  placeholder="Ou coller une URL d'image..."
               class="w-full px-4 py-2.5 rounded-xl border text-sm outline-none"
-              :style="{ backgroundColor: 'var(--color-bg)', borderColor: 'var(--color-border)', color: 'var(--color-text-main)' }" />
-              
+              :style="{ backgroundColor: 'var(--color-bg)', borderColor: 'var(--color-border)', color: 'var(--color-text-main)' }" /> -->
+
             <div v-if="imagePreview || postForm.image" class="mt-3 rounded-xl overflow-hidden h-32 border relative" :style="{ borderColor: 'var(--color-border)' }">
-              <img :src="imagePreview || postForm.image" class="w-full h-full object-cover" />
+              <img :src="imagePreview || getImageUrl(postForm.image)" class="w-full h-full object-cover" />
               <button type="button" v-if="imagePreview" @click="clearFile" class="absolute top-2 right-2 bg-red-500 text-white rounded-lg p-1.5 opacity-80 hover:opacity-100">
                 <Trash2 :size="14" />
               </button>
@@ -86,8 +86,6 @@
             <tr class="border-b text-left text-xs font-black uppercase tracking-widest"
               :style="{ borderColor: 'var(--color-border)', color: 'var(--color-text-sub)' }">
               <th class="px-6 py-4">Article</th>
-              <th class="px-6 py-4 hidden md:table-cell">Auteur</th>
-              <th class="px-6 py-4">Statut</th>
               <th class="px-6 py-4 hidden sm:table-cell">Date</th>
               <th class="px-6 py-4 text-right">Actions</th>
             </tr>
@@ -99,7 +97,9 @@
                 <div class="flex items-center gap-3">
                   <div class="w-10 h-10 rounded-xl overflow-hidden border flex-shrink-0"
                     :style="{ borderColor: 'var(--color-border)' }">
-                    <img v-if="post.image" :src="post.image" class="w-full h-full object-cover" />
+
+
+                    <img v-if="post.image" :src="getImageUrl(post.image)" class="w-full h-full object-cover" />
                     <div v-else class="w-full h-full flex items-center justify-center"
                       :style="{ backgroundColor: 'var(--color-bg)' }">
                       <FileText :size="14" class="opacity-30" />
@@ -108,23 +108,11 @@
                   <p class="font-bold text-sm truncate max-w-[200px]">{{ post.titre || post.title }}</p>
                 </div>
               </td>
-              <td class="px-6 py-4 hidden md:table-cell text-sm opacity-70">{{ post.author?.nom ?? '—' }}</td>
-              <td class="px-6 py-4">
-                <span class="text-[11px] font-black px-2.5 py-1 rounded-full"
-                  :class="post.published_at || post.est_publie ? 'bg-green-500/15 text-green-400' : 'bg-amber-500/15 text-amber-400'">
-                  {{ (post.published_at || post.est_publie) ? 'Publié' : 'Brouillon' }}
-                </span>
-              </td>
               <td class="px-6 py-4 hidden sm:table-cell text-sm opacity-50">
                 {{ new Date(post.created_at).toLocaleDateString('fr-FR') }}
               </td>
               <td class="px-6 py-4 text-right">
                 <div class="flex items-center justify-end gap-2">
-                  <button @click="togglePublish(post)"
-                    class="w-8 h-8 rounded-lg flex items-center justify-center transition opacity-100 group-hover:opacity-100"
-                    :class="(post.published_at || post.est_publie) ? 'hover:bg-amber-500/10 text-amber-400' : 'hover:bg-green-500/10 text-green-400'">
-                    <component :is="(post.published_at || post.est_publie) ? EyeOff : Eye" :size="14" />
-                  </button>
                   <button @click="editPost(post)"
                     class="w-8 h-8 rounded-lg flex items-center justify-center transition hover:bg-indigo-500/10 text-indigo-400 opacity-100 group-hover:opacity-100">
                     <Pencil :size="14" />
@@ -158,7 +146,8 @@
 
 <script setup>
 import { ref, onMounted } from 'vue';
-import { Plus, FileText, Trash2, Eye, EyeOff, Pencil } from 'lucide-vue-next';
+import { Plus, FileText, Trash2, Pencil } from 'lucide-vue-next';
+import { CONFIG } from "../../config/index.js";
 
 import apiClient from '../../api/index.js';
 import { useFlash } from '../../composables/useFlash';
@@ -179,11 +168,19 @@ const imagePreview = ref(null);
 const fileInput = ref(null);
 const imageUploader = ref(null);
 
+const getImageUrl = (path) => {
+  if (!path) return "";
+  if (path.startsWith("http")) return path;
+  return `${CONFIG.API_BASE_URL}/storage/${path}`;
+};
+
 const onImageSelect = (e) => {
   const file = e.target.files[0];
   if (!file) return;
   fileInput.value = file;
   imagePreview.value = URL.createObjectURL(file);
+  // console.log(imagePreview.value);
+
 };
 
 const clearFile = () => {
@@ -218,6 +215,7 @@ const savePost = async () => {
     if (postForm.value.excerpt) {
       fd.append('excerpt', postForm.value.excerpt);
     }
+    console.log(fileInput.value);
     
     if (fileInput.value) {
       fd.append('image', fileInput.value);
@@ -225,15 +223,24 @@ const savePost = async () => {
       fd.append('image', postForm.value.image.trim());
     }
     
-    if (editingPost.value) {
-      fd.append('is_published', editingPost.value.is_published ? '1' : '0');
-    }
+    console.log(postForm.value);
 
     if (editingPost.value) {
-      await apiClient.post(`/admin/blog/posts/${editingPost.value.id}`, fd);
+      await apiClient.post(`/admin/blog/posts/${editingPost.value.id}`, fd, {
+        headers: {
+          'Content-Type': 'multipart/form-data',
+        },
+      });
+
       flash.success('Article mis à jour avec succès');
     } else {
-      await apiClient.post('/admin/blog/posts', fd);
+      // const res = await apiClient.post('/admin/blog/posts', fd);
+
+      await apiClient.post('/admin/blog/posts', fd, {
+        headers: {
+          'Content-Type': 'multipart/form-data',
+        },
+      });
       flash.success('Article créé avec succès');
     }
     await fetchPosts(currentPage.value);
@@ -266,14 +273,6 @@ const cancelForm = () => {
   editingPost.value = null;
   postForm.value = { title: '', excerpt: '', content: '', image: '' };
   clearFile();
-};
-
-const togglePublish = async (post) => {
-  try {
-    await apiClient.patch(`/admin/blog/posts/${post.id}/toggle-publish`);
-    post.est_publie = !post.est_publie;
-    post.published_at = post.est_publie ? new Date().toISOString() : null;
-  } catch (e) { console.error(e); }
 };
 
 const deletePost = async (post) => {

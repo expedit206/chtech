@@ -461,8 +461,18 @@
 
         <!-- Modal Footer -->
         <div
-          class="px-6 py-4 border-t border-[var(--color-border)] bg-[var(--color-bg)] flex justify-end items-center gap-3 rounded-b-[2rem]"
+          class="px-6 py-4 border-t border-[var(--color-border)] bg-[var(--color-bg)] flex justify-end items-center gap-3 rounded-b-[2rem] flex-wrap"
         >
+          <button
+            v-if="selectedOrder.status === 'shipped'"
+            @click="confirmDelivery"
+            :disabled="isConfirming"
+            class="px-6 py-2.5 rounded-xl font-bold text-sm bg-green-500 text-white hover:bg-green-600 shadow-lg shadow-green-500/20 transition-all flex items-center gap-2"
+          >
+            <i v-if="isConfirming" class="fas fa-spinner fa-spin"></i>
+            <CheckCircle v-else :size="16" />
+            Confirmer la réception
+          </button>
           <button
             @click="closeDetails"
             class="px-6 py-2.5 rounded-xl font-bold text-sm bg-[var(--color-surface)] border border-[var(--color-border)] text-[var(--color-text-main)] hover:bg-[var(--color-border)]/40 transition-colors"
@@ -500,8 +510,11 @@ import {
 } from "lucide-vue-next";
 import apiClient from "../../api/index.js";
 import { CONFIG } from "../../config/index.js";
+import { useToast } from "vue-toastification";
 
+const toast = useToast();
 const isLoading = ref(true);
+const isConfirming = ref(false);
 const invoiceLoading = ref(null);
 const orders = ref([]);
 const selectedOrder = ref(null);
@@ -547,8 +560,8 @@ const handleEscape = (e) => {
   }
 };
 
-onMounted(async () => {
-  document.addEventListener("keydown", handleEscape);
+const fetchOrders = async () => {
+  isLoading.value = true;
   try {
     const res = await apiClient.get("/orders");
     const data = res.data.data || res.data || [];
@@ -594,6 +607,11 @@ onMounted(async () => {
   } finally {
     isLoading.value = false;
   }
+};
+
+onMounted(() => {
+  document.addEventListener("keydown", handleEscape);
+  fetchOrders();
 });
 
 onUnmounted(() => {
@@ -645,6 +663,28 @@ const getStatusClass = (status) => {
   if (s.includes("cancel"))
     return "bg-red-500/10 text-red-600 border border-red-500/20";
   return "bg-amber-500/10 text-amber-600 border border-amber-500/20";
+};
+
+const confirmDelivery = async () => {
+  if (!selectedOrder.value || isConfirming.value) return;
+  isConfirming.value = true;
+  try {
+    await apiClient.put(`/orders/${selectedOrder.value.rawId}/status`, {
+      status: "delivered",
+    });
+    toast.success("Réception confirmée avec succès !");
+    selectedOrder.value.status = "delivered";
+    // Met a jour l'élément dans la liste
+    const orderIndex = orders.value.findIndex(o => o.rawId === selectedOrder.value.rawId);
+    if(orderIndex !== -1) {
+      orders.value[orderIndex].status = "delivered";
+    }
+  } catch (err) {
+    console.error(err);
+    toast.error("Erreur lors de la confirmation");
+  } finally {
+    isConfirming.value = false;
+  }
 };
 
 const formatStatus = (status) => {
