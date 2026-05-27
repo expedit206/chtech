@@ -116,6 +116,27 @@
                 </span>
              </div>
           </div>
+
+          <!-- Admin Direct Contact actions -->
+          <div v-if="authStore.isAdmin" class="flex items-center gap-2 ml-2">
+              <a 
+                v-if="messageStore.selectedConversation.telephone"
+                :href="'tel:' + messageStore.selectedConversation.telephone"
+                class="w-10 h-10 flex items-center justify-center rounded-full  text-blue-600 hover:bg-gray-300/20 hover:text-white transition-all  active:scale-95"
+                title="Appeler directement"
+              >
+                <Phone :size="20" :stroke-width="2" />
+              </a>
+              <a 
+                v-if="messageStore.selectedConversation.whatsapp || messageStore.selectedConversation.telephone"
+                :href="'https://wa.me/' + (messageStore.selectedConversation.whatsapp || messageStore.selectedConversation.telephone).replace(/\D/g, '')"
+                target="_blank"
+                class="w-10 h-10 flex items-center justify-center rounded-full  text-green-600 hover:bg-gray-300/50 hover:text-white transition-all  active:scale-95"
+                title="Contacter sur WhatsApp"
+              >
+                <MessageSquare :size="20" :stroke-width="2" />
+              </a>
+          </div>
         </div>
         <div
           v-else
@@ -550,6 +571,8 @@ import {
   MessageCircle,
   ArrowLeft,
   ShoppingCart,
+  Phone,
+  MessageSquare,
 } from "lucide-vue-next";
 // Components
 import Sidebar from "../components/Messages/Sidebar.vue";

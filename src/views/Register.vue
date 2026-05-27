@@ -28,7 +28,7 @@
           </div>
           <div>
             <label for="telephone" class="block text-sm font-medium mb-1"
-              :style="{ color: 'var(--color-text-main)' }">Téléphone / Email</label>
+              :style="{ color: 'var(--color-text-main)' }">Téléphone</label>
             <input id="telephone" v-model="form.telephone" name="telephone" type="text" required
               class="appearance-none relative block w-full px-4 py-3 border rounded-xl focus:outline-none focus:ring-2 transition-all duration-200 sm:text-sm"
               :style="{
@@ -36,7 +36,7 @@
                 borderColor: 'var(--color-border)',
                 color: 'var(--color-text-main)',
                 '--tw-ring-color': 'var(--color-primary)',
-              }" placeholder="Ex: 6XXXXXXXX ou votremail@gmail.com" />
+              }" placeholder="Ex: 6XXXXXXXX" />
           </div>
           <div>
             <label for="password" class="block text-sm font-medium mb-1"

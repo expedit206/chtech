@@ -145,6 +145,17 @@
                 >
                   <Eye :size="16" /> Voir les détails
                 </button>
+
+                <button
+                  v-if="order.status === 'shipped'"
+                  @click="confirmDelivery(order)"
+                  :disabled="isConfirming"
+                  class="flex items-center gap-2 px-3 py-1.5 rounded-lg font-bold text-xs bg-green-500 text-white hover:bg-green-600 shadow-md shadow-green-500/20 transition-all disabled:opacity-50 ml-auto"
+                >
+                  <i v-if="isConfirming" class="fas fa-spinner fa-spin"></i>
+                  <CheckCircle v-else :size="14" />
+                  Confirmer la réception
+                </button>
               </div>
             </div>
           </div>
@@ -565,6 +576,7 @@ const fetchOrders = async () => {
   try {
     const res = await apiClient.get("/orders");
     const data = res.data.data || res.data || [];
+console.log(res.data);
 
     orders.value = data.map((o) => {
       // Map all items for the details modal
@@ -665,17 +677,18 @@ const getStatusClass = (status) => {
   return "bg-amber-500/10 text-amber-600 border border-amber-500/20";
 };
 
-const confirmDelivery = async () => {
-  if (!selectedOrder.value || isConfirming.value) return;
+const confirmDelivery = async (order = null) => {
+  const targetOrder = order instanceof Event ? selectedOrder.value : (order || selectedOrder.value);
+  if (!targetOrder || isConfirming.value) return;
   isConfirming.value = true;
   try {
-    await apiClient.put(`/orders/${selectedOrder.value.rawId}/status`, {
+    await apiClient.put(`/orders/${targetOrder.rawId}/status`, {
       status: "delivered",
     });
     toast.success("Réception confirmée avec succès !");
-    selectedOrder.value.status = "delivered";
+    targetOrder.status = "delivered";
     // Met a jour l'élément dans la liste
-    const orderIndex = orders.value.findIndex(o => o.rawId === selectedOrder.value.rawId);
+    const orderIndex = orders.value.findIndex(o => o.rawId === targetOrder.rawId);
     if(orderIndex !== -1) {
       orders.value[orderIndex].status = "delivered";
     }
