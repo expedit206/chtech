@@ -697,6 +697,10 @@ const performLiveSearch = async (query) => {
     if (response.data.success && response.data.data) {
       const products = (response.data.data.products || []).map((p) => ({
         ...p,
+        image:
+          p.photos && p.photos.length > 0
+            ? productStore.getImageUrl(p.photos[0])
+            : "/placeholder.png",
         slug:
           p.slug && !p.slug.endsWith(`-${p.id}`)
             ? `${p.slug}-${p.id}`

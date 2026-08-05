@@ -63,6 +63,11 @@ const routes = [
         component: () => import("../views/Wishlist.vue"),
       },
       {
+        path: "commissions",
+        name: "my-commissions",
+        component: () => import("../views/user/UserCommissions.vue"),
+      },
+      {
         path: "settings",
         name: "Settings",
         component: () => import("../views/Settings.vue"),
@@ -148,6 +153,11 @@ const routes = [
         path: "finance",
         name: "admin-finance",
         component: () => import("../views/admin/AdminFinance.vue"),
+      },
+      {
+        path: "promo-codes",
+        name: "admin-promo-codes",
+        component: () => import("../views/admin/AdminPromoCodes.vue"),
       },
       {
         path: "orders",

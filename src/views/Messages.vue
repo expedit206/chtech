@@ -122,7 +122,7 @@
               <a 
                 v-if="messageStore.selectedConversation.telephone"
                 :href="'tel:' + messageStore.selectedConversation.telephone"
-                class="w-10 h-10 flex items-center justify-center rounded-full  text-blue-600 hover:bg-gray-300/20 hover:text-white transition-all  active:scale-95"
+                class="w-10 h-10 flex items-center justify-center rounded-full  text-blue-600 hover:bg-gray-300/20 transition-all  active:scale-95"
                 title="Appeler directement"
               >
                 <Phone :size="20" :stroke-width="2" />
@@ -131,7 +131,7 @@
                 v-if="messageStore.selectedConversation.whatsapp || messageStore.selectedConversation.telephone"
                 :href="'https://wa.me/' + (messageStore.selectedConversation.whatsapp || messageStore.selectedConversation.telephone).replace(/\D/g, '')"
                 target="_blank"
-                class="w-10 h-10 flex items-center justify-center rounded-full  text-green-600 hover:bg-gray-300/50 hover:text-white transition-all  active:scale-95"
+                class="w-10 h-10 flex items-center justify-center rounded-full  text-green-600 hover:bg-gray-300/20  transition-all  active:scale-95"
                 title="Contacter sur WhatsApp"
               >
                 <MessageSquare :size="20" :stroke-width="2" />

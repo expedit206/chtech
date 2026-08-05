@@ -456,6 +456,20 @@
               </div>
             </div>
 
+            <!-- Ville -->
+            <div class="space-y-1">
+              <label class="text-[9px] font-semibold  opacity-50 ml-1"
+                >Ville</label
+              >
+              <input
+                v-model="form.ville"
+                required
+                type="text"
+                placeholder="ex: Douala, Bafoussam, Buea, Yaoundé..."
+                class="w-full px-4 py-2 rounded-lg bg-[var(--color-bg)] border border-transparent focus:border-[var(--color-primary)] focus:ring-2 focus:ring-[var(--color-primary)]/20 transition-all outline-none font-medium text-[var(--color-text-main)]"
+              />
+            </div>
+
             <!-- Description -->
             <div class="space-y-1">
               <label class="text-[9px] font-semibold  opacity-50 ml-1"
@@ -950,3 +964,4 @@ window.addEventListener("click", (e) => {
   transform: translateY(-10px);
 }
 </style>
+ 

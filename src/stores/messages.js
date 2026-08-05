@@ -422,6 +422,10 @@ export const useMessageStore = defineStore("message", () => {
             })),
           ),
         );
+        const promo = cartData.find((i) => i.promoCode)?.promoCode;
+        if (promo) {
+          formData.append("promo_code", promo);
+        }
       }
 
       if (file) {
@@ -634,15 +638,20 @@ export const useMessageStore = defineStore("message", () => {
     // Set a clean message content just for the address and default question
     let content = "Ces articles sont-ils toujours disponibles ?";
 
-    if (meta.deliveryAddress) {
-      // Add a line break and the delivery address
-      content += `\n\n📍 Adresse de livraison : ${meta.deliveryAddress}`;
+    if (meta.promoCode) {
+      content += `\n\n🎟️ Code Promo : ${meta.promoCode}`;
     }
 
-    // Attach deliveryAddress to each cart item so the backend/admin can see it
+    if (meta.deliveryAddress) {
+      // Add a line break and the delivery address
+      content += `\n📍 Adresse de livraison : ${meta.deliveryAddress}`;
+    }
+
+    // Attach deliveryAddress and promoCode to each cart item so the backend/admin can see it
     const itemsWithMeta = items.map((i) => ({
       ...i,
       deliveryAddress: meta.deliveryAddress || null,
+      promoCode: meta.promoCode || null,
     }));
 
     try {

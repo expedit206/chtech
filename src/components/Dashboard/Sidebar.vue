@@ -160,6 +160,7 @@ import {
   Users,
   Package,
   Tag,
+  Ticket,
   FileText,
   DollarSign,
   Megaphone,
@@ -210,6 +211,7 @@ const menuSections = computed(() => {
         icon: ShoppingBag,
         route: { name: "my-orders" },
       },
+      { name: "Mes Commissions", icon: DollarSign, route: { name: "my-commissions" } },
       { name: "Mes Favoris", icon: Star, route: { name: "Wishlist" } },
     ],
   });
@@ -225,6 +227,11 @@ const menuSections = computed(() => {
           route: { name: "admin-dashboard" },
         },
         { name: "Utilisateurs", icon: Users, route: { name: "admin-users" } },
+        {
+          name: "Codes Promo",
+          icon: Ticket,
+          route: { name: "admin-promo-codes" },
+        },
         {
           name: "Commandes",
           icon: ShoppingBag,

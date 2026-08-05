@@ -186,18 +186,74 @@
           v-if="!cartStore.isEmpty"
           class="shrink-0 border-t border-[var(--color-border)] p-4 space-y-3"
         >
-          <!-- Total -->
-          <div class="flex justify-between items-center">
-            <span
-              class="text-sm font-bold"
-              :style="{ color: 'var(--color-text-sub)' }"
-              >Total estimé</span
-            >
-            <span
-              class="text-xl font-black underline"
-              :style="{ color: 'var(--color-primary)' }"
-              >{{ formatMoney(cartStore.totalPrice) }}</span
-            >
+          <!-- Code Promo Input Section -->
+          <div class="p-3 bg-[var(--color-bg)] rounded-xl border border-[var(--color-border)] space-y-2">
+            <div class="flex items-center justify-between">
+              <label class="text-[10px] font-black tracking-wider uppercase flex items-center gap-1.5 text-[var(--color-text-sub)]">
+                <Tag :size="12" class="text-[var(--color-primary)]" />
+                Code Promotionnel
+              </label>
+              <span v-if="appliedPromo" class="text-[10px] font-bold text-emerald-600 bg-emerald-500/10 px-2 py-0.5 rounded-full flex items-center gap-1">
+                <Check :size="10" /> Appliqué
+              </span>
+            </div>
+
+            <div v-if="!appliedPromo" class="flex gap-2">
+              <input
+                v-model="promoCodeInput"
+                type="text"
+                placeholder="Ex: SASAYEE10"
+                class="flex-1 px-3 py-1.5 rounded-lg border text-xs font-mono uppercase font-bold outline-none transition-all"
+                :style="{
+                  borderColor: 'var(--color-border)',
+                  backgroundColor: 'var(--color-surface)',
+                  color: 'var(--color-text-main)',
+                }"
+                @keyup.enter="applyPromoCode"
+              />
+              <button
+                @click="applyPromoCode"
+                :disabled="isValidatingPromo || !promoCodeInput.trim()"
+                class="px-3 py-1.5 rounded-lg bg-[var(--color-primary)] text-white text-xs font-bold hover:opacity-90 disabled:opacity-50 transition-all flex items-center gap-1"
+              >
+                <Loader2 v-if="isValidatingPromo" :size="12" class="animate-spin" />
+                <span>Appliquer</span>
+              </button>
+            </div>
+
+            <div v-else class="flex items-center justify-between bg-emerald-500/10 border border-emerald-500/20 p-2 rounded-lg text-xs">
+              <div>
+                <span class="font-mono font-black text-emerald-700 dark:text-emerald-400 uppercase">{{ appliedPromo.code }}</span>
+                <span class="text-[10px] block text-emerald-600 opacity-80">
+                  -{{ formatMoney(appliedPromo.discount_amount) }} de réduction
+                </span>
+              </div>
+              <button @click="removePromoCode" class="p-1 text-red-500 hover:bg-red-500/10 rounded">
+                <X :size="14" />
+              </button>
+            </div>
+
+            <p v-if="promoError" class="text-[11px] font-bold text-red-500 mt-1">
+              {{ promoError }}
+            </p>
+          </div>
+
+          <!-- Totaux -->
+          <div class="space-y-1">
+            <div class="flex justify-between items-center text-xs text-[var(--color-text-sub)]">
+              <span>Sous-total</span>
+              <span>{{ formatMoney(cartStore.totalPrice) }}</span>
+            </div>
+            <div v-if="appliedPromo" class="flex justify-between items-center text-xs font-bold text-emerald-600">
+              <span>Réduction ({{ appliedPromo.code }})</span>
+              <span>-{{ formatMoney(appliedPromo.discount_amount) }}</span>
+            </div>
+            <div class="flex justify-between items-center pt-1 border-t border-[var(--color-border)]">
+              <span class="text-sm font-bold text-[var(--color-text-main)]">Total final</span>
+              <span class="text-xl font-black underline text-[var(--color-primary)]">
+                {{ formatMoney(finalTotal) }}
+              </span>
+            </div>
           </div>
 
           <!-- Delivery address (optional) -->
@@ -259,7 +315,7 @@
 </template>
 
 <script setup>
-import { ref } from "vue";
+import { ref, computed } from "vue";
 import { useRouter } from "vue-router";
 import {
   ShoppingCart,
@@ -270,6 +326,9 @@ import {
   Package,
   MessageCircle,
   MapPin,
+  Tag,
+  Check,
+  Loader2,
 } from "lucide-vue-next";
 import { useCartStore } from "../../stores/cart.js";
 import { useMessageStore } from "../../stores/messages.js";
@@ -286,8 +345,52 @@ const router = useRouter();
 const isProceedingToChat = ref(false);
 const deliveryAddress = ref("");
 
+// Code promo state
+const promoCodeInput = ref("");
+const appliedPromo = ref(null);
+const isValidatingPromo = ref(false);
+const promoError = ref("");
+
+const finalTotal = computed(() => {
+  if (!appliedPromo.value) return cartStore.totalPrice;
+  return Math.max(0, cartStore.totalPrice - appliedPromo.value.discount_amount);
+});
+
 const formatMoney = (amount) =>
   `${Number(amount || 0).toLocaleString("fr-FR")} FCFA`;
+
+const applyPromoCode = async () => {
+  if (!promoCodeInput.value.trim()) return;
+
+  isValidatingPromo.value = true;
+  promoError.value = "";
+
+  try {
+    const response = await apiClient.post("/promo-codes/validate", {
+      code: promoCodeInput.value.trim(),
+      order_amount: cartStore.totalPrice,
+    });
+
+    if (response.data.valid) {
+      appliedPromo.value = response.data.data;
+      promoError.value = "";
+    } else {
+      promoError.value = response.data.message || "Code promo non valide.";
+    }
+  } catch (err) {
+    console.error("Erreur validation code promo:", err);
+    promoError.value =
+      err.response?.data?.message || "Code promo invalide ou expiré.";
+  } finally {
+    isValidatingPromo.value = false;
+  }
+};
+
+const removePromoCode = () => {
+  appliedPromo.value = null;
+  promoCodeInput.value = "";
+  promoError.value = "";
+};
 
 const proceedToChat = async () => {
   if (!authStore.isAuthenticated) {
@@ -321,9 +424,10 @@ const proceedToChat = async () => {
       return;
     }
 
-    // Stocker le panier + adresse (pas de message manuel — il est généré automatiquement)
+    // Stocker le panier + adresse + code promo
     messageStore.setCartItems(cartStore.toPayload(), {
       deliveryAddress: deliveryAddress.value.trim() || null,
+      promoCode: appliedPromo.value ? appliedPromo.value.code : null,
     });
 
     cartStore.isDrawerOpen = false;
@@ -331,6 +435,7 @@ const proceedToChat = async () => {
 
     cartStore.clearCart();
     deliveryAddress.value = "";
+    removePromoCode();
   } catch (err) {
     console.error("Erreur panier → chat:", err);
     alertStore.showAlert({
